@@ -78,7 +78,6 @@ export class WebGL {
     raycaster.addTarget(this.cube)
 
     raycaster.events.on('intersection', (intersections) => {
-      console.log(intersections)
       const cubeIntersection = intersections.find(
         (intersection) => intersection.object.uuid === this.cube.uuid
       )
