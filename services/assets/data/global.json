@@ -1,0 +1,9 @@
+{
+  "name": "global",
+  "files": [
+    {
+      "name": "factory",
+      "path": "/obj/factory.glb"
+    }
+  ]
+}

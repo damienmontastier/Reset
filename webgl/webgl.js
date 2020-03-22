@@ -1,11 +1,16 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
+import assetsManager from '@/services/assets/manager'
+
 import viewport from '@/plugins/viewport'
 import gui from '@/plugins/gui'
 
 import Renderer from '@/webgl/renderer/renderer'
 import raycaster from '@/webgl/raycaster'
 import rendererStats from '@/webgl/renderer-stats'
+
+import getStore from '@/store'
+const store = getStore()
 
 export class WebGL {
   constructor(canvas) {
@@ -33,17 +38,17 @@ export class WebGL {
       document.getElementById('__nuxt')
     )
 
-    // raycaster
-    raycaster.camera = this.camera
-
     // renderer
     this.renderer = new Renderer({
       canvas: this.canvas,
       camera: this.camera,
       scene: this.scene
     })
+    store.commit('webgl/setRenderer', this.renderer)
 
     this.addCube()
+
+    this.addFactory()
   }
 
   init() {
@@ -73,6 +78,7 @@ export class WebGL {
     raycaster.addTarget(this.cube)
 
     raycaster.events.on('intersection', (intersections) => {
+      console.log(intersections)
       const cubeIntersection = intersections.find(
         (intersection) => intersection.object.uuid === this.cube.uuid
       )
@@ -83,6 +89,53 @@ export class WebGL {
         this.cube.scale.setScalar(200)
       }
     })
+  }
+
+  loadFactoryModel() {
+    assetsManager.loader.addGroup({
+      name: 'factory',
+      base: '/',
+      files: [
+        {
+          name: 'factory',
+          path: 'obj/factory.glb'
+        }
+      ]
+    })
+    // assetsManager.loader.loadGroup('factory')
+
+    return assetsManager.get('factory')
+  }
+
+  async addFactory() {
+    const { factory } = await this.loadFactoryModel()
+
+    factory.scene.scale.setScalar(100)
+    factory.scene.traverse((child) => {
+      child.parentUUID = factory.scene.uuid
+      child.material = new THREE.MeshNormalMaterial()
+    })
+
+    this.scene.add(factory.scene)
+
+    raycaster.addTarget(factory.scene)
+
+    raycaster.events.on('intersection', (intersections) => {
+      const factoryIntersections = intersections.filter(
+        (intersection) => intersection.object.parentUUID === factory.scene.uuid
+      )
+
+      if (factoryIntersections.length) {
+        const selectedPart = factoryIntersections[0].object
+        selectedPart.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+      } else {
+        factory.scene.traverse((child) => {
+          child.material = new THREE.MeshNormalMaterial()
+        })
+      }
+    })
+
+    gui.addObject3D('factory', factory.scene)
   }
 
   onWindowResize() {
