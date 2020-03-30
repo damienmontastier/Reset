@@ -3,8 +3,6 @@ import useGUI from '@/hooks/use-gui'
 
 let game
 
-// TODO
-
 class Game {
   constructor() {
     const { scene } = useWebGL()
