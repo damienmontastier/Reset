@@ -71,6 +71,9 @@ export default {
         type: 'font/woff2',
         crossorigin: 'anonymous'
       }
+    ],
+    script: [
+      { src: 'https://identity.netlify.com/v1/netlify-identity-widget.js' }
     ]
   },
   /*
