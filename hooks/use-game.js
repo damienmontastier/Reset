@@ -1,15 +1,16 @@
 import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
-import assetsManager from '@/services/assets/manager'
 
-class WebGL {
+let game
+
+class Game {
   constructor() {
     const { scene } = useWebGL()
 
-    this.group = new THREE.Object3D()
-    this.group.scale.setScalar(250)
+    this.scene = new THREE.Scene()
+    this.scene.scale.setScalar(100)
 
-    scene.add(this.group)
+    scene.add(this.scene)
 
     this.init()
   }
@@ -32,7 +33,7 @@ class WebGL {
     const geometry = new THREE.BoxGeometry(1, 1, 1)
     const material = new THREE.MeshNormalMaterial()
     const cube = new THREE.Mesh(geometry, material)
-    this.group.add(cube)
+    this.scene.add(cube)
 
     const { raycaster } = useWebGL()
 
@@ -52,6 +53,7 @@ class WebGL {
   }
 
   loadFactoryModel() {
+    const assetsManager = require('@/services/assets/manager').default
     assetsManager.loader.addGroup({
       name: 'factory',
       base: '/',
@@ -68,17 +70,17 @@ class WebGL {
   }
 
   async addFactory() {
-    const { scene, raycaster } = useWebGL()
+    const { raycaster } = useWebGL()
     const gui = useGUI()
     const { factory } = await this.loadFactoryModel()
 
-    factory.scene.scale.setScalar(100)
+    // factory.scene.scale.setScalar(100)
     factory.scene.traverse((child) => {
       child.parentUUID = factory.scene.uuid
       child.material = new THREE.MeshNormalMaterial()
     })
 
-    scene.add(factory.scene)
+    this.scene.add(factory.scene)
 
     raycaster.addTarget(factory.scene)
 
@@ -100,24 +102,11 @@ class WebGL {
     gui.addObject3D('factory', factory.scene)
   }
 
-  destroy() {
-    const { scene } = useWebGL()
-    scene.remove(this.group)
-  }
+  destroy() {}
 }
 
-export default ({ app }, inject) => {
-  inject('getWebgl', () => {
-    return app.$webgl || app.$createWebgl()
-  })
-
-  inject('createWebgl', () => {
-    app.$webgl = new WebGL()
-    return app.$webgl
-  })
-
-  inject('destroyWebgl', () => {
-    app.$webgl.destroy()
-    app.$webgl = null
-  })
+const useGame = () => {
+  return game || (game = new Game())
 }
+
+export default useGame

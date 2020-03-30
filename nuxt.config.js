@@ -92,8 +92,7 @@ export default {
     { src: '~/plugins/viewport.js', mode: 'client' },
     { src: '~/plugins/mouse.js', mode: 'client' },
     { src: '~/plugins/scroll.js', mode: 'client' },
-    { src: '~/plugins/directives.js', mode: 'client' },
-    { src: '~/webgl/webgl.js', mode: 'client' }
+    { src: '~/plugins/directives.js', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules
@@ -150,12 +149,7 @@ export default {
           [
             '@babel/preset-env',
             {
-              targets: {
-                edge: '17',
-                firefox: '60',
-                chrome: '67',
-                safari: '11.1'
-              }
+              targets: '> 2%, not dead'
             }
           ]
         ]

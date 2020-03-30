@@ -6,6 +6,7 @@
 
 <script>
 import useWebGL from '@/hooks/use-webgl'
+import useGame from '@/hooks/use-game'
 
 import Info from '@/components/webgl/info'
 
@@ -17,13 +18,11 @@ export default {
     const { canvas } = useWebGL()
     this.$el.appendChild(canvas)
 
-    this.$createWebgl()
+    useGame()
   },
   beforeDestroy() {
     const { destroy } = useWebGL()
     destroy()
-
-    this.$destroyWebgl()
   }
 }
 </script>
