@@ -1,5 +1,6 @@
 import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
+import useAssetsManager from '@/hooks/use-manager'
 
 let game
 
@@ -53,8 +54,9 @@ class Game {
   }
 
   loadFactoryModel() {
-    const assetsManager = require('@/services/assets/manager').default
-    assetsManager.loader.addGroup({
+    const manager = useAssetsManager()
+
+    manager.loader.addGroup({
       name: 'factory',
       base: '/',
       files: [
@@ -64,9 +66,7 @@ class Game {
         }
       ]
     })
-    // assetsManager.loader.loadGroup('factory')
-
-    return assetsManager.get('factory')
+    return manager.get('factory')
   }
 
   async addFactory() {
