@@ -20,7 +20,7 @@ class Game {
     this.initCamera()
 
     this.addBox()
-    // this.addFactory()
+    this.addFactory()
   }
 
   initCamera() {
