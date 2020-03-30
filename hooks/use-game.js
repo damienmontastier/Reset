@@ -19,7 +19,7 @@ class Game {
     this.initCamera()
 
     this.addBox()
-    this.addFactory()
+    // this.addFactory()
   }
 
   initCamera() {
@@ -32,22 +32,22 @@ class Game {
   addBox() {
     const geometry = new THREE.BoxGeometry(1, 1, 1)
     const material = new THREE.MeshNormalMaterial()
-    const cube = new THREE.Mesh(geometry, material)
-    this.scene.add(cube)
+    this.cube = new THREE.Mesh(geometry, material)
+    this.scene.add(this.cube)
 
     const { raycaster } = useWebGL()
 
-    raycaster.addTarget(cube)
+    raycaster.addTarget(this.cube)
 
     raycaster.events.on('intersection', (intersections) => {
       const cubeIsIntersected = intersections.filter(
-        (intersection) => intersection.object.uuid === cube.uuid
+        (intersection) => intersection.object.uuid === this.cube.uuid
       )
 
       if (cubeIsIntersected[0]) {
-        cube.scale.setScalar(1.1)
+        this.cube.scale.setScalar(1.1)
       } else {
-        cube.scale.setScalar(1)
+        this.cube.scale.setScalar(1)
       }
     })
   }
