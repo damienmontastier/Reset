@@ -7,7 +7,7 @@ import {
   BlendFunction
 } from 'postprocessing'
 
-import gui from '@/plugins/gui'
+import useGUI from '@/hooks/use-gui'
 
 export default class AntialiasingEffect {
   constructor() {
@@ -63,6 +63,7 @@ export default class AntialiasingEffect {
   }
 
   initGUI() {
+    const gui = useGUI()
     const antialising = gui.postprocessing.addFolder('Antialiasing')
 
     const effectPass = this.effectPass
