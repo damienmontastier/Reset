@@ -4,7 +4,7 @@ import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader'
 import Loader from './loader'
 import global from './data/global.json'
 
-class Manager {
+export default class Manager {
   constructor() {
     const gltfLoader = new GLTFLoader()
 
@@ -38,5 +38,3 @@ class Manager {
     return this.loader.get(name, synchronous)
   }
 }
-
-export default new Manager()
