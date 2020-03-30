@@ -19,6 +19,12 @@ module.exports = {
   rules: {
     'no-undef': 0,
     'new-cap': 0,
-    'unicorn/number-literal-case': 0
+    'unicorn/number-literal-case': 0,
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto'
+      }
+    ]
   }
 }
