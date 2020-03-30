@@ -23,15 +23,6 @@ class WebGL {
       10000
     )
 
-    // camera controls
-    const {
-      OrbitControls
-    } = require('three/examples/jsm/controls/OrbitControls.js')
-    this.cameraControls = new OrbitControls(
-      this.camera,
-      document.getElementById('__nuxt')
-    )
-
     // canvas
     this.canvas = document.createElement('canvas')
 
@@ -41,6 +32,12 @@ class WebGL {
       WEBGL.isWebGL2Available() ? 'webgl2' : 'webgl',
       { alpha: false }
     )
+
+    // camera controls
+    const {
+      OrbitControls
+    } = require('three/examples/jsm/controls/OrbitControls.js')
+    this.cameraControls = new OrbitControls(this.camera, this.canvas)
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({

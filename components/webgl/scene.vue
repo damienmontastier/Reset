@@ -6,7 +6,6 @@
 
 <script>
 import useWebGL from '@/hooks/use-webgl'
-import useGame from '@/hooks/use-game'
 
 import Info from '@/components/webgl/info'
 
@@ -17,8 +16,6 @@ export default {
   mounted() {
     const { canvas } = useWebGL()
     this.$el.appendChild(canvas)
-
-    useGame()
   },
   beforeDestroy() {
     const { destroy } = useWebGL()
@@ -35,7 +32,7 @@ export default {
   position: fixed;
   top: 0;
   width: 100% !important;
-  z-index: -1;
+  // z-index: -1;
 
   canvas {
     height: 100% !important;
