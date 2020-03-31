@@ -77,21 +77,21 @@ class Game {
   }
 
   addFloor() {
-    const { scene } = useWebGL()
+    // const { scene } = useWebGL()
 
     const geometry = new THREE.PlaneBufferGeometry(1, 1)
     this.shadowsMaterial = new THREE.ShadowMaterial({
       color: Math.floor(Math.random() * 16777215)
     })
 
-    this.floor = new THREE.Mesh(geometry, this.shadowsMaterial)
-    this.floor.receiveShadow = true
-    this.floor.position.y = -0.1
+    this.shadowFloor = new THREE.Mesh(geometry, this.shadowsMaterial)
+    this.shadowFloor.receiveShadow = true
+    this.shadowFloor.position.y = -0.1
 
-    this.floor.scale.setScalar(10000, 10000, 10000)
-    this.floor.rotation.x = THREE.MathUtils.degToRad(-90)
+    this.shadowFloor.scale.setScalar(10000, 10000, 10000)
+    this.shadowFloor.rotation.x = THREE.MathUtils.degToRad(-90)
 
-    scene.add(this.floor)
+    this.scene.add(this.shadowFloor)
   }
 
   addBox() {
@@ -139,6 +139,7 @@ class Game {
   async addFactory() {
     const { raycaster } = useWebGL()
     const gui = useGUI()
+    const factoryGUI = gui.addFolder('factory')
     const { factory } = await this.loadFactoryModel()
 
     // factory.scene.scale.setScalar(100)
@@ -150,6 +151,10 @@ class Game {
       })
       child.castShadow = true
       child.receiveShadow = true
+
+      const childGUI = factoryGUI.addFolder(child.uuid.substring(0, 10))
+      childGUI.addObject3D('object', child)
+      childGUI.addMaterial('material', child.material)
     })
 
     this.scene.add(factory.scene)
@@ -171,7 +176,7 @@ class Game {
     //   }
     // })
 
-    gui.addObject3D('factory', factory.scene)
+    factoryGUI.addObject3D('object', factory.scene)
   }
 
   initGUI() {
