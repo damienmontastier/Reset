@@ -19,18 +19,20 @@ export default class Workers extends THREE.Object3D {
     Raf.add(this.model.uuid, this.render.bind(this), 0)
 
     document.addEventListener('mousedown', () => {
-      this.spline.isMoving = true
+      this.spline.start()
     })
+
     document.addEventListener('mouseup', () => {
-      this.spline.isMoving = false
+      this.spline.stop()
     })
   }
   init() {
     this.spline = new Spline({
       spline: this.spline,
-      loop: true,
+      loop: false,
       autoplay: true
     })
+
     this.path = this.spline.path
   }
   render() {

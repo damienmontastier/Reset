@@ -1,17 +1,21 @@
 import * as THREE from 'three'
 import raf from '@/plugins/raf'
 
+// TODO - add duration
+// TODO - add rotation
+
 export default class Spline {
   constructor({ spline, loop = true, autoplay = true }) {
     this.spline = spline
 
     this.time = 0
+    this.isMoving = false
+    this.loop = loop
+    this.autoplay = autoplay
+
+    if (this.autoplay) this.start()
 
     this.uuid = THREE.MathUtils.generateUUID()
-
-    this.isMoving = false
-
-    this.loop = loop
 
     this.points = spline.geometry.getAttribute('position').array
     this.vectors = this.convertPointsArrayToVector(this.points, 5)
@@ -31,6 +35,14 @@ export default class Spline {
       resultPoints.push(vectorPoint)
     }
     return resultPoints
+  }
+
+  stop() {
+    this.isMoving = false
+  }
+
+  start() {
+    this.isMoving = true
   }
 
   render() {
