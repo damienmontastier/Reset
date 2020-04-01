@@ -1,8 +1,13 @@
 import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
-import useAssetsManager from '@/hooks/use-manager'
+import useAssetsManager from '@/hooks/use-assets-manager'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
+
+import Factory from '@/game/components/factory'
+import Player from '@/game/components/player'
+
+import GridTerrain from '@/game/features/grid-terrain'
 
 import raf from '@/plugins/raf'
 
@@ -20,23 +25,41 @@ class Game {
     this.init()
   }
 
-  async init() {
+  init() {
     this.initCamera()
     this.initLights()
+    this.initGridTerrain()
 
-    this.addBox()
-    this.addFloor()
-    await this.addFactory()
+    // this.addBox()
+    // this.addFloor()
+    // await this.addFactory()
 
-    this.initGUI()
+    // this.initGUI()
 
     raf.add('use-game', this.loop.bind(this), 1)
+  }
+
+  async initGridTerrain() {
+    this.factory = new Factory()
+    await this.factory.load()
+
+    this.scene.add(this.factory)
+
+    this.player = new Player()
+    this.scene.add(this.player)
+    this.player.position.set(-1, 0, -1)
+
+    this.gridTerrain = new GridTerrain(this.factory.floor.scene)
+
+    const { scene } = useWebGL()
+
+    scene.add(this.gridTerrain.debug)
   }
 
   initCamera() {
     const { scene, camera } = useWebGL()
 
-    camera.position.set(500, 500, 500)
+    camera.position.set(250, 250, 250)
     camera.lookAt(scene.position)
   }
 
@@ -140,7 +163,9 @@ class Game {
     const { raycaster } = useWebGL()
     const gui = useGUI()
     const factoryGUI = gui.addFolder('factory')
-    const { factory } = await this.loadFactoryModel()
+    const factoryGLTF = await this.loadFactoryModel()
+    const { factory } = factoryGLTF
+    console.log(factoryGLTF)
 
     // factory.scene.scale.setScalar(100)
     factory.scene.traverse((child) => {
