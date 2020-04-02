@@ -1,12 +1,18 @@
+// import TWEEN from '@tweenjs/tween.js'
+import gsap from 'gsap'
+
 import useKeyboard from '@/hooks/use-keyboard'
-import useGame from '@/hooks/use-game'
+
+import raf from '@/plugins/raf'
 
 export default class Player extends THREE.Object3D {
-  constructor() {
+  constructor({ gridTerrain }) {
     super()
-    // this.scale.setScalar(0.1)
+    this.gridTerrain = gridTerrain
     this.load()
     this.init()
+
+    raf.add('player', this.loop.bind(this))
   }
 
   load() {
@@ -20,13 +26,18 @@ export default class Player extends THREE.Object3D {
     this.model.add(this.pathfinder)
   }
 
+  loop(deltaTime) {
+    if (this.positionTween) {
+      const time = this.positionTween.time()
+      this.positionTween.time(time + deltaTime)
+    }
+  }
+
   init() {
     const { events } = useKeyboard()
 
     events.on('keydown', (e) => {
-      const { gridTerrain } = useGame()
-
-      console.log(gridTerrain)
+      if (this.positionTween) return
 
       const delta = new THREE.Vector3()
       switch (e.code) {
@@ -47,7 +58,7 @@ export default class Player extends THREE.Object3D {
       }
 
       this.pathfinder.position.add(delta)
-      const intersects = gridTerrain.castCell(
+      const intersects = this.gridTerrain.castCell(
         this.pathfinder.getWorldPosition(new THREE.Vector3())
       )
       if (intersects[0]) {
@@ -60,8 +71,35 @@ export default class Player extends THREE.Object3D {
         )
 
         const y = point.divide(scale).y
-        this.position.add(delta)
-        this.position.y = y
+        // this.position.add(delta)
+        // this.position.y = y
+
+        this.nextPosition = this.position.clone().add(delta)
+        this.nextPosition.y = y
+        // this.positionTween = new TWEEN.Tween(this.position)
+        //   .to(
+        //     {
+        //       x: this.nextPosition.x,
+        //       y: this.nextPosition.y,
+        //       z: this.nextPosition.z
+        //     },
+        //     1000
+        //   )
+        //   .easing(TWEEN.Easing.Quadratic.Out)
+        //   .start()
+
+        this.positionTween = gsap
+          .to(this.position, {
+            duration: 0.4,
+            x: this.nextPosition.x,
+            y: this.nextPosition.y,
+            z: this.nextPosition.z,
+            ease: 'power4.out',
+            onComplete: () => {
+              this.positionTween = undefined
+            }
+          })
+          .pause()
       }
       this.pathfinder.position.copy(new THREE.Vector3())
     })

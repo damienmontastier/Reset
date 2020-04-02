@@ -28,7 +28,7 @@ class Game {
   init() {
     this.initCamera()
     this.initLights()
-    this.initGridTerrain()
+    // this.initGridTerrain()
 
     // this.addBox()
     // this.addFloor()
