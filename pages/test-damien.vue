@@ -14,7 +14,9 @@ export default {
 
     this.factory = new FactorySpline()
     const splines = await this.factory.load()
-    this.worker = new Workers({ model: splines })
+    const model = splines.getObjectByName('model')
+    const spline = splines.getObjectByName('spline')
+    this.worker = new Workers({ model, spline })
 
     scene.add(this.worker)
   }
