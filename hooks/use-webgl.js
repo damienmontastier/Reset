@@ -37,6 +37,7 @@ class WebGL {
       OrbitControls
     } = require('three/examples/jsm/controls/OrbitControls.js')
     this.cameraControls = new OrbitControls(this.camera, this.canvas)
+    this.cameraControls.enableKeys = false
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({

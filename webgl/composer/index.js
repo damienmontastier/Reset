@@ -55,10 +55,16 @@ export default class Composer {
       this.antialiasingEffect.smaaEffect
     )
 
+    this.AAPass = new EffectPass(
+      this.camera,
+      this.antialiasingEffect.smaaEffect
+    )
+
     // addPasses
     this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
     this.composer.addPass(this.effectPass)
+    this.composer.addPass(this.AAPass)
   }
 
   render(deltaTime) {
@@ -74,38 +80,38 @@ export default class Composer {
   initGUI() {
     const gui = useGUI()
 
-    // const composer = this.composer
-    // const renderer = composer.getRenderer()
-    // const context = renderer.getContext()
+    const composer = this.composer
+    const renderer = composer.getRenderer()
+    const context = renderer.getContext()
 
-    // const effectPass = this.effectPass
+    const effectPass = this.effectPass
 
-    // const AAMode = Object.assign(
-    //   {
-    //     DISABLED: 0,
-    //     SMAA: 1
-    //   },
-    //   !renderer.capabilities.isWebGL2
-    //     ? {}
-    //     : {
-    //         MSAA: 2
-    //       }
-    // )
+    const AAMode = Object.assign(
+      {
+        DISABLED: 0,
+        SMAA: 1
+      },
+      !renderer.capabilities.isWebGL2
+        ? {}
+        : {
+            MSAA: 2
+          }
+    )
 
-    // const AAparams = {
-    //   antialiasing: AAMode.SMAA
-    // }
+    const AAparams = {
+      antialiasing: AAMode.SMAA
+    }
 
-    // gui.postprocessing.add(AAparams, 'antialiasing', AAMode).onChange(() => {
-    //   const mode = Number(AAparams.antialiasing)
+    gui.postprocessing.add(AAparams, 'antialiasing', AAMode).onChange(() => {
+      const mode = Number(AAparams.antialiasing)
 
-    //   effectPass.enabled = mode === AAMode.SMAA
+      effectPass.enabled = mode === AAMode.SMAA
 
-    //   composer.multisampling =
-    //     mode === AAMode.MSAA
-    //       ? Math.min(4, context.getParameter(context.MAX_SAMPLES))
-    //       : 0
-    // })
+      composer.multisampling =
+        mode === AAMode.MSAA
+          ? Math.min(4, context.getParameter(context.MAX_SAMPLES))
+          : 0
+    })
 
     gui.rendering
       .add(this, 'renderingScale')

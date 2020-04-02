@@ -17,7 +17,7 @@ export default class AntialiasingEffect {
           this.assets.get('smaa-search'),
           this.assets.get('smaa-area'),
           SMAAPreset.HIGH,
-          EdgeDetectionMode.DEPTH
+          EdgeDetectionMode.COLOR
         )
 
         // this.edgesTextureEffect = new TextureEffect({

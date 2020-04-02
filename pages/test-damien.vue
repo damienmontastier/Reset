@@ -3,10 +3,11 @@
 </template>
 
 <script>
-// import gsap from 'gsap'
 import useGame from '@/hooks/use-game'
-import FactorySpline from '@/game/components/factorySpline'
-import Workers from '@/game/components/workers'
+import FactorySpline from '@/game/components/factory-spline'
+import Worker from '@/game/components/worker'
+import Spline from '@/webgl/utils/spline'
+import AnimatedWorker from '@/game/components/animated-worker'
 
 export default {
   async mounted() {
@@ -16,9 +17,31 @@ export default {
     const splines = await this.factory.load()
     const model = splines.getObjectByName('model')
     const spline = splines.getObjectByName('spline')
-    this.worker = new Workers({ model, spline })
+
+    this.worker = new Worker({ model })
 
     scene.add(this.worker)
+
+    this.spline = new Spline({
+      spline,
+      scale: 5
+    })
+
+    this.animatedWorker = new AnimatedWorker({
+      worker: this.worker,
+      spline: this.spline,
+      loop: true,
+      autoplay: true,
+      duration: 2
+    })
+
+    document.addEventListener('mousedown', () => {
+      this.animatedWorker.stop()
+    })
+
+    document.addEventListener('mouseup', () => {
+      this.animatedWorker.start()
+    })
   }
 }
 </script>
