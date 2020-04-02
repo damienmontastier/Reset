@@ -18,7 +18,7 @@ class Game {
     const { scene } = useWebGL()
 
     this.scene = new THREE.Group()
-    this.scene.scale.setScalar(100)
+    this.scene.scale.setScalar(50)
 
     scene.add(this.scene)
 
@@ -30,7 +30,7 @@ class Game {
     this.initLights()
     // this.initGridTerrain()
 
-    // this.addBox()
+    this.addBox()
     // this.addFloor()
     // await this.addFactory()
 
