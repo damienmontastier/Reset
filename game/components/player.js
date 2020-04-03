@@ -1,10 +1,10 @@
 // import TWEEN from '@tweenjs/tween.js'
-// import gsap from 'gsap'
+import gsap from 'gsap'
 
 import useKeyboard from '@/hooks/use-keyboard'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
-// import raf from '@/plugins/raf'
+import raf from '@/plugins/raf'
 
 export default class Player extends THREE.Object3D {
   constructor({ terrain } = {}) {
@@ -20,9 +20,9 @@ export default class Player extends THREE.Object3D {
     // this.load()
     // this.init()
 
-    // raf.add('player', this.loop.bind(this))
-
     this.init()
+
+    raf.add('player', this.loop.bind(this))
   }
 
   async load() {
@@ -46,23 +46,6 @@ export default class Player extends THREE.Object3D {
 
     // to remove
     this.model.rotation.y = 135
-
-    // return new Promise((resolve, reject) => {
-    //   assetsManager.get('character').then((files) => {
-    //     const { model } = files
-
-    //     this.modelGLB = model
-    //     this.model = this.modelGLB.scene
-    //     // this.model.position.set(-0.5, 0, -0.5)
-    //     this.model.scale.setScalar(3)
-    //     this.model.rotation.y = 135
-    //     // this.add(this.model)
-
-    //     this.initAnimations()
-
-    //     resolve(files)
-    //   })
-    // })
   }
 
   async init() {
@@ -93,6 +76,13 @@ export default class Player extends THREE.Object3D {
 
   destroy() {
     keyboadEvents.off('keydown', this.onKeydownHandler)
+  }
+
+  loop(deltaTime) {
+    if (this.positionTween) {
+      const time = this.positionTween.time()
+      this.positionTween.time(time + deltaTime)
+    }
   }
 
   onKeydown(e) {
@@ -143,11 +133,29 @@ export default class Player extends THREE.Object3D {
       // apply scale
       point.divide(scale)
 
-      // set position
-      this.position.copy(point.clone())
+      // set next position
+      this.nextPosition = point.clone()
+      // this.position.copy(point.clone())
 
       // set to center of the cell
-      this.position.sub(this.cellCenter)
+      this.nextPosition.sub(this.cellCenter)
+      // this.position.sub(this.cellCenter)
+
+      this.positionTween = gsap
+        .to(this.position, {
+          duration: 0.2,
+          x: this.nextPosition.x,
+          y: this.nextPosition.y,
+          z: this.nextPosition.z,
+          ease: 'power4.out',
+          onComplete: () => {
+            this.positionTween = undefined
+            // this.action.stop()
+            // this.action = this.mixer.clipAction(this.clips[0])
+            // this.action.play()
+          }
+        })
+        .pause()
     }
   }
 
