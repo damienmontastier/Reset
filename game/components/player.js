@@ -1,29 +1,31 @@
 // import TWEEN from '@tweenjs/tween.js'
-import gsap from 'gsap'
+// import gsap from 'gsap'
 
 import useKeyboard from '@/hooks/use-keyboard'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
-import raf from '@/plugins/raf'
+// import raf from '@/plugins/raf'
 
 export default class Player extends THREE.Object3D {
-  constructor({ gridTerrain } = {}) {
+  constructor({ terrain } = {}) {
     super()
-    this.gridTerrain = gridTerrain
+    this.terrain = terrain
 
-    this.pathfinder = new THREE.Group()
+    // this.pathfinder = new THREE.Group()
 
-    this.load().then(() => {
-      this.init()
-    })
+    // this.load().then(() => {
+    //   this.init()
+    // })
 
     // this.load()
     // this.init()
 
-    raf.add('player', this.loop.bind(this))
+    // raf.add('player', this.loop.bind(this))
+
+    this.init()
   }
 
-  load() {
+  async load() {
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -37,128 +39,240 @@ export default class Player extends THREE.Object3D {
       ]
     })
 
-    return new Promise((resolve, reject) => {
-      assetsManager.get('character').then((files) => {
-        const { model } = files
+    this.files = await assetsManager.get('character')
 
-        this.modelGLB = model
-        this.model = this.modelGLB.scene
-        // this.model.position.set(-0.5, 0, -0.5)
-        this.model.scale.setScalar(3)
-        this.model.rotation.y = 135
-        // this.add(this.model)
+    this.model = this.files.model.scene
+    this.modelAnimations = this.files.model.animations
 
-        this.initAnimations()
+    // return new Promise((resolve, reject) => {
+    //   assetsManager.get('character').then((files) => {
+    //     const { model } = files
 
-        resolve(files)
-      })
-    })
+    //     this.modelGLB = model
+    //     this.model = this.modelGLB.scene
+    //     // this.model.position.set(-0.5, 0, -0.5)
+    //     this.model.scale.setScalar(3)
+    //     this.model.rotation.y = 135
+    //     // this.add(this.model)
+
+    //     this.initAnimations()
+
+    //     resolve(files)
+    //   })
+    // })
   }
 
-  initAnimations() {
-    this.mixer = new THREE.AnimationMixer(this.model)
-    this.clips = this.modelGLB.animations
+  async init() {
+    await this.load()
 
-    this.action = this.mixer.clipAction(this.clips[0])
-    this.action.play()
+    this.cellSize = new THREE.Vector3(1, 1, 1)
+    this.cellCenter = new THREE.Vector3(
+      -this.cellSize.x / 2,
+      0,
+      -this.cellSize.z / 2
+    )
+
+    // group that wrap model this > innerGroup > model
+    this.innerGroup = new THREE.Group()
+    this.innerGroup.position.copy(this.cellCenter)
+    this.add(this.innerGroup)
+
+    this.innerGroup.add(this.model)
+
+    this.pathfinder = new THREE.Group()
+    this.innerGroup.add(this.pathfinder)
+
+    const { events: keyboardEvents } = useKeyboard()
+
+    this.onKeydownHandler = this.onKeydown.bind(this)
+    keyboardEvents.on('keydown', this.onKeydownHandler)
+  }
+
+  destroy() {
+    keyboadEvents.off('keydown', this.onKeydownHandler)
+  }
+
+  onKeydown(e) {
+    console.log(e)
+
+    const delta = new THREE.Vector3()
+
+    // keysHandler
+    switch (e.code) {
+      case 'ArrowLeft':
+        delta.x -= this.cellSize.x
+        break
+      case 'ArrowRight':
+        delta.x += this.cellSize.x
+        break
+      case 'ArrowDown':
+        delta.z += this.cellSize.z
+        break
+      case 'ArrowUp':
+        delta.z -= this.cellSize.z
+        break
+      default:
+        break
+    }
+
+    this.pathfinder.position.add(delta)
+    this.moveTo(this.pathfinder.getWorldPosition(new THREE.Vector3()))
+
+    // this.move(delta)
+    this.pathfinder.position.copy(new THREE.Vector3())
+  }
+
+  moveTo(position) {
+    const intersects = this.terrain.castCell(position)
+
+    console.log(intersects)
+    if (intersects.length) {
+      const intersect = intersects[0]
+      const point = intersect.point
+      console.log(point)
+
+      // get scale
+      const scale = new THREE.Vector3()
+      this.matrixWorld.decompose(
+        new THREE.Vector3(),
+        new THREE.Quaternion(),
+        scale
+      )
+
+      point.divide(scale)
+
+      this.position.copy(point.clone())
+
+      this.position.sub(this.cellCenter)
+    }
   }
 
   // load() {
-  // this.modelGroup = new THREE.Group()
-  // this.add(this.modelGroup)
-  // this.model = new THREE.Mesh(
-  //   new THREE.BoxGeometry(1, 1, 1),
-  //   new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-  // )
-  // this.modelGroup.add(this.model).position.set(-0.5, 0.5, -0.5)
-  // this.pathfinder = new THREE.Group()
-  // this.modelGroup.add(this.pathfinder)
+  //   const assetsManager = useAssetsManager()
+
+  //   assetsManager.loader.addGroup({
+  //     name: 'character',
+  //     base: '/',
+  //     files: [
+  //       {
+  //         name: 'model',
+  //         path: 'obj/character/character.glb'
+  //       }
+  //     ]
+  //   })
+
+  //   return new Promise((resolve, reject) => {
+  //     assetsManager.get('character').then((files) => {
+  //       const { model } = files
+
+  //       this.modelGLB = model
+  //       this.model = this.modelGLB.scene
+  //       // this.model.position.set(-0.5, 0, -0.5)
+  //       this.model.scale.setScalar(3)
+  //       this.model.rotation.y = 135
+  //       // this.add(this.model)
+
+  //       this.initAnimations()
+
+  //       resolve(files)
+  //     })
+  //   })
   // }
 
-  loop(deltaTime) {
-    if (this.mixer) {
-      this.mixer.update(deltaTime * 3)
-    }
-    if (this.positionTween) {
-      const time = this.positionTween.time()
-      this.positionTween.time(time + deltaTime)
-    }
-  }
+  // initAnimations() {
+  //   this.mixer = new THREE.AnimationMixer(this.model)
+  //   this.clips = this.modelGLB.animations
 
-  init() {
-    this.modelGroup = new THREE.Group()
-    this.add(this.modelGroup)
-    // this.model = new THREE.Mesh(
-    //   new THREE.BoxGeometry(1, 1, 1),
-    //   new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    // )
-    console.log(this.modelGLB)
-    this.modelGroup.add(this.model)
-    this.modelGroup.position.set(-0.5, 0, -0.5)
-    this.pathfinder = new THREE.Group()
-    this.modelGroup.add(this.pathfinder)
+  //   this.action = this.mixer.clipAction(this.clips[0])
+  //   this.action.play()
+  // }
 
-    const { events } = useKeyboard()
+  // loop(deltaTime) {
+  //   if (this.mixer) {
+  //     this.mixer.update(deltaTime * 3)
+  //   }
+  //   if (this.positionTween) {
+  //     const time = this.positionTween.time()
+  //     this.positionTween.time(time + deltaTime)
+  //   }
+  // }
 
-    events.on('keydown', (e) => {
-      if (this.positionTween) return
+  // init() {
+  //   this.modelGroup = new THREE.Group()
+  //   this.add(this.modelGroup)
+  //   // this.model = new THREE.Mesh(
+  //   //   new THREE.BoxGeometry(1, 1, 1),
+  //   //   new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+  //   // )
+  //   this.modelGroup.add(this.model)
+  //   this.modelGroup.position.set(-0.5, 0, -0.5)
+  //   this.pathfinder = new THREE.Group()
+  //   this.modelGroup.add(this.pathfinder)
 
-      const delta = new THREE.Vector3()
-      switch (e.code) {
-        case 'ArrowLeft':
-          delta.x -= 1
-          break
-        case 'ArrowRight':
-          delta.x += 1
-          break
-        case 'ArrowDown':
-          delta.z += 1
-          break
-        case 'ArrowUp':
-          delta.z -= 1
-          break
-        default:
-          break
-      }
+  //   const { events } = useKeyboard()
 
-      this.pathfinder.position.add(delta)
-      const intersects = this.gridTerrain.castCell(
-        this.pathfinder.getWorldPosition(new THREE.Vector3())
-      )
-      if (intersects[0]) {
-        const point = intersects[0].point
-        const scale = new THREE.Vector3()
-        this.matrixWorld.decompose(
-          new THREE.Vector3(),
-          new THREE.Quaternion(),
-          scale
-        )
+  //   events.on('keydown', (e) => {
+  //     if (this.positionTween) return
 
-        const y = point.divide(scale).y
+  //     const delta = new THREE.Vector3()
+  //     switch (e.code) {
+  //       case 'ArrowLeft':
+  //         delta.x -= 1
+  //         break
+  //       case 'ArrowRight':
+  //         delta.x += 1
+  //         break
+  //       case 'ArrowDown':
+  //         delta.z += 1
+  //         break
+  //       case 'ArrowUp':
+  //         delta.z -= 1
+  //         break
+  //       default:
+  //         break
+  //     }
 
-        this.nextPosition = this.position.clone().add(delta)
-        this.nextPosition.y = y
+  //     this.pathfinder.position.add(delta)
+  //     const intersects = this.terrain.castCell(
+  //       this.pathfinder.getWorldPosition(new THREE.Vector3())
+  //     )
+  //     console.log(intersects)
+  //     if (intersects[0]) {
+  //       const intersect = intersects[0]
+  //       console.log(intersect.object.name)
+  //       const point = intersect.point
+  //       const scale = new THREE.Vector3()
+  //       this.matrixWorld.decompose(
+  //         new THREE.Vector3(),
+  //         new THREE.Quaternion(),
+  //         scale
+  //       )
 
-        this.action = this.mixer.clipAction(this.clips[2])
-        this.action.play()
+  //       const y = point.divide(scale).y
 
-        this.positionTween = gsap
-          .to(this.position, {
-            duration: 0.2,
-            x: this.nextPosition.x,
-            y: this.nextPosition.y,
-            z: this.nextPosition.z,
-            // ease: 'power4.out',
-            onComplete: () => {
-              this.positionTween = undefined
-              this.action.stop()
-              this.action = this.mixer.clipAction(this.clips[0])
-              this.action.play()
-            }
-          })
-          .pause()
-      }
-      this.pathfinder.position.copy(new THREE.Vector3())
-    })
-  }
+  //       this.nextPosition = this.position.clone().add(delta)
+  //       this.nextPosition.y = y
+
+  //       this.action = this.mixer.clipAction(this.clips[2])
+  //       this.action.play()
+
+  //       this.positionTween = gsap
+  //         .to(this.position, {
+  //           duration: 0.1,
+  //           x: this.nextPosition.x,
+  //           y: this.nextPosition.y,
+  //           z: this.nextPosition.z,
+  //           // ease: 'power4.out',
+  //           onComplete: () => {
+  //             this.positionTween = undefined
+  //             this.action.stop()
+  //             this.action = this.mixer.clipAction(this.clips[0])
+  //             this.action.play()
+  //           }
+  //         })
+  //         .pause()
+  //     }
+  //     this.pathfinder.position.copy(new THREE.Vector3())
+  //   })
+  // }
 }
