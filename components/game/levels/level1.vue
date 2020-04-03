@@ -4,7 +4,7 @@
 
 <script>
 // import gsap from 'gsap'
-import useWebGL from '@/hooks/use-webgl'
+// import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
 
 import Player from '@/game/components/player'
@@ -30,8 +30,8 @@ export default {
       this.levelGroup.add(this.map)
 
       this.terrain = new GridTerrain(this.map.zones)
-      const { scene: webglScene } = useWebGL()
-      webglScene.add(this.terrain.debug)
+      // const { scene: webglScene } = useWebGL()
+      // webglScene.add(this.terrain.debug)
 
       this.player = new Player({ terrain: this.terrain })
       this.player.position.copy(this.map.spawnPoint)

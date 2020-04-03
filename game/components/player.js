@@ -44,6 +44,9 @@ export default class Player extends THREE.Object3D {
     this.model = this.files.model.scene
     this.modelAnimations = this.files.model.animations
 
+    // to remove
+    this.model.rotation.y = 135
+
     // return new Promise((resolve, reject) => {
     //   assetsManager.get('character').then((files) => {
     //     const { model } = files
@@ -93,8 +96,6 @@ export default class Player extends THREE.Object3D {
   }
 
   onKeydown(e) {
-    console.log(e)
-
     const delta = new THREE.Vector3()
 
     // keysHandler
@@ -115,21 +116,21 @@ export default class Player extends THREE.Object3D {
         break
     }
 
+    // move pathfinder
     this.pathfinder.position.add(delta)
     this.moveTo(this.pathfinder.getWorldPosition(new THREE.Vector3()))
 
-    // this.move(delta)
+    // reset pathfinder
     this.pathfinder.position.copy(new THREE.Vector3())
   }
 
   moveTo(position) {
     const intersects = this.terrain.castCell(position)
 
-    console.log(intersects)
     if (intersects.length) {
+      // player can walk
       const intersect = intersects[0]
       const point = intersect.point
-      console.log(point)
 
       // get scale
       const scale = new THREE.Vector3()
@@ -139,10 +140,13 @@ export default class Player extends THREE.Object3D {
         scale
       )
 
+      // apply scale
       point.divide(scale)
 
+      // set position
       this.position.copy(point.clone())
 
+      // set to center of the cell
       this.position.sub(this.cellCenter)
     }
   }

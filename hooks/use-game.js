@@ -18,7 +18,7 @@ class Game {
     const { scene } = useWebGL()
 
     this.scene = new THREE.Group()
-    this.scene.scale.setScalar(50)
+    this.scene.scale.setScalar(100)
 
     scene.add(this.scene)
 
