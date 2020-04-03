@@ -1,4 +1,4 @@
-// import gsap from 'gsap'
+import gsap from 'gsap'
 import * as THREE from 'three'
 import raf from '@/plugins/raf'
 import useWebGL from '@/hooks/use-webgl'
@@ -23,30 +23,41 @@ export default class AnimatedWorker {
     raf.add(this.uuid, this.render.bind(this), 0)
   }
 
+  toNextPosition() {
+    this.gsapPosition = gsap
+      .to(this.worker.position, {
+        x: this.nextPosition.x,
+        y: this.nextPosition.y,
+        z: this.nextPosition.z,
+        duration: this.duration * 0.1,
+        ease: 'power2.out',
+        onComplete: () => (this.gsapPosition = undefined)
+      })
+      .pause()
+  }
+
   stop() {
     this.clock.stop()
     this.isMovable = false
   }
 
   start() {
+    this.toNextPosition()
+
     this.clock.start()
     this.isMovable = true
   }
 
-  render() {
-    if (!this.isMovable) return
+  render(deltaTime) {
+    if (!this.isMovable && !this.gsapPosition) return
 
+    this.toNextPosition()
     this.time += this.clock.getDelta() / this.duration
+    this.gsapPosition.time(deltaTime)
+  }
 
-    this.worker.position.copy(this.nextPosition)
-
-    // gsap.to(this.worker.position, {
-    //   x: this.nextPosition.x,
-    //   y: this.nextPosition.y,
-    //   z: this.nextPosition.z,
-    //   duration: 1,
-    //   ease: 'power1.out'
-    // })
+  destroy() {
+    raf.add(this.uuid)
   }
 
   get nextPosition() {

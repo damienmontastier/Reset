@@ -32,16 +32,18 @@ export default {
       spline: this.spline,
       loop: true,
       autoplay: true,
-      duration: 2
+      duration: 10
     })
 
-    document.addEventListener('mousedown', () => {
-      this.animatedWorker.stop()
-    })
+    if (!this.animatedWorker.autoplay) {
+      document.addEventListener('mousedown', () => {
+        this.animatedWorker.start()
+      })
 
-    document.addEventListener('mouseup', () => {
-      this.animatedWorker.start()
-    })
+      document.addEventListener('mouseup', () => {
+        this.animatedWorker.stop()
+      })
+    }
   }
 }
 </script>
