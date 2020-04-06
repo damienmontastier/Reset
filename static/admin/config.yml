@@ -11,7 +11,7 @@ collections:
     files:
       - label: 'Content'
         name: 'content'
-        file: 'assets/levels/level_1.yml'
+        file: 'assets/content/levels/level_1.yml'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }
@@ -20,10 +20,7 @@ collections:
             widget: list
             fields:
               - { label: Name, name: name, widget: string }
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
-      - { label: 'Featured Image', name: 'thumbnail', widget: 'image' }
+
   - name: 'about'
     label: 'A propos'
     format: 'json'
