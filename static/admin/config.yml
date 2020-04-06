@@ -11,7 +11,7 @@ collections:
     files:
       - label: 'Content'
         name: 'content'
-        file: 'assets/content/level_1.yml'
+        file: 'site/content/about.yml'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }
