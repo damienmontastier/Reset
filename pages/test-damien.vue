@@ -9,6 +9,8 @@ import Worker from '@/game/components/worker'
 import Spline from '@/webgl/utils/spline'
 import AnimatedWorker from '@/game/components/animated-worker'
 
+// Deploy
+
 export default {
   async mounted() {
     const { scene } = useGame()
