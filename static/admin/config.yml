@@ -6,38 +6,6 @@ media_folder: static/img
 public_folder: /img
 
 collections:
-  - name: 'Levels'
-    label: 'Levels'
-    format: 'json'
-    folder: 'assets/content/levels'
-    create: true
-    slug: '{{slug}}'
-    editor:
-      preview: true
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Publish Date', name: 'date', widget: 'datetime' }
-      - { label: 'Description', name: 'description', widget: 'string' }
-      - { label: 'Body', name: 'body', widget: 'markdown' }
-      - {
-          label: 'Relation',
-          name: 'Relation',
-          widget: 'relation',
-          collection: 'level_1',
-          valueField: 'name.first',
-        }
-  - name: 'level_1'
-    label: 'Level 1'
-    format: 'json'
-    folder: 'assets/content/level1'
-    create: true
-    slug: '{{slug}}'
-    editor:
-      preview: true
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-      - { label: 'Description', name: 'description', widget: 'text' }
-      - label: 'Pages'
   - label: 'Pages'
     name: 'pages'
     files:
@@ -45,12 +13,24 @@ collections:
         name: 'about'
         file: 'site/content/about.yml'
         fields:
-          - { label: 'Title', name: 'title', widget: 'string' }
-          - { label: 'Intro', name: 'intro', widget: 'markdown' }
-          - label: 'Team'
-            name: 'team'
-            widget: 'list'
+          - { label: Title, name: title, widget: string }
+          - { label: Intro, name: intro, widget: markdown }
+          - label: Team
+            name: team
+            widget: list
             fields:
-              - { label: 'Name', name: 'name', widget: 'string' }
-              - { label: 'Position', name: 'position', widget: 'string' }
-              - { label: 'Photo', name: 'photo', widget: 'image' }
+              - { label: Name, name: name, widget: string }
+              - { label: Position, name: position, widget: string }
+              - { label: Photo, name: photo, widget: image }
+      - label: 'Locations Page'
+        name: 'locations'
+        file: 'site/content/locations.yml'
+        fields:
+          - { label: Title, name: title, widget: string }
+          - { label: Intro, name: intro, widget: markdown }
+          - label: Locations
+            name: locations
+            widget: list
+            fields:
+              - { label: Name, name: name, widget: string }
+              - { label: Address, name: address, widget: string }
