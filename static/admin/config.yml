@@ -19,8 +19,14 @@ collections:
       - { label: 'Publish Date', name: 'date', widget: 'datetime' }
       - { label: 'Description', name: 'description', widget: 'string' }
       - { label: 'Body', name: 'body', widget: 'markdown' }
-      - { label: 'Relation', name: 'Relation', widget: 'relation', collection: "level_1", valueField: "name.first" }
-   - name: 'level_1'
+      - {
+          label: 'Relation',
+          name: 'Relation',
+          widget: 'relation',
+          collection: 'level_1',
+          valueField: 'name.first',
+        }
+  - name: 'level_1'
     label: 'Level 1'
     format: 'json'
     folder: 'assets/content/level1'
@@ -31,4 +37,3 @@ collections:
     fields:
       - { label: 'Title', name: 'title', widget: 'string' }
       - { label: 'Description', name: 'description', widget: 'text' }
-
