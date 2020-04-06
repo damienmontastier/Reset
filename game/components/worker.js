@@ -7,8 +7,6 @@ export default class Worker extends THREE.Object3D {
 
     this.model = model
 
-    this.time = 0
-
     this.add(this.model)
 
     this.model.scale.multiplyScalar(10)

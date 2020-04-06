@@ -6,16 +6,29 @@ media_folder: static/img
 public_folder: /img
 
 collections:
-  - name: 'blog'
-    label: 'Blog'
+  - name: 'Levels'
+    label: 'Levels'
     format: 'json'
-    folder: 'assets/content/blog'
+    folder: 'assets/content/levels'
     create: true
-    slug: '{{year}}-{{month}}-{{day}}-{{slug}}'
+    slug: '{{slug}}'
     editor:
-      preview: false
+      preview: true
     fields:
       - { label: 'Title', name: 'title', widget: 'string' }
       - { label: 'Publish Date', name: 'date', widget: 'datetime' }
       - { label: 'Description', name: 'description', widget: 'string' }
       - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: 'Relation', name: 'Relation', widget: 'relation', collection: "level_1", valueField: "name.first" }
+   - name: 'level_1'
+    label: 'Level 1'
+    format: 'json'
+    folder: 'assets/content/level1'
+    create: true
+    slug: '{{slug}}'
+    editor:
+      preview: true
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: 'Description', name: 'description', widget: 'text' }
+

@@ -17,6 +17,17 @@ export default class AnimatedWorker {
     this.duration = duration
     this.autoplay = autoplay
 
+    this.dirWorker = this.nextPosition.normalize()
+    const origin = new THREE.Vector3(0, 0.5, 0)
+    this.arrowHelper = new THREE.ArrowHelper(
+      this.dirWorker,
+      origin,
+      1,
+      0xffff00
+    )
+    this.arrowHelper.scale.multiplyScalar(2)
+    this.worker.add(this.arrowHelper)
+
     if (this.autoplay) this.start()
 
     this.uuid = THREE.MathUtils.generateUUID()
@@ -36,6 +47,24 @@ export default class AnimatedWorker {
       .pause()
   }
 
+  setDirection(dir) {
+    const _axis = new THREE.Vector3()
+
+    if (dir.y > 0.99999) {
+      this.worker.quaternion.set(0, 0, 0, 1)
+    } else if (dir.y < -0.99999) {
+      this.worker.quaternion.set(1, 0, 0, 0)
+    } else {
+      _axis.set(dir.z, 0, -dir.x).normalize()
+
+      const radians = Math.acos(dir.y)
+
+      this.worker.children[0].quaternion.setFromAxisAngle(_axis, radians)
+      //   this.worker.children[0].rotation.x = 0
+      //   this.worker.children[0].rotation.z = 0
+    }
+  }
+
   stop() {
     this.clock.stop()
     this.isMovable = false
@@ -50,6 +79,14 @@ export default class AnimatedWorker {
 
   render(deltaTime) {
     if (!this.isMovable && !this.gsapPosition) return
+
+    this.dirWorker
+      .subVectors(this.nextPosition, this.worker.position)
+      .normalize()
+
+    this.arrowHelper.setDirection(this.dirWorker)
+    this.setDirection(this.dirWorker)
+    // this.worker.children[0].lookAt(this.dirWorker)
 
     this.toNextPosition()
     this.time += this.clock.getDelta() / this.duration
