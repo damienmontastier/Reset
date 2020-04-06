@@ -7,12 +7,12 @@ public_folder: /img
 
 collections:
   - label: 'Level 1'
-    name: 'level_1'
+    name: 'level1'
     format: 'json'
     files:
       - label: 'Content'
         name: 'content'
-        file: 'assets/content/levels/level_1.json'
+        file: 'assets/content/levels/level1.json'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }
@@ -22,12 +22,12 @@ collections:
             fields:
               - { label: Name, name: name, widget: string }
   - label: 'Level 2'
-    name: 'level_2'
+    name: 'level2'
     format: 'json'
     files:
       - label: 'Content'
         name: 'content'
-        file: 'assets/content/levels/level_2.json'
+        file: 'assets/content/levels/level2.json'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }

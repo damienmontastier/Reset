@@ -14,17 +14,16 @@ export const getters = {}
 
 export const actions = {
   async nuxtServerInit({ commit }) {
-    const files = await require.context(
+    const levelsFiles = await require.context(
       '~/assets/content/levels',
       false,
       /\.json$/
     )
-    const blogPosts = files.keys().map((key) => {
-      const res = files(key)
+    const levels = levelsFiles.keys().map((key) => {
+      const res = levelsFiles(key)
       res.slug = key.slice(2, -5)
       return res
     })
-    console.log(blogPosts)
-    // await commit('setBlogPosts', blogPosts)
+    await commit('setLevelsContent', levels)
   }
 }
