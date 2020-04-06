@@ -42,7 +42,6 @@ export default class Level01 extends THREE.Object3D {
           color: 0x00ff00,
           visible: false
         })
-        console.log('treadmill', zone)
       }
 
       if (name.includes('terminal')) {
@@ -52,7 +51,7 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('zone_spawn')) {
-        console.log('spawn', zone.position)
+        // console.log('spawn', zone.position)
         // this.spawnPoint = zone.position.clone()
         // console.log('spawn', zone.position)
         // zone.material = new THREE.MeshBasicMaterial({ color: 0x00ffff })
@@ -60,9 +59,9 @@ export default class Level01 extends THREE.Object3D {
     })
   }
 
-  async replaceInstances() {
-    const treadmill = new Treadmill()
-    await treadmill.load()
+  replaceInstances() {
+    // const treadmill = new Treadmill()
+    // await treadmill.load()
     this.instances = this.model.getObjectByName('instances')
 
     this.instances.children.forEach((child) => {
@@ -70,8 +69,9 @@ export default class Level01 extends THREE.Object3D {
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
         // console.log(instanceName, child.position)
-        // const treadmill = new Treadmill
-        child.add(treadmill.clone())
+        const treadmill = new Treadmill()
+        treadmill.load()
+        child.add(treadmill)
       }
     })
   }

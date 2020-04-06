@@ -4,12 +4,9 @@ import useAssetsManager from '@/hooks/use-assets-manager'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
 
-import Factory from '@/game/components/factory'
-import Player from '@/game/components/player'
-
-import GridTerrain from '@/game/features/grid-terrain'
-
 import raf from '@/plugins/raf'
+
+import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 let game
 
@@ -21,6 +18,9 @@ class Game {
     this.scene.scale.setScalar(100)
 
     scene.add(this.scene)
+
+    this.intersections = new INTERSECTIONS.World()
+    scene.add(this.intersections)
 
     this.init()
   }
@@ -37,23 +37,6 @@ class Game {
     // this.initGUI()
 
     raf.add('use-game', this.loop.bind(this), 1)
-  }
-
-  async initGridTerrain() {
-    this.factory = new Factory()
-    await this.factory.load()
-
-    this.scene.add(this.factory)
-
-    this.player = new Player()
-    this.scene.add(this.player)
-    this.player.position.set(-1, 0, -1)
-
-    this.gridTerrain = new GridTerrain(this.factory.floor.scene)
-
-    const { scene } = useWebGL()
-
-    scene.add(this.gridTerrain.debug)
   }
 
   initCamera() {
@@ -242,6 +225,8 @@ class Game {
     this.directionalLight.position.x = Math.sin(time * 0.1) * 1000
     this.directionalLight.position.z = Math.cos(time * 0.1) * 1000
     this.directionalLightHelper.update()
+
+    this.intersections.step()
   }
 
   destroy() {}

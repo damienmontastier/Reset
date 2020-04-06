@@ -3,6 +3,9 @@ import gsap from 'gsap'
 
 import useKeyboard from '@/hooks/use-keyboard'
 import useAssetsManager from '@/hooks/use-assets-manager'
+import useGame from '@/hooks/use-game'
+
+import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 import raf from '@/plugins/raf'
 
@@ -73,11 +76,26 @@ export default class Player extends THREE.Object3D {
     this.innerGroup.add(this.pathfinder)
   }
 
+  initHitbox() {
+    this.hitboxMesh = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial()
+    )
+    this.hitboxMesh.position.copy(new THREE.Vector3(-0.5, 0.5, -0.5))
+    this.add(this.hitboxMesh)
+    this.hitboxMesh.visible = false
+    this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh)
+
+    const { intersections } = useGame()
+    intersections.addHitbox(this.hitbox)
+  }
+
   async init() {
     await this.load()
 
     this.initAnimations()
     this.initModel()
+    this.initHitbox()
 
     this.animations.idle.play()
 
