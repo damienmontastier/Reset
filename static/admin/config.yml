@@ -21,7 +21,7 @@ collections:
             widget: list
             fields:
               - { label: Name, name: name, widget: string }
-              - label: 'Level 1'
+  - label: 'Level 2'
     name: 'level_2'
     format: 'json'
     files:
