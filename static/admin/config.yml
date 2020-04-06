@@ -8,10 +8,11 @@ public_folder: /img
 collections:
   - label: 'Level 1'
     name: 'level_1'
+    format: 'json'
     files:
       - label: 'Content'
         name: 'content'
-        file: 'assets/content/levels/level_1.yml'
+        file: 'assets/content/levels/level_1.json'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }
@@ -24,6 +25,7 @@ collections:
   - name: 'about'
     label: 'A propos'
     format: 'json'
+    extension: 'json'
     folder: 'assets/content/about'
     create: true
     slug: '{{slug}}'
