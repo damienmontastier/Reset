@@ -6,12 +6,12 @@ media_folder: static/img
 public_folder: /img
 
 collections:
-  - label: 'Pages'
-    name: 'pages'
+  - label: 'Level 1'
+    name: 'level_1'
     files:
-      - label: 'About Page'
-        name: 'about'
-        file: 'site/content/about.yml'
+      - label: 'Content'
+        name: 'content'
+        file: 'site/content/level_1.yml'
         fields:
           - { label: Title, name: title, widget: string }
           - { label: Intro, name: intro, widget: markdown }
@@ -20,20 +20,7 @@ collections:
             widget: list
             fields:
               - { label: Name, name: name, widget: string }
-              - { label: Position, name: position, widget: string }
-              - { label: Photo, name: photo, widget: image }
-      - label: 'Locations Page'
-        name: 'locations'
-        file: 'site/content/locations.yml'
-        fields:
-          - { label: Title, name: title, widget: string }
-          - { label: Intro, name: intro, widget: markdown }
-          - label: Locations
-            name: locations
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
-              - { label: Address, name: address, widget: string }
+
   - label: 'Blog'
     name: 'blog'
     folder: '_posts/blog'
