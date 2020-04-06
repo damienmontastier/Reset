@@ -20,6 +20,8 @@ collections:
             widget: list
             fields:
               - { label: Name, name: name, widget: string }
+    fields:
+      - { label: 'Title', name: 'title', widget: 'string' }
 
   - label: 'Blog'
     name: 'blog'
