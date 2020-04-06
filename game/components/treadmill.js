@@ -1,16 +1,14 @@
 import useAssetsManager from '@/hooks/use-assets-manager'
-import raf from '@/plugins/raf'
+// import raf from '@/plugins/raf'
 
-import ToonMaterial from '@/webgl/materials/toon'
+// import ToonMaterial from '@/webgl/materials/toon'
 
 export default class Treadmill extends THREE.Object3D {
-  constructor() {
-    super()
+  // constructor() {
+  //   super()
+  // }
 
-    raf.add('treadmill', this.loop.bind(this), 1)
-  }
-
-  load() {
+  async load() {
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -18,48 +16,20 @@ export default class Treadmill extends THREE.Object3D {
       base: '/',
       files: [
         {
-          name: 'treadmill',
+          name: 'model',
           path: 'obj/treadmill/treadmill.glb'
         }
       ]
     })
 
-    return new Promise((resolve, reject) => {
-      assetsManager.get('treadmill').then((files) => {
-        const { treadmill } = files
-        this.treadmillGLB = treadmill
-        this.treadmill = this.treadmillGLB.scene
-        this.add(this.treadmill)
+    this.files = await assetsManager.get('treadmill')
 
-        // this.tapis = this.treadmill.getObjectByName('tapis')
-        // console.log(this.tapis)
+    this.model = this.files.model.scene
+    this.add(this.model)
 
-        // for (let index = 0; index < 10; index++) {
-        //   const tapis = this.tapis.clone()
-        //   this.treadmill.add(tapis)
-        //   tapis.position.x += index
-        // }
+    console.log(this.model)
 
-        // this.scale.setScalar(0.01)
-
-        this.treadmill.traverse((child) => {
-          child.material = new ToonMaterial()
-        })
-
-        this.mixer = new THREE.AnimationMixer(this.treadmill)
-        this.clips = this.treadmillGLB.animations
-
-        this.action = this.mixer.clipAction(this.clips[0])
-        this.action.play()
-
-        resolve(files)
-      })
-    })
-  }
-
-  loop() {
-    if (this.mixer) {
-      this.mixer.update(0.01)
-    }
+    this.modelHitbox = this.model.getObjectByName('hitbox')
+    this.modelHitbox.visible = false
   }
 }

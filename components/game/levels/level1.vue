@@ -4,11 +4,11 @@
 
 <script>
 // import gsap from 'gsap'
-import useWebGL from '@/hooks/use-webgl'
+// import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
 
 import Player from '@/game/components/player'
-import Factory from '@/game/components/factory'
+import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
 export default {
@@ -22,16 +22,19 @@ export default {
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
 
-      this.factory = new Factory()
-      await this.factory.load()
+      this.map = new MapLevel01()
+      await this.map.load()
 
-      this.levelGroup.add(this.factory)
+      // console.log(this.map.model)
 
-      this.gridTerrain = new GridTerrain(this.factory.floor.scene)
-      const { scene: webglScene } = useWebGL()
-      webglScene.add(this.gridTerrain.debug)
+      this.levelGroup.add(this.map)
 
-      this.player = new Player({ gridTerrain: this.gridTerrain })
+      this.terrain = new GridTerrain(this.map.zones)
+      // const { scene: webglScene } = useWebGL()
+      // webglScene.add(this.terrain.debug)
+
+      this.player = new Player({ terrain: this.terrain })
+      this.player.position.copy(this.map.spawnPoint)
 
       this.levelGroup.add(this.player)
     }

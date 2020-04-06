@@ -74,7 +74,9 @@ export default class Composer {
     )
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    this.composer.render(deltaTime)
+    // this.composer.render(deltaTime)
+
+    this.renderer.render(this.scene, this.camera)
   }
 
   initGUI() {
