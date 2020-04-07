@@ -1,5 +1,4 @@
 import Stats from 'stats.js'
-
 import viewport from '@/plugins/viewport'
 import raf from '@/plugins/raf'
 
