@@ -27,7 +27,7 @@ export default class Treadmill extends THREE.Object3D {
     this.model = this.files.model.scene
     this.add(this.model)
 
-    console.log(this.model)
+    // console.log(this.model)
 
     this.modelHitbox = this.model.getObjectByName('hitbox')
     this.modelHitbox.visible = false

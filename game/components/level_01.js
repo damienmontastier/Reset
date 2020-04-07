@@ -42,7 +42,7 @@ export default class Level01 extends THREE.Object3D {
           color: 0x00ff00,
           visible: false
         })
-        console.log('treadmill', zone)
+        // console.log('treadmill', zone)
       }
 
       if (name.includes('terminal')) {
@@ -52,7 +52,7 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('zone_spawn')) {
-        console.log('spawn', zone.position)
+        // console.log('spawn', zone.position)
         // this.spawnPoint = zone.position.clone()
         // console.log('spawn', zone.position)
         // zone.material = new THREE.MeshBasicMaterial({ color: 0x00ffff })

@@ -1,5 +1,4 @@
 import Events from 'events'
-
 import mouse from '@/plugins/mouse'
 
 export default class Raycaster {

@@ -1,6 +1,7 @@
 import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
 import useAssetsManager from '@/hooks/use-assets-manager'
+import useCamera from '@/hooks/use-camera'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
 
@@ -19,6 +20,7 @@ class Game {
 
     this.scene = new THREE.Group()
     this.scene.scale.setScalar(100)
+    this.raf = new raf()
 
     scene.add(this.scene)
 
@@ -36,7 +38,7 @@ class Game {
 
     // this.initGUI()
 
-    raf.add('use-game', this.loop.bind(this), 1)
+    this.raf.add('use-game', this.loop.bind(this), 1)
   }
 
   async initGridTerrain() {
@@ -57,7 +59,8 @@ class Game {
   }
 
   initCamera() {
-    const { scene, camera } = useWebGL()
+    const { scene } = useWebGL()
+    const { camera } = useCamera()
 
     camera.position.set(250, 250, 250)
     camera.lookAt(scene.position)

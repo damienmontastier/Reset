@@ -1,4 +1,4 @@
-class Raf {
+export default class Raf {
   constructor() {
     this.rafs = {}
     this.isRunning = false
@@ -50,5 +50,3 @@ class Raf {
     }
   }
 }
-
-export default new Raf()

@@ -1,6 +1,7 @@
 import Stats from 'stats.js'
 import viewport from '@/plugins/viewport'
 import raf from '@/plugins/raf'
+import useCamera from '@/hooks/use-camera'
 
 let webgl
 
@@ -13,14 +14,7 @@ class WebGL {
     this.scene = new THREE.Scene()
 
     // camera
-    this.camera = new THREE.OrthographicCamera(
-      viewport.width / -2,
-      viewport.width / 2,
-      viewport.height / 2,
-      viewport.height / -2,
-      -10000,
-      10000
-    )
+    const { camera } = useCamera()
 
     // canvas
     this.canvas = document.createElement('canvas')
@@ -36,7 +30,7 @@ class WebGL {
     const {
       OrbitControls
     } = require('three/examples/jsm/controls/OrbitControls.js')
-    this.cameraControls = new OrbitControls(this.camera, this.canvas)
+    this.cameraControls = new OrbitControls(camera, this.canvas)
     this.cameraControls.enableKeys = false
 
     // renderer
@@ -56,7 +50,7 @@ class WebGL {
     // composer
     const Composer = require('@/webgl/composer').default
     this.composer = new Composer({
-      camera: this.camera,
+      camera,
       renderer: this.renderer,
       scene: this.scene
     })
@@ -69,33 +63,24 @@ class WebGL {
 
     // raycaster
     const Raycaster = require('@/webgl/raycaster').default
-    this.raycaster = new Raycaster(this.camera)
-
-    // events
-    viewport.events.on('resize', this.onWindowResize.bind(this))
+    this.raycaster = new Raycaster(camera)
   }
 
   get viewsize() {
     let width, height
-    if (this.camera.type === 'PerspectiveCamera') {
-      const distance = this.camera.position.z
-      const vFov = (this.camera.fov * Math.PI) / 180
+    const { camera } = useCamera()
+
+    if (camera.type === 'PerspectiveCamera') {
+      const distance = camera.position.z
+      const vFov = (camera.fov * Math.PI) / 180
       height = 2 * Math.tan(vFov / 2) * distance
       width = height * viewport.ratio
-    } else if (this.camera.type === 'OrthographicCamera') {
+    } else if (camera.type === 'OrthographicCamera') {
       width = viewport.width
       height = viewport.height
     }
 
     return { width, height }
-  }
-
-  onWindowResize() {
-    this.camera.left = viewport.width / -2
-    this.camera.right = viewport.width / 2
-    this.camera.top = viewport.height / 2
-    this.camera.bottom = viewport.height / -2
-    this.camera.updateProjectionMatrix()
   }
 
   destroy() {}

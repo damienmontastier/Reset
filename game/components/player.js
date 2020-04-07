@@ -1,6 +1,5 @@
 // import TWEEN from '@tweenjs/tween.js'
 import gsap from 'gsap'
-
 import useKeyboard from '@/hooks/use-keyboard'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
@@ -83,6 +82,8 @@ export default class Player extends THREE.Object3D {
 
     const { events: keyboardEvents } = useKeyboard()
 
+    // console.log('player.js', this.getWorldPosition(new THREE.Vector3()))
+
     this.onKeydownHandler = this.onKeydown.bind(this)
     keyboardEvents.on('keydown', this.onKeydownHandler)
   }
@@ -127,7 +128,6 @@ export default class Player extends THREE.Object3D {
     // move pathfinder
     this.pathfinder.position.add(delta)
     this.moveTo(this.pathfinder.getWorldPosition(new THREE.Vector3()))
-
     // reset pathfinder
     this.pathfinder.position.copy(new THREE.Vector3())
   }
@@ -216,5 +216,10 @@ export default class Player extends THREE.Object3D {
     tl.pause()
 
     return tl
+  }
+
+  get worldPosition() {
+    console.log('coucou')
+    return this.getWorldPosition(new THREE.Vector3())
   }
 }
