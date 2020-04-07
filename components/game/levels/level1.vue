@@ -9,6 +9,7 @@ import useGame from '@/hooks/use-game'
 // import useCamera from '@/hooks/use-camera'
 
 import Player from '@/game/components/player'
+import CameraMouvement from '@/game/components/camera-mouvement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
@@ -44,7 +45,16 @@ export default {
       this.player.position.copy(this.map.spawnPoint)
 
       this.levelGroup.add(this.player)
+
+      this.cameraAnimation = new CameraMouvement({
+        mesh: this.player,
+        duration: 2
+      })
+
+      raf.add('level1', this.loop.bind(this))
     },
+
+    loop() {},
 
     initIntersections() {
       // this.player.hitbox
@@ -54,14 +64,5 @@ export default {
       })
     }
   }
-  // watch: {
-  //   'player.worldPosition': {
-  //     handler: (after) => {
-  //       console.log('here', after)
-  //       // Changes detected. Do work...
-  //     }
-  //     // deep: true
-  //   }
-  // }
 }
 </script>
