@@ -39,13 +39,19 @@ export default {
       // webglScene.add(this.terrain.debug)
 
       this.player = new Player({ terrain: this.terrain })
+      await this.player.load()
+      this.initIntersections()
       this.player.position.copy(this.map.spawnPoint)
 
       this.levelGroup.add(this.player)
+    },
 
-      // const { camera } = useCamera()
-
-      // console.log(camera.attachTo(this.player))
+    initIntersections() {
+      // this.player.hitbox
+      // console.log(this.player.hitbox)
+      this.player.hitbox.events.on('intersection', (intersections) => {
+        console.log(intersections)
+      })
     }
   }
   // watch: {

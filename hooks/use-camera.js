@@ -15,6 +15,7 @@ class Camera {
       10000
     )
 
+    // events
     viewport.events.on('resize', this.onWindowResize.bind(this))
   }
 
@@ -24,10 +25,6 @@ class Camera {
     this.camera.top = viewport.height / 2
     this.camera.bottom = viewport.height / -2
     this.camera.updateProjectionMatrix()
-  }
-
-  attachTo(model) {
-    console.log(model)
   }
 
   destroy() {}

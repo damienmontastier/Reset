@@ -5,24 +5,23 @@ import useCamera from '@/hooks/use-camera'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
 
-import Factory from '@/game/components/factory'
-import Player from '@/game/components/player'
+import Raf from '@/plugins/raf.js'
 
-import GridTerrain from '@/game/features/grid-terrain'
-
-import raf from '@/plugins/raf'
+import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 let game
 
 class Game {
   constructor() {
-    const { scene } = useWebGL()
-
     this.scene = new THREE.Group()
     this.scene.scale.setScalar(100)
-    this.raf = new raf()
+    this.raf = new Raf()
 
+    const { scene } = useWebGL()
     scene.add(this.scene)
+
+    this.intersections = new INTERSECTIONS.World()
+    scene.add(this.intersections)
 
     this.init()
   }
@@ -39,23 +38,6 @@ class Game {
     // this.initGUI()
 
     this.raf.add('use-game', this.loop.bind(this), 1)
-  }
-
-  async initGridTerrain() {
-    this.factory = new Factory()
-    await this.factory.load()
-
-    this.scene.add(this.factory)
-
-    this.player = new Player()
-    this.scene.add(this.player)
-    this.player.position.set(-1, 0, -1)
-
-    this.gridTerrain = new GridTerrain(this.factory.floor.scene)
-
-    const { scene } = useWebGL()
-
-    scene.add(this.gridTerrain.debug)
   }
 
   initCamera() {
@@ -245,9 +227,17 @@ class Game {
     this.directionalLight.position.x = Math.sin(time * 0.1) * 1000
     this.directionalLight.position.z = Math.cos(time * 0.1) * 1000
     this.directionalLightHelper.update()
+
+    this.frameCount = (this.frameCount || 0) + 1
+    if (this.frameCount % 1 === 0) this.intersections.step()
   }
 
-  destroy() {}
+  destroy() {
+    this.raf.remove('use-game')
+
+    const { scene } = useWebGL()
+    scene.remove(this.scene)
+  }
 }
 
 const useGame = () => {

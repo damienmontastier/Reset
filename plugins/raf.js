@@ -1,9 +1,9 @@
 export default class Raf {
-  constructor() {
+  constructor(clock = new THREE.Clock()) {
     this.rafs = {}
     this.isRunning = false
 
-    this.clock = new THREE.Clock()
+    this.clock = clock
   }
 
   loop() {
@@ -11,6 +11,7 @@ export default class Raf {
 
     // clock
     const deltaTime = this.clock.getDelta()
+    const time = this.clock.getElapsedTime()
 
     // callbacks
     Object.values(this.rafs)
@@ -18,7 +19,7 @@ export default class Raf {
         return a.priority - b.priority
       })
       .forEach((raf) => {
-        raf.callback(deltaTime)
+        raf.callback({ time, deltaTime })
       })
 
     // this.stats.end()
