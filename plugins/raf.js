@@ -2,11 +2,13 @@ export default class Raf {
   constructor(clock = new THREE.Clock()) {
     this.rafs = {}
     this.isRunning = false
-
     this.clock = clock
+    this.paused = false
   }
 
   loop() {
+    if (this.paused && !this.isRunning) return
+
     this.isRunning = true
 
     // clock
@@ -27,6 +29,14 @@ export default class Raf {
     this.rafId = requestAnimationFrame(this.loop.bind(this))
   }
 
+  start() {
+    this.setPaused = false
+  }
+
+  pause() {
+    this.setPaused = true
+  }
+
   add(id, callback, priority = 0) {
     if (this.rafs[id]) {
       console.log(`raf.add(): ${id} already added`)
@@ -35,6 +45,19 @@ export default class Raf {
     this.rafs[id] = { id, callback, priority }
 
     if (!this.isRunning) {
+      this.loop()
+    }
+  }
+
+  set setPaused(bool) {
+    this.paused = bool
+    this.isRunning = !bool
+
+    if (bool) {
+      this.clock.stop()
+      cancelAnimationFrame(this.rafId)
+    } else {
+      this.clock.start()
       this.loop()
     }
   }
