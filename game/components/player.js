@@ -7,7 +7,7 @@ import useGame from '@/hooks/use-game'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-const JUMP_DURATION = 0.1
+const JUMP_DURATION = 0.2
 
 export default class Player extends THREE.Object3D {
   constructor({ terrain } = {}) {
@@ -84,7 +84,12 @@ export default class Player extends THREE.Object3D {
     this.hitboxMesh.scale.setScalar(0.9)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
-    this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh)
+    this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
+      layers: ['player'],
+      filters: ['treadmill'],
+      sleeping: false,
+      kinematic: false
+    })
 
     const { intersections } = useGame()
     intersections.addHitbox(this.hitbox)

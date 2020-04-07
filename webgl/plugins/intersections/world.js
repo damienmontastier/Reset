@@ -14,10 +14,27 @@ export default class World extends THREE.Object3D {
   }
 
   intersects() {
+    this.intersectsCounter = 0
     // get intersections
-    this.hitboxes.children.forEach((hitbox) => {
-      this.hitboxes.children.forEach((target) => {
+    let hitboxes = this.hitboxes.children
+
+    // intersects if hitbox not sleeping
+    hitboxes = hitboxes.filter((hitbox) => !hitbox.sleeping)
+
+    hitboxes.forEach((hitbox) => {
+      let targets = this.hitboxes.children
+
+      // intersects if hitbox filters includes target layers
+      if (hitbox.filters) {
+        targets = targets.filter((target) =>
+          hitbox.filters.some((filter) => target._layers.includes(filter))
+        )
+      }
+
+      targets.forEach((target) => {
         if (hitbox.uuid !== target.uuid) {
+          this.intersectsCounter++
+
           const lastIntersecting = hitbox.intersections[target.uuid]
             ? hitbox.intersections[target.uuid].intersecting
             : undefined
@@ -28,7 +45,8 @@ export default class World extends THREE.Object3D {
 
           hitbox.intersections[target.uuid] = {
             intersecting,
-            needsUpdate
+            needsUpdate,
+            target
           }
         }
       })
@@ -44,10 +62,16 @@ export default class World extends THREE.Object3D {
         hitbox.events.emit('intersection', intersections)
       }
     })
+
+    console.log('intersections :', this.intersectsCounter)
   }
 
   step() {
-    this.hitboxes.children.forEach((hitbox) => {
+    let hitboxes = this.hitboxes.children
+
+    hitboxes = hitboxes.filter((hitbox) => !hitbox.kinematic)
+
+    hitboxes.forEach((hitbox) => {
       hitbox.update()
     })
 

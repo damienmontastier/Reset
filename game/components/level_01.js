@@ -1,5 +1,7 @@
 import Treadmill from './treadmill'
+
 import useAssetsManager from '@/hooks/use-assets-manager'
+import useGame from '@/hooks/use-game'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
@@ -26,6 +28,8 @@ export default class Level01 extends THREE.Object3D {
 
     // spawn point
     this.spawnPoint = new THREE.Vector3(0, 1, 18)
+
+    this.initTreadmills()
 
     // instances
     await this.replaceInstances()
@@ -57,22 +61,48 @@ export default class Level01 extends THREE.Object3D {
         // zone.material = new THREE.MeshBasicMaterial({ color: 0x00ffff })
       }
     })
+
+    const { raf } = useGame()
+    raf.add('level_01', this.update.bind(this), 0)
   }
 
-  replaceInstances() {
-    // const treadmill = new Treadmill()
-    // await treadmill.load()
+  initTreadmills() {
+    this.treadmills = []
+  }
+
+  async replaceInstances() {
+    const assetsManager = useAssetsManager()
+    assetsManager.loader.addGroup({
+      name: 'instances',
+      base: '/',
+      files: [
+        {
+          name: 'treadmill',
+          path: 'obj/treadmill/treadmill.glb'
+        }
+      ]
+    })
+
+    const files = await assetsManager.get('instances')
+    const treadmillModel = files.treadmill.scene
+
     this.instances = this.model.getObjectByName('instances')
 
+    let i = 0
     this.instances.children.forEach((child) => {
-      //   console.log(child)
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
-        // console.log(instanceName, child.position)
-        const treadmill = new Treadmill()
-        treadmill.load()
+        const treadmill = new Treadmill(treadmillModel.clone(), i)
         child.add(treadmill)
+        this.treadmills.push(treadmill)
       }
+      i++
+    })
+  }
+
+  update(clock) {
+    this.treadmills.forEach((treadmill) => {
+      treadmill.update(clock)
     })
   }
 }

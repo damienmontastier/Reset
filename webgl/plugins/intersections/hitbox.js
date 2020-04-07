@@ -1,9 +1,17 @@
 import Events from 'events'
 
 export default class Hitbox extends THREE.Object3D {
-  constructor(mesh) {
+  constructor(
+    mesh,
+    { layers = [], filters = null, sleeping = false, kinematic = false } = {}
+  ) {
     super()
     this.mesh = mesh
+
+    this._layers = layers
+    this.filters = filters
+    this.sleeping = sleeping
+    this.kinematic = kinematic
 
     this.mesh.geometry.computeBoundingBox()
 
