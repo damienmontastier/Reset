@@ -29,7 +29,7 @@ export default class Raf {
     this.rafId = requestAnimationFrame(this.loop.bind(this))
   }
 
-  start() {
+  resume() {
     this.setPaused = false
   }
 
