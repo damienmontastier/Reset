@@ -29,14 +29,6 @@ export default class Raf {
     this.rafId = requestAnimationFrame(this.loop.bind(this))
   }
 
-  resume() {
-    this.setPaused = false
-  }
-
-  pause() {
-    this.setPaused = true
-  }
-
   add(id, callback, priority = 0) {
     if (this.rafs[id]) {
       console.log(`raf.add(): ${id} already added`)
@@ -49,7 +41,7 @@ export default class Raf {
     }
   }
 
-  set setPaused(bool) {
+  set pause(bool) {
     this.paused = bool
     this.isRunning = !bool
 

@@ -13,6 +13,13 @@ export default class CameraMouvement {
     this.toNextPosition()
 
     raf.add('camera-animation', this.loop.bind(this), 0)
+
+    document.addEventListener('mousedown', () => {
+      raf.pause = true
+    })
+    document.addEventListener('mouseup', () => {
+      raf.pause = false
+    })
   }
 
   toNextPosition() {
