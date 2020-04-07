@@ -48,7 +48,7 @@ export default {
 
       this.cameraAnimation = new CameraMouvement({
         mesh: this.player,
-        duration: 2
+        duration: 1
       })
 
       raf.add('level1', this.loop.bind(this))

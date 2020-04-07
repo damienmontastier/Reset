@@ -239,7 +239,6 @@ export default class Player extends THREE.Object3D {
   }
 
   get worldPosition() {
-    console.log('coucou')
     return this.getWorldPosition(new THREE.Vector3())
   }
 }
