@@ -31,6 +31,7 @@ export default class Treadmill extends THREE.Object3D {
 
     this.model = this.files.model.scene.clone()
     this.add(this.model)
+    this.model.matrixAutoUpdate = false
 
     this.initHitbox()
   }
@@ -44,4 +45,6 @@ export default class Treadmill extends THREE.Object3D {
 
     intersections.addHitbox(this.hitbox)
   }
+
+  initParcelPosts() {}
 }

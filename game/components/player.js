@@ -7,9 +7,7 @@ import useGame from '@/hooks/use-game'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-import raf from '@/plugins/raf'
-
-const JUMP_DURATION = 0.25
+const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
   constructor({ terrain } = {}) {
@@ -18,6 +16,7 @@ export default class Player extends THREE.Object3D {
 
     this.init()
 
+    const { raf } = useGame()
     raf.add('player', this.loop.bind(this))
   }
 
@@ -82,6 +81,7 @@ export default class Player extends THREE.Object3D {
       new THREE.MeshBasicMaterial()
     )
     this.hitboxMesh.position.copy(new THREE.Vector3(-0.5, 0.5, -0.5))
+    this.hitboxMesh.scale.setScalar(0.9)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh)
@@ -110,10 +110,10 @@ export default class Player extends THREE.Object3D {
     raf.remove('player')
   }
 
-  loop(deltaTime) {
+  loop(clock) {
     if (this.positionTween) {
       const time = this.positionTween.time()
-      this.positionTween.time(time + deltaTime)
+      this.positionTween.time(time + clock.deltaTime)
     }
 
     // if (this.animationMixer) {
@@ -184,7 +184,9 @@ export default class Player extends THREE.Object3D {
         this.positionTween.eventCallback('onComplete', () => {
           // this.animations.walking.stop()
           // this.animations.idle.play()
-          this.positionTween = null
+          requestAnimationFrame(() => {
+            this.positionTween = false
+          })
         })
       }
     }

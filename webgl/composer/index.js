@@ -8,7 +8,6 @@ import {
 import OutlineEffect from './effects/outline'
 import AntialiasingEffect from './effects/antialiasing'
 
-import raf from '@/plugins/raf'
 import viewport from '@/plugins/viewport'
 
 import useGUI from '@/hooks/use-gui'
@@ -27,8 +26,6 @@ export default class Composer {
   async init() {
     await this.initComposer()
     this.initGUI()
-
-    raf.add('renderer', this.render.bind(this), 0)
   }
 
   async initComposer() {
@@ -67,14 +64,14 @@ export default class Composer {
     this.composer.addPass(this.AAPass)
   }
 
-  render(deltaTime) {
+  render(clock) {
     this.renderer.setSize(
       viewport.width * this.renderingScale,
       viewport.height * this.renderingScale
     )
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    // this.composer.render(deltaTime)
+    // this.composer.render(clock.deltaTime)
 
     this.renderer.render(this.scene, this.camera)
   }

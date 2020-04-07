@@ -1,3 +1,5 @@
+import Events from 'events'
+
 export default class Hitbox extends THREE.Object3D {
   constructor(mesh) {
     super()
@@ -9,6 +11,10 @@ export default class Hitbox extends THREE.Object3D {
 
     this.helper = new THREE.Box3Helper(this.box, 0x00ff00)
     this.add(this.helper)
+
+    this.intersections = {}
+
+    this.events = new Events()
 
     this.update()
   }

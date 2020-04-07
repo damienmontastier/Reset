@@ -4,7 +4,7 @@ import useAssetsManager from '@/hooks/use-assets-manager'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
 
-import raf from '@/plugins/raf'
+import Raf from '@/plugins/raf.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -12,15 +12,16 @@ let game
 
 class Game {
   constructor() {
-    const { scene } = useWebGL()
-
     this.scene = new THREE.Group()
     this.scene.scale.setScalar(100)
 
+    const { scene } = useWebGL()
     scene.add(this.scene)
 
     this.intersections = new INTERSECTIONS.World()
     scene.add(this.intersections)
+
+    this.raf = new Raf()
 
     this.init()
   }
@@ -36,7 +37,7 @@ class Game {
 
     // this.initGUI()
 
-    raf.add('use-game', this.loop.bind(this), 1)
+    this.raf.add('use-game', this.loop.bind(this), 1)
   }
 
   initCamera() {
@@ -226,10 +227,16 @@ class Game {
     this.directionalLight.position.z = Math.cos(time * 0.1) * 1000
     this.directionalLightHelper.update()
 
-    this.intersections.step()
+    this.frameCount = (this.frameCount || 0) + 1
+    if (this.frameCount % 1 === 0) this.intersections.step()
   }
 
-  destroy() {}
+  destroy() {
+    this.raf.remove('use-game')
+
+    const { scene } = useWebGL()
+    scene.remove(this.scene)
+  }
 }
 
 const useGame = () => {
