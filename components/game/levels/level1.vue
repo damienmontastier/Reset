@@ -9,7 +9,7 @@ import useGame from '@/hooks/use-game'
 // import useCamera from '@/hooks/use-camera'
 
 import Player from '@/game/components/player'
-import CameraMouvement from '@/game/components/camera-mouvement'
+// import CameraMouvement from '@/game/components/camera-mouvement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
@@ -40,10 +40,10 @@ export default {
 
       this.levelGroup.add(this.player)
 
-      this.cameraAnimation = new CameraMouvement({
-        mesh: this.player,
-        duration: 1
-      })
+      // this.cameraAnimation = new CameraMouvement({
+      //   mesh: this.player,
+      //   duration: 1
+      // })
 
       raf.add('level1', this.loop.bind(this))
     },
@@ -51,40 +51,83 @@ export default {
     loop() {},
 
     initIntersections() {
-      // this.player.hitbox
-      // console.log(this.player.hitbox)
-      this.player.hitbox.events.on('intersection', (intersections) => {
-        // parcel posts
-        const parcelPostsIntersections = intersections.filter(
-          (intersection) =>
-            intersection.target._layers.includes('parcel_post') &&
-            intersection.lastIntersecting !== undefined &&
-            intersection.intersecting === true
-        )
+      this.player.hitbox.events.on('intersection', this.onPlayerIntersects)
+    },
 
-        if (parcelPostsIntersections.length > 0) {
-          console.log('PLAYER INTERSECTS WITH BOX')
+    onPlayerIntersects(intersections) {
+      // parcel posts
+      const parcelPostsIntersections = intersections.filter(
+        (intersection) =>
+          intersection.target._layers.includes('parcel_post') &&
+          intersection.lastIntersecting !== undefined &&
+          intersection.intersecting === true
+      )
+
+      if (parcelPostsIntersections.length > 0) {
+        this.onPlayerIntersectsWithParcelPost()
+      }
+
+      // treadmills
+      const treadmillsIntersections = intersections.filter(
+        (intersection) =>
+          intersection.target._layers.includes('treadmill') &&
+          intersection.lastIntersecting !== undefined &&
+          intersection.intersecting === true
+      )
+
+      if (treadmillsIntersections.length > 0) {
+        console.log('PLAYER INTERSECTS WITH TREADMILL')
+
+        const treadmillIntersection = treadmillsIntersections[0].target
+        if (this.treadmill) {
+          this.treadmill.unHook(this.player)
         }
+        this.treadmill = treadmillIntersection.userData.parentInstance
+        this.treadmill.hook(this.player)
+      }
 
-        const treadmillsIntersections = intersections.filter(
-          (intersection) =>
-            intersection.target._layers.includes('treadmill') &&
-            intersection.lastIntersecting !== undefined &&
-            intersection.intersecting === true
-        )
+      // const treadmillsIntersections = intersections.filter(
+      //   (intersection) =>
+      //     intersection.target._layers.includes('treadmill') &&
+      //     intersection.lastIntersecting !== undefined
+      // )
 
-        if (treadmillsIntersections.length > 0) {
-          console.log('PLAYER INTERSECTS WITH TREADMILL')
+      // const leavedTreadmill = treadmillsIntersections.filter(
+      //   (intersection) => intersection.intersecting === false
+      // )
 
-          const treadmillIntersection = treadmillsIntersections[0].target
-          if (this.treadmill) {
-            this.treadmill.unHook(this.player)
-          }
-          this.treadmill = treadmillIntersection.userData.parentInstance
-          this.treadmill.hook(this.player)
-        }
-      })
+      // // if (isPlayerLeavedTreadmill) {
+      // //   console.log('player leaved treadmill')
+      // // }
+
+      // const enteredTreadmills = treadmillsIntersections.filter(
+      //   (intersection) => intersection.intersecting === true
+      // )
+
+      // // if (enteredTreadmills.length > 0) {
+      // //   console.log('player entered treadmill', enteredTreadmills)
+      // // }
+
+      // if (enteredTreadmills.length > 0) {
+      //   // unhook
+
+      //   console.log('entering')
+
+      //   // hook
+      // } else if (leavedTreadmill.length > 0) {
+      //   // unhook
+
+      //   console.log('leaving')
+      // }
+    },
+
+    onPlayerIntersectsWithParcelPost() {
+      console.log('PLAYER INTERSECTS WITH BOX')
     }
+
+    // onPlayerEnteredInTreadmill(treadmill) {
+
+    // }
   }
 }
 </script>
