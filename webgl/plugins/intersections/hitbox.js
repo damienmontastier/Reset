@@ -24,6 +24,10 @@ export default class Hitbox extends THREE.Object3D {
 
     this.events = new Events()
 
+    // events :
+    // 'intersecting' = emit intersecting status with all filtered hitboxes in the world every step
+    // 'intersection' = emit every time hitbox enter/leave another
+
     this.update()
   }
 
