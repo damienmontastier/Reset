@@ -13,11 +13,32 @@ export default class World extends THREE.Object3D {
     this.hitboxes.add(hitbox)
   }
 
+  removeHitbox(hitbox) {
+    this.hitboxes.remove(hitbox)
+  }
+
   intersects() {
+    this.intersectsCounter = 0
     // get intersections
-    this.hitboxes.children.forEach((hitbox) => {
-      this.hitboxes.children.forEach((target) => {
+    let hitboxes = this.hitboxes.children
+
+    // intersects if hitbox not sleeping
+    hitboxes = hitboxes.filter((hitbox) => !hitbox.sleeping)
+
+    hitboxes.forEach((hitbox) => {
+      let targets = this.hitboxes.children
+
+      // intersects if hitbox filters includes target layers
+      if (hitbox.filters) {
+        targets = targets.filter((target) =>
+          hitbox.filters.some((filter) => target._layers.includes(filter))
+        )
+      }
+
+      targets.forEach((target) => {
         if (hitbox.uuid !== target.uuid) {
+          this.intersectsCounter++
+
           const lastIntersecting = hitbox.intersections[target.uuid]
             ? hitbox.intersections[target.uuid].intersecting
             : undefined
@@ -27,8 +48,10 @@ export default class World extends THREE.Object3D {
           const needsUpdate = intersecting !== lastIntersecting
 
           hitbox.intersections[target.uuid] = {
+            lastIntersecting,
             intersecting,
-            needsUpdate
+            needsUpdate,
+            target
           }
         }
       })
@@ -36,6 +59,8 @@ export default class World extends THREE.Object3D {
 
     // emit collision events
     this.hitboxes.children.forEach((hitbox) => {
+      hitbox.events.emit('intersecting', Object.values(hitbox.intersections))
+
       const intersections = Object.values(hitbox.intersections).filter(
         (intersection) => intersection.needsUpdate
       )
@@ -44,10 +69,16 @@ export default class World extends THREE.Object3D {
         hitbox.events.emit('intersection', intersections)
       }
     })
+
+    // console.log('intersections :', this.intersectsCounter)
   }
 
   step() {
-    this.hitboxes.children.forEach((hitbox) => {
+    let hitboxes = this.hitboxes.children
+
+    hitboxes = hitboxes.filter((hitbox) => !hitbox.kinematic)
+
+    hitboxes.forEach((hitbox) => {
       hitbox.update()
     })
 
