@@ -6,7 +6,7 @@ import useGame from '@/hooks/use-game'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-const JUMP_DURATION = 0.2
+const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
   constructor({ terrain } = {}) {

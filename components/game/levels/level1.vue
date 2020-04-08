@@ -17,17 +17,11 @@ export default {
   mounted() {
     this.init()
   },
-  data() {
-    return {
-      player: null
-    }
-  },
   methods: {
     async init() {
       const { scene: gameScene, raf } = useGame()
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
-      console.log(raf)
       this.map = new MapLevel01()
       await this.map.load()
 
@@ -70,6 +64,24 @@ export default {
 
         if (parcelPostsIntersections.length > 0) {
           console.log('PLAYER INTERSECTS WITH BOX')
+        }
+
+        const treadmillsIntersections = intersections.filter(
+          (intersection) =>
+            intersection.target._layers.includes('treadmill') &&
+            intersection.lastIntersecting !== undefined &&
+            intersection.intersecting === true
+        )
+
+        if (treadmillsIntersections.length > 0) {
+          console.log('PLAYER INTERSECTS WITH TREADMILL')
+
+          const treadmillIntersection = treadmillsIntersections[0].target
+          if (this.treadmill) {
+            this.treadmill.unHook(this.player)
+          }
+          this.treadmill = treadmillIntersection.userData.parentInstance
+          this.treadmill.hook(this.player)
         }
       })
     }
