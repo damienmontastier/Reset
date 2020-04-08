@@ -1,15 +1,16 @@
 import gsap from 'gsap'
 import * as THREE from 'three'
-import raf from '@/plugins/raf'
 import useWebGL from '@/hooks/use-webgl'
+import useGame from '@/hooks/use-game'
 
 export default class AnimatedWorker {
   constructor({ worker, spline, loop = true, autoplay = true, duration = 10 }) {
-    this.time = 0
-    this.isMovable = false
     const { clock } = useWebGL()
+    const { raf } = useGame()
 
     this.clock = clock
+    this.time = 0
+    this.isMovable = false
     this.worker = worker
     this.spline = spline
     this.path = this.spline.path
@@ -77,20 +78,24 @@ export default class AnimatedWorker {
     this.isMovable = true
   }
 
-  render(deltaTime) {
-    if (!this.isMovable && !this.gsapPosition) return
+  render(clock) {
+    if (!this.isMovable) return
 
     this.dirWorker
       .subVectors(this.nextPosition, this.worker.position)
       .normalize()
 
     this.arrowHelper.setDirection(this.dirWorker)
-    this.setDirection(this.dirWorker)
+    // this.setDirection(this.dirWorker)
     // this.worker.children[0].lookAt(this.dirWorker)
 
-    this.toNextPosition()
-    this.time += this.clock.getDelta() / this.duration
-    this.gsapPosition.time(deltaTime)
+    if (this.gsapPosition) {
+      this.toNextPosition()
+      const time = this.gsapPosition.time()
+      this.gsapPosition.time(time + clock.deltaTime)
+    }
+    // this.time += this.clock.getDelta() / this.duration
+    // this.gsapPosition.time(deltaTime)
   }
 
   destroy() {

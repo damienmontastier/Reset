@@ -9,8 +9,6 @@ import Worker from '@/game/components/worker'
 import Spline from '@/webgl/utils/spline'
 import AnimatedWorker from '@/game/components/animated-worker'
 
-// Deploy
-
 export default {
   async mounted() {
     const { scene } = useGame()
@@ -34,7 +32,7 @@ export default {
       spline: this.spline,
       loop: true,
       autoplay: true,
-      duration: 10
+      duration: 2
     })
 
     if (!this.animatedWorker.autoplay) {
