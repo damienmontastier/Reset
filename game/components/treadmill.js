@@ -13,57 +13,9 @@ export default class Treadmill extends THREE.Object3D {
     this.add(this.model)
     this.model.matrixAutoUpdate = false
 
-    this.initOutHiboxes()
+    // this.initOutHiboxes()
     this.initHitbox()
     this.initParcelPostsApparition()
-  }
-
-  initOutHiboxes() {
-    const { intersections } = useGame()
-
-    const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
-
-    // up stream
-    this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-6, 1, 0))
-
-    this.add(this.outHitboxUpstreamMesh)
-    this.outHitboxUpstreamMesh.visible = false
-    this.outHitboxUpstream = new INTERSECTIONS.Hitbox(
-      this.outHitboxUpstreamMesh,
-      {
-        layers: ['treadmill_out_hitbox'],
-        filters: ['parcel_post'],
-        sleeping: true
-      }
-    )
-
-    intersections.addHitbox(this.outHitboxUpstream)
-
-    // this.outHitboxUpstream.events.on('intersection', (intersections) => {
-    //   console.log(intersections)
-    // })
-
-    // down stream
-    this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(6, 1, 0))
-
-    this.add(this.outHitboxDownstreamMesh)
-    this.outHitboxDownstreamMesh.visible = false
-    this.outHitboxDownstreamMesh = new INTERSECTIONS.Hitbox(
-      this.outHitboxDownstreamMesh,
-      {
-        layers: ['treadmill_out_hitbox'],
-        filters: ['parcel_post'],
-        sleeping: true
-      }
-    )
-
-    intersections.addHitbox(this.outHitboxDownstreamMesh)
-
-    // this.outHitboxDownstreamMesh.events.on('intersection', (intersections) => {
-    //   console.log(intersections)
-    // })
   }
 
   initHitbox() {
@@ -85,14 +37,14 @@ export default class Treadmill extends THREE.Object3D {
     this.add(this.parcelPosts)
 
     this.direction = Math.random() > 0.5 ? 1 : -1
-    this.speed = Math.random() / 10
-    this.appearFrequencyBasis = 0.5
+    this.speed = Math.max(Math.random(), 0.5) / 15
+    this.appearFrequencyBasis = 1.5
     this.appearFrequencyRandomness = 1
 
     this.spawnPoint =
       this.direction > 0
-        ? new THREE.Vector3(-4.5, 1, 0)
-        : new THREE.Vector3(4.5, 1, 0)
+        ? new THREE.Vector3(-4, 1, 0)
+        : new THREE.Vector3(4, 1, 0)
   }
 
   get appearFrequency() {
@@ -106,9 +58,10 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   update(clock) {
-    if (this.index > 0) return
+    // if (this.index > 3) return
     this.parcelPosts.children.forEach((post) => {
       post.position.add(this.deltaPosition)
+      post.updateMatrixWorld()
     })
     this.time = (this.time || 0) + clock.deltaTime
     if (this.time > this.appearFrequency) {

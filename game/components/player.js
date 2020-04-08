@@ -86,7 +86,7 @@ export default class Player extends THREE.Object3D {
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
       layers: ['player'],
-      filters: ['treadmill'],
+      filters: ['treadmill', 'parcel_post'],
       sleeping: false,
       kinematic: false
     })

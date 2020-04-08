@@ -45,7 +45,17 @@ export default {
       // this.player.hitbox
       // console.log(this.player.hitbox)
       this.player.hitbox.events.on('intersection', (intersections) => {
-        console.log(intersections)
+        // parcel posts
+        const parcelPostsIntersections = intersections.filter(
+          (intersection) =>
+            intersection.target._layers.includes('parcel_post') &&
+            intersection.lastIntersecting !== undefined &&
+            intersection.intersecting === true
+        )
+
+        if (parcelPostsIntersections.length > 0) {
+          console.log('PLAYER INTERSECTS WITH BOX')
+        }
       })
     }
   }

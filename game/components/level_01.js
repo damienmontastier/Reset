@@ -1,7 +1,10 @@
 import Treadmill from './treadmill'
 
+import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
+
+import BoxGeometry from '@/webgl/geometries/box'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
@@ -68,6 +71,43 @@ export default class Level01 extends THREE.Object3D {
 
   initTreadmills() {
     this.treadmills = []
+
+    const { intersections } = useGame()
+
+    const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
+    box.scale.set(1, 1, 30)
+
+    // up stream
+    this.outHitboxUpstreamMesh = box.clone()
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-5.3, 1, -4))
+
+    this.add(this.outHitboxUpstreamMesh)
+    this.outHitboxUpstreamMesh.visible = false
+    this.outHitboxUpstream = new INTERSECTIONS.Hitbox(
+      this.outHitboxUpstreamMesh,
+      {
+        layers: ['treadmill_out_hitbox'],
+        sleeping: true
+      }
+    )
+
+    intersections.addHitbox(this.outHitboxUpstream)
+
+    // down stream
+    this.outHitboxDownstreamMesh = box.clone()
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(5, 1, -4))
+
+    this.add(this.outHitboxDownstreamMesh)
+    this.outHitboxDownstreamMesh.visible = false
+    this.outHitboxDownstreamMesh = new INTERSECTIONS.Hitbox(
+      this.outHitboxDownstreamMesh,
+      {
+        layers: ['treadmill_out_hitbox'],
+        sleeping: true
+      }
+    )
+
+    intersections.addHitbox(this.outHitboxDownstreamMesh)
   }
 
   async replaceInstances() {

@@ -31,5 +31,13 @@ export default class Hitbox extends THREE.Object3D {
     this.box
       .copy(this.mesh.geometry.boundingBox)
       .applyMatrix4(this.mesh.matrixWorld)
+
+    const intersecting = Object.values(this.intersections).some(
+      (intersection) => intersection.intersecting
+    )
+
+    this.helper.material.color = new THREE.Color(
+      intersecting ? 0xff0000 : 0x00ff00
+    )
   }
 }

@@ -25,19 +25,26 @@ export default class ParcelPost extends THREE.Object3D {
       filters: ['treadmill_out_hitbox']
     })
 
-    const { intersections } = useGame()
-    intersections.addHitbox(this.hitbox)
+    const { intersections: intersectionsWorld } = useGame()
+    intersectionsWorld.addHitbox(this.hitbox)
 
-    this.hitbox.events.on('intersection', (intersections) => {
-      const outHitboxes = intersections.filter(
+    this.hitbox.events.on('intersecting', (intersections) => {
+      // console.log(intersections)
+      const outHitboxesIntersections = intersections.filter(
         (intersection) =>
           intersection.target._layers.includes('treadmill_out_hitbox') &&
-          intersection.intersecting === true
+          intersection.intersecting === true &&
+          intersection.lastIntersecting !== undefined
       )
+
       // console.log(outHitboxes)
-      if (outHitboxes.length > 0) {
+      if (outHitboxesIntersections.length > 0) {
         this.model.material.color = new THREE.Color(0xff0000)
+        this.parent.remove(this)
+        intersectionsWorld.removeHitbox(this.hitbox)
       }
+
+      // console.log(intersections)
     })
   }
 }
