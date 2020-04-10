@@ -30,7 +30,7 @@ export default class Level01 extends THREE.Object3D {
     this.zones = this.model.getObjectByName('zones')
 
     // spawn point
-    this.spawnPoint = new THREE.Vector3(0, 1, 18)
+    this.spawnPoint = new THREE.Vector3(0.5, 1, 18.5)
 
     this.initTreadmills()
 

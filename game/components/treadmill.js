@@ -49,7 +49,7 @@ export default class Treadmill extends THREE.Object3D {
     this.direction = Math.random() > 0.5 ? 1 : -1
     this.speed = Math.max(Math.random(), 0.5) / 20
 
-    this.appearIntervalBasis = 2.5
+    this.appearIntervalBasis = 5
 
     this.appearInterval = this.getNewInterval()
 
@@ -95,7 +95,7 @@ export default class Treadmill extends THREE.Object3D {
       BoxGeometry,
       new THREE.MeshBasicMaterial({ color: 0xffffff })
     )
-    postMesh.scale.set(1, 0.4, 0.5)
+    postMesh.scale.set(0.7, 0.4, 0.5)
 
     const post = new ParcelPost(postMesh)
     post.position.copy(this.spawnPoint)

@@ -4,12 +4,13 @@
 
 <script>
 // import gsap from 'gsap'
-// import useWebGL from '@/hooks/use-webgl'
+import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
+import useKeyboard from '@/hooks/use-keyboard'
 // import useCamera from '@/hooks/use-camera'
 
 import Player from '@/game/components/player'
-// import CameraMouvement from '@/game/components/camera-mouvement'
+import CameraMouvement from '@/game/components/camera-mouvement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
@@ -25,27 +26,85 @@ export default {
       this.map = new MapLevel01()
       await this.map.load()
 
-      // console.log(this.map.model)
-
       this.levelGroup.add(this.map)
 
       this.terrain = new GridTerrain(this.map.zones)
-      // const { scene: webglScene } = useWebGL()
-      // webglScene.add(this.terrain.debug)
+      const { scene: webglScene } = useWebGL()
+      webglScene.add(this.terrain.debug)
 
-      this.player = new Player({ terrain: this.terrain })
+      this.player = new Player()
       await this.player.load()
       this.initIntersections()
       this.player.position.copy(this.map.spawnPoint)
 
       this.levelGroup.add(this.player)
 
-      // this.cameraAnimation = new CameraMouvement({
-      //   mesh: this.player,
-      //   duration: 1
-      // })
+      this.cameraAnimation = new CameraMouvement({
+        mesh: this.player,
+        duration: 1
+      })
+
+      const { events: keyboardEvents } = useKeyboard()
+      keyboardEvents.on('keydown', this.onKeydown)
 
       raf.add('level1', this.loop.bind(this))
+    },
+
+    onKeydown(e) {
+      const delta = new THREE.Vector3()
+      switch (e.code) {
+        case 'ArrowLeft':
+          delta.x -= 1
+          break
+        case 'ArrowRight':
+          delta.x += 1
+          break
+        case 'ArrowDown':
+          delta.z += 1
+          break
+        case 'ArrowUp':
+          delta.z -= 1
+          break
+        default:
+          break
+      }
+
+      if (this.player.positionTween) return
+
+      delta.add(this.player.position)
+
+      const { scene: gameScene } = useGame()
+
+      const nextPosition = delta.clone().applyMatrix4(gameScene.matrixWorld)
+
+      const intersects = this.terrain.castCell(nextPosition)
+
+      if (intersects.length > 0) {
+        // if intersects = can walk on next zone
+        const intersect = intersects[0]
+        const zoneName = intersect.object.name
+
+        // if player on treadmill -> unhook()
+
+        const position = intersect.point
+
+        const m = new THREE.Matrix4().getInverse(gameScene.matrixWorld)
+        position.applyMatrix4(m)
+
+        if (zoneName.includes('floor')) {
+          if (this.hookingTreadmill) {
+            this.hookingTreadmill.unHook(this.player)
+          }
+          position.x = Math.floor(position.x) + 0.5
+          position.z = Math.floor(position.z) + 0.5
+        }
+
+        // this.player.position.copy(position)
+
+        this.player.moveTo(position)
+      } else {
+        console.log('out')
+      }
     },
 
     loop() {},
@@ -55,18 +114,6 @@ export default {
     },
 
     onPlayerIntersects(intersections) {
-      // parcel posts
-      const parcelPostsIntersections = intersections.filter(
-        (intersection) =>
-          intersection.target._layers.includes('parcel_post') &&
-          intersection.lastIntersecting !== undefined &&
-          intersection.intersecting === true
-      )
-
-      if (parcelPostsIntersections.length > 0) {
-        this.onPlayerIntersectsWithParcelPost()
-      }
-
       // treadmills
       const treadmillsIntersections = intersections.filter(
         (intersection) =>
@@ -79,55 +126,39 @@ export default {
         console.log('PLAYER INTERSECTS WITH TREADMILL')
 
         const treadmillIntersection = treadmillsIntersections[0].target
-        if (this.treadmill) {
-          this.treadmill.unHook(this.player)
+        if (this.hookingTreadmill) {
+          this.hookingTreadmill.unHook(this.player)
         }
-        this.treadmill = treadmillIntersection.userData.parentInstance
-        this.treadmill.hook(this.player)
+        this.hookingTreadmill = treadmillIntersection.userData.parentInstance
+        this.hookingTreadmill.hook(this.player)
       }
 
-      // const treadmillsIntersections = intersections.filter(
-      //   (intersection) =>
-      //     intersection.target._layers.includes('treadmill') &&
-      //     intersection.lastIntersecting !== undefined
-      // )
+      // parcel posts
+      const parcelPostsIntersections = intersections.filter(
+        (intersection) =>
+          intersection.target._layers.includes('parcel_post') &&
+          intersection.lastIntersecting !== undefined &&
+          intersection.intersecting === true
+      )
 
-      // const leavedTreadmill = treadmillsIntersections.filter(
-      //   (intersection) => intersection.intersecting === false
-      // )
-
-      // // if (isPlayerLeavedTreadmill) {
-      // //   console.log('player leaved treadmill')
-      // // }
-
-      // const enteredTreadmills = treadmillsIntersections.filter(
-      //   (intersection) => intersection.intersecting === true
-      // )
-
-      // // if (enteredTreadmills.length > 0) {
-      // //   console.log('player entered treadmill', enteredTreadmills)
-      // // }
-
-      // if (enteredTreadmills.length > 0) {
-      //   // unhook
-
-      //   console.log('entering')
-
-      //   // hook
-      // } else if (leavedTreadmill.length > 0) {
-      //   // unhook
-
-      //   console.log('leaving')
-      // }
+      if (parcelPostsIntersections.length > 0) {
+        this.onPlayerIntersectsWithParcelPost()
+      }
     },
 
     onPlayerIntersectsWithParcelPost() {
       console.log('PLAYER INTERSECTS WITH BOX')
+      if (this.hookingTreadmill) {
+        console.log(this.hookingTreadmill)
+        this.hookingTreadmill.unHook(this.player)
+      }
+      if (this.player.positionTween) {
+        this.player.positionTween.kill()
+        this.player.positionTween = null
+      }
+      console.log(this.map.spawnPoint)
+      this.player.position.copy(this.map.spawnPoint)
     }
-
-    // onPlayerEnteredInTreadmill(treadmill) {
-
-    // }
   }
 }
 </script>

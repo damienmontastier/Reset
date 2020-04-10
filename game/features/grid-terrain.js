@@ -14,7 +14,7 @@ export default class GridTerrain {
 
     this.cube = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial({ color: 0xff0000 })
+      new THREE.MeshBasicMaterial({ color: 0x0000ff })
     )
     // this.cube.position.set(0.5, 0.5, 0.5)
 
@@ -22,7 +22,7 @@ export default class GridTerrain {
       this.direction,
       new THREE.Vector3(0, 0, 0),
       10,
-      0xff0000
+      0x0000ff
     )
 
     this.debug.add(this.cube)
