@@ -1,7 +1,6 @@
 import Events from 'events'
 import gsap from 'gsap'
 
-// import useKeyboard from '@/hooks/use-keyboard'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 
@@ -10,9 +9,8 @@ import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
-  constructor({ terrain } = {}) {
+  constructor() {
     super()
-    // this.terrain = terrain
 
     this.init()
 
@@ -57,13 +55,6 @@ export default class Player extends THREE.Object3D {
   }
 
   initModel() {
-    this.cellSize = new THREE.Vector3(1, 1, 1)
-    this.cellCenter = new THREE.Vector3(
-      -this.cellSize.x / 2,
-      0,
-      -this.cellSize.z / 2
-    )
-
     // group that wrap model this > innerGroup > model
     this.innerGroup = new THREE.Group()
     // this.innerGroup.position.copy(this.cellCenter)
@@ -86,7 +77,7 @@ export default class Player extends THREE.Object3D {
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
       layers: ['player'],
-      filters: ['treadmill', 'parcel_post'],
+      filters: ['treadmill', 'parcel_post', 'treadmill_edge'],
       sleeping: false,
       kinematic: false
     })
@@ -104,13 +95,6 @@ export default class Player extends THREE.Object3D {
     this.initHitbox()
 
     this.animations.idle.play()
-
-    // const { events: keyboardEvents } = useKeyboard()
-
-    // console.log('player.js', this.getWorldPosition(new THREE.Vector3()))
-
-    // this.onKeydownHandler = this.onKeydown.bind(this)
-    // keyboardEvents.on('keydown', this.onKeydownHandler)
   }
 
   destroy() {
@@ -123,87 +107,7 @@ export default class Player extends THREE.Object3D {
       const time = this.positionTween.time()
       this.positionTween.time(time + clock.deltaTime)
     }
-
-    // if (this.animationMixer) {
-    //   this.animationMixer.update(deltaTime * (1 / JUMP_DURATION))
-    // }
   }
-
-  // onKeydown(e) {
-  //   const delta = new THREE.Vector3()
-
-  //   // keysHandler
-  //   switch (e.code) {
-  //     case 'ArrowLeft':
-  //       delta.x -= this.cellSize.x
-  //       break
-  //     case 'ArrowRight':
-  //       delta.x += this.cellSize.x
-  //       break
-  //     case 'ArrowDown':
-  //       delta.z += this.cellSize.z
-  //       break
-  //     case 'ArrowUp':
-  //       delta.z -= this.cellSize.z
-  //       break
-  //     default:
-  //       break
-  //   }
-
-  //   // move pathfinder
-  //   this.pathfinder.position.add(delta)
-  //   this.moveTo(this.pathfinder.getWorldPosition(new THREE.Vector3()))
-  //   // reset pathfinder
-  //   this.pathfinder.position.copy(new THREE.Vector3())
-  // }
-
-  // moveTo(position) {
-  //   if (!this.positionTween) {
-  //     const intersects = this.terrain.castCell(position)
-
-  //     if (intersects.length) {
-  //       // player can walk
-  //       const intersect = intersects[0]
-  //       // console.log(intersect)
-
-  //       const point = intersect.point
-
-  //       // get scale
-  //       const scale = new THREE.Vector3()
-  //       this.matrixWorld.decompose(
-  //         new THREE.Vector3(),
-  //         new THREE.Quaternion(),
-  //         scale
-  //       )
-
-  //       // apply scale
-  //       point.divide(scale)
-
-  //       // set next position
-  //       this.nextPosition = point.clone()
-
-  //       // set to center of the cell
-  //       this.nextPosition.sub(this.cellCenter)
-
-  //       const zone = intersect.object.name
-
-  //       this.positionTween = this.jumpAnimation()
-  //       this.positionTween.eventCallback('onStart', () => {
-  //         this.events.emit('move:start', { zone, position: this.nextPosition })
-  //         // this.animations.idle.stop()
-  //         // this.animations.walking.play()
-  //       })
-  //       this.positionTween.eventCallback('onComplete', () => {
-  //         // this.animations.walking.stop()
-  //         // this.animations.idle.play()
-  //         requestAnimationFrame(() => {
-  //           this.events.emit('move:end', { zone, position: this.nextPosition })
-  //           this.positionTween = false
-  //         })
-  //       })
-  //     }
-  //   }
-  // }
 
   moveTo(position) {
     const tl = new gsap.timeline()

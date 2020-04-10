@@ -22,7 +22,7 @@ export default class ParcelPost extends THREE.Object3D {
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
       layers: ['parcel_post'],
-      filters: ['treadmill_out_hitbox']
+      filters: ['treadmill_edge']
     })
 
     const { intersections: intersectionsWorld } = useGame()
@@ -35,7 +35,7 @@ export default class ParcelPost extends THREE.Object3D {
   onIntersecting(intersections) {
     const outHitboxesIntersections = intersections.filter(
       (intersection) =>
-        intersection.target._layers.includes('treadmill_out_hitbox') &&
+        intersection.target._layers.includes('treadmill_edge') &&
         intersection.intersecting === true &&
         intersection.lastIntersecting !== undefined
     )

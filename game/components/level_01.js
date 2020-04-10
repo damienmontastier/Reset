@@ -86,7 +86,7 @@ export default class Level01 extends THREE.Object3D {
     this.outHitboxUpstream = new INTERSECTIONS.Hitbox(
       this.outHitboxUpstreamMesh,
       {
-        layers: ['treadmill_out_hitbox'],
+        layers: ['treadmill_edge'],
         sleeping: true
       }
     )
@@ -102,7 +102,7 @@ export default class Level01 extends THREE.Object3D {
     this.outHitboxDownstreamMesh = new INTERSECTIONS.Hitbox(
       this.outHitboxDownstreamMesh,
       {
-        layers: ['treadmill_out_hitbox'],
+        layers: ['treadmill_edge'],
         sleeping: true
       }
     )

@@ -47,9 +47,9 @@ export default class Treadmill extends THREE.Object3D {
     this.simplex = new SimplexNoise()
 
     this.direction = Math.random() > 0.5 ? 1 : -1
-    this.speed = Math.max(Math.random(), 0.5) / 20
+    this.speed = Math.max(Math.random(), 0.4) / 20
 
-    this.appearIntervalBasis = 5
+    this.appearIntervalBasis = 6
 
     this.appearInterval = this.getNewInterval()
 

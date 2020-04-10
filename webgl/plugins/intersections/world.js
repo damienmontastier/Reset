@@ -6,6 +6,10 @@ export default class World extends THREE.Object3D {
 
     this.hitboxes = new THREE.Group()
 
+    this.infos = {
+      intersections: 0
+    }
+
     this.add(this.hitboxes)
   }
 
@@ -18,7 +22,7 @@ export default class World extends THREE.Object3D {
   }
 
   intersects() {
-    this.intersectsCounter = 0
+    let i = 0
     // get intersections
     let hitboxes = this.hitboxes.children
 
@@ -37,7 +41,7 @@ export default class World extends THREE.Object3D {
 
       targets.forEach((target) => {
         if (hitbox.uuid !== target.uuid) {
-          this.intersectsCounter++
+          i++
 
           const lastIntersecting = hitbox.intersections[target.uuid]
             ? hitbox.intersections[target.uuid].intersecting
@@ -70,7 +74,7 @@ export default class World extends THREE.Object3D {
       }
     })
 
-    // console.log('intersections :', this.intersectsCounter)
+    this.infos.intersections = i
   }
 
   step() {

@@ -99,8 +99,6 @@ export default {
           position.z = Math.floor(position.z) + 0.5
         }
 
-        // this.player.position.copy(position)
-
         this.player.moveTo(position)
       } else {
         console.log('out')
@@ -142,6 +140,19 @@ export default {
       )
 
       if (parcelPostsIntersections.length > 0) {
+        this.onPlayerIntersectsWithParcelPost()
+      }
+
+      // treadmills edges
+
+      const treadmillsEdgesIntersections = intersections.filter(
+        (intersection) =>
+          intersection.target._layers.includes('treadmill_edge') &&
+          intersection.lastIntersecting !== undefined &&
+          intersection.intersecting === true
+      )
+
+      if (treadmillsEdgesIntersections.length > 0) {
         this.onPlayerIntersectsWithParcelPost()
       }
     },
