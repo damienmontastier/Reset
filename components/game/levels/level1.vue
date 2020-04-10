@@ -156,7 +156,6 @@ export default {
         this.player.positionTween.kill()
         this.player.positionTween = null
       }
-      console.log(this.map.spawnPoint)
       this.player.position.copy(this.map.spawnPoint)
     }
   }
