@@ -14,8 +14,8 @@ export default class Player extends THREE.Object3D {
 
     this.init()
 
-    const { raf } = useGame()
-    raf.add('player', this.loop.bind(this))
+    // const { raf } = useGame()
+    // raf.add('player', this.loop.bind(this))
   }
 
   async load() {
@@ -102,12 +102,12 @@ export default class Player extends THREE.Object3D {
     raf.remove('player')
   }
 
-  loop(clock) {
-    if (this.positionTween) {
-      const time = this.positionTween.time()
-      this.positionTween.time(time + clock.deltaTime)
-    }
-  }
+  // loop(clock) {
+  //   if (this.positionTween) {
+  //     const time = this.positionTween.time()
+  //     this.positionTween.time(time + clock.deltaTime)
+  //   }
+  // }
 
   moveTo(position) {
     const tl = new gsap.timeline()
@@ -118,8 +118,6 @@ export default class Player extends THREE.Object3D {
       y: position.y,
       z: position.z
     })
-
-    tl.pause()
 
     this.positionTween = tl
 

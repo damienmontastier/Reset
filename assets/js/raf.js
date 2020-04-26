@@ -24,8 +24,6 @@ export default class Raf {
         raf.callback({ time, deltaTime })
       })
 
-    // this.stats.end()
-
     this.rafId = requestAnimationFrame(this.loop.bind(this))
   }
 

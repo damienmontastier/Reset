@@ -1,11 +1,14 @@
+// import gsap from 'gsap'
+
 import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useCamera from '@/hooks/use-camera'
+import useRAF from '@/hooks/use-raf'
 
 import ToonMaterial from '@/webgl/materials/toon.js'
 
-import Raf from '@/plugins/raf.js'
+// import Raf from '@/plugins/raf.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -15,15 +18,20 @@ class Game {
   constructor() {
     this.scene = new THREE.Group()
     this.scene.scale.setScalar(100)
-    this.raf = new Raf()
+    // this.raf = new Raf()
 
     const { scene } = useWebGL()
     scene.add(this.scene)
 
     this.intersections = new INTERSECTIONS.World()
-    scene.add(this.intersections)
+    // scene.add(this.intersections)
 
     this.init()
+
+    // console.log(gsap)
+    // // gsap.ticker.lagSmoothing(0)
+    // gsap.globalTimeline.pause()
+    // console.log(gsap.globalTimeline)
   }
 
   init() {
@@ -37,7 +45,8 @@ class Game {
 
     // this.initGUI()
 
-    this.raf.add('use-game', this.loop.bind(this), 1)
+    const RAF = useRAF()
+    RAF.add('use-game', this.loop.bind(this), 1)
   }
 
   initCamera() {

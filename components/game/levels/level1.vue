@@ -8,6 +8,7 @@ import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
 import useKeyboard from '@/hooks/use-keyboard'
 // import useCamera from '@/hooks/use-camera'
+// import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
 import CameraMouvement from '@/game/components/camera-mouvement'
@@ -20,7 +21,7 @@ export default {
   },
   methods: {
     async init() {
-      const { scene: gameScene, raf } = useGame()
+      const { scene: gameScene } = useGame()
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
       this.map = new MapLevel01()
@@ -47,7 +48,8 @@ export default {
       const { events: keyboardEvents } = useKeyboard()
       keyboardEvents.on('keydown', this.onKeydown)
 
-      raf.add('level1', this.loop.bind(this))
+      // const RAF = useRAF()
+      //       RAF.add('level1', this.loop.bind(this))
     },
 
     onKeydown(e) {

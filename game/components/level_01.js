@@ -3,6 +3,7 @@ import Treadmill from './treadmill'
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
+import useRAF from '@/hooks/use-raf'
 
 import BoxGeometry from '@/webgl/geometries/box'
 
@@ -65,8 +66,8 @@ export default class Level01 extends THREE.Object3D {
       }
     })
 
-    const { raf } = useGame()
-    raf.add('level_01', this.update.bind(this), 0)
+    const RAF = useRAF()
+    RAF.add('level_01', this.update.bind(this), 0)
   }
 
   initTreadmills() {
