@@ -1,4 +1,6 @@
 import useGame from '@/hooks/use-game'
+// import useGUI from '@/hooks/use-gui'
+import ToonMaterial from '@/webgl/materials/toon.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -10,7 +12,20 @@ export default class ParcelPost extends THREE.Object3D {
     this.model = model
     this.add(this.model)
 
+    this.initMaterial()
     this.initHitbox()
+  }
+
+  initMaterial() {
+    const material = new ToonMaterial({
+      color: Math.floor(Math.random() * 16777215),
+      emissive: Math.floor(Math.random() * 16777215)
+    })
+
+    this.model.material = material
+
+    // const gui = useGUI()
+    // gui.addMaterial(this.model.uuid.substring(0, 10), material)
   }
 
   initHitbox() {
