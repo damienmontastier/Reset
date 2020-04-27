@@ -94,7 +94,21 @@ export default {
         const m = new THREE.Matrix4().getInverse(gameScene.matrixWorld)
         position.applyMatrix4(m)
 
-        if (zoneName.includes('floor')) {
+        const intersectZones = intersects.map(
+          (intersect) => intersect.object.name
+        )
+        console.log(intersectZones)
+
+        if (intersectZones.includes('zone_tuto')) {
+          this.$events.emit('tuto')
+        }
+
+        if (intersectZones.includes('zone_endgame')) {
+          const clock = useClock()
+          clock.pause()
+        }
+
+        if (!zoneName.includes('treadmill')) {
           // player is not on treadmill
           if (this.hookingTreadmill) {
             this.hookingTreadmill.unHook(this.player)

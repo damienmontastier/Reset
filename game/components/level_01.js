@@ -6,6 +6,7 @@ import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
+import useKeyboard from '@/hooks/use-keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
 
@@ -19,7 +20,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level_01.glb'
+          path: 'obj/level_01/level01_10.glb'
         }
       ]
     })
@@ -28,8 +29,6 @@ export default class Level01 extends THREE.Object3D {
 
     this.model = this.files.model.scene
     this.add(this.model)
-
-    console.log(this.model)
 
     const background = this.model.getObjectByName('model_background')
     const gui = useGUI()
@@ -43,11 +42,30 @@ export default class Level01 extends THREE.Object3D {
     // spawn point
     this.spawnPoint = new THREE.Vector3(0.5, 1, 18.5)
 
+    this.init()
+  }
+
+  async init() {
+    const keyboard = useKeyboard()
+    keyboard.events.on('keydown', (e) => {
+      // SHIFT+P to stop
+      if (e.keyCode === 80 && e.shiftKey) {
+        this.paused = !this.paused
+        console.log('paused')
+      }
+    })
+    this.paused = false
     this.initTreadmills()
+    this.initZones()
 
     // instances
     await this.replaceInstances()
 
+    const RAF = useRAF()
+    RAF.add('level_01', this.update.bind(this), 0)
+  }
+
+  initZones() {
     // debug materials
     this.zones.traverse((zone) => {
       const name = zone.name
@@ -93,15 +111,18 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('zone_spawn')) {
+        // zone.visible = false
         // console.log('spawn', zone.position)
         // this.spawnPoint = zone.position.clone()
         // console.log('spawn', zone.position)
         // zone.material = new THREE.MeshBasicMaterial({ color: 0x00ffff })
+        // zone.position.add(new THREE.Vector3(0.5, 1, 0.5))
+      }
+
+      if (name.includes('zone_tuto')) {
+        zone.visible = false
       }
     })
-
-    const RAF = useRAF()
-    RAF.add('level_01', this.update.bind(this), 0)
   }
 
   initTreadmills() {
@@ -176,6 +197,7 @@ export default class Level01 extends THREE.Object3D {
   }
 
   update(clock) {
+    if (this.paused) return
     this.treadmills.forEach((treadmill) => {
       treadmill.update(clock)
     })
