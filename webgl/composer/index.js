@@ -45,22 +45,18 @@ export default class Composer {
     this.composer = new EffectComposer(this.renderer)
 
     // passes
-    this.effectPass = new EffectPass(
-      this.camera,
-      this.outlineEffect,
-      this.antialiasingEffect.smaaEffect
-    )
+    this.effectPass = new EffectPass(this.camera, this.outlineEffect)
 
-    this.AAPass = new EffectPass(
-      this.camera,
-      this.antialiasingEffect.smaaEffect
-    )
+    // this.AAPass = new EffectPass(
+    //   this.camera,
+    //   this.antialiasingEffect.smaaEffect
+    // )
 
     // addPasses
     this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
     this.composer.addPass(this.effectPass)
-    this.composer.addPass(this.AAPass)
+    // this.composer.addPass(this.AAPass)
   }
 
   render(clock) {
