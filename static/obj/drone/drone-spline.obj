@@ -1,7 +1,7 @@
 # Blender v2.82 (sub 7) OBJ File: 'test spline.blend'
 # www.blender.org
 mtllib test spline 4.mtl
-o Drone_Drone.001
+o Drone
 v 0.000000 4.000000 0.000000
 v 0.000000 5.000000 0.000000
 v 0.000000 4.000000 -1.000000

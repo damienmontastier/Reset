@@ -12,8 +12,6 @@ export default class CameraMouvement {
 
     this.toNextPosition()
 
-    raf.add('camera-animation', this.loop.bind(this), 0)
-
     document.addEventListener('mousedown', () => {
       raf.pause = true
     })
@@ -37,7 +35,7 @@ export default class CameraMouvement {
       .pause()
   }
 
-  loop(clock) {
+  render(clock) {
     if (this.gsapPosition) {
       this.toNextPosition()
       const time = this.gsapPosition.time()

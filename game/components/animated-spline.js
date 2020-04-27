@@ -8,7 +8,7 @@ export default class AnimatedWorker {
     this.isMovable = false
     this.worker = worker
     this.spline = spline
-    this.path = this.spline.path
+    this.path = this.spline.vectors
     this.loop = loop
     this.duration = duration
     this.autoplay = autoplay
@@ -28,34 +28,30 @@ export default class AnimatedWorker {
   }
 
   toNextPosition() {
+    const dist = this.worker.position.distanceTo(this.nextPosition)
+
+    console.log(dist)
+
     this.gsapPosition = gsap
       .to(this.worker.position, {
         x: this.nextPosition.x,
         y: this.nextPosition.y,
         z: this.nextPosition.z,
-        duration: this.duration * 0.1,
-        ease: 'power2.out',
+        duration: 0.1,
         onComplete: () => (this.gsapPosition = undefined)
       })
       .pause()
   }
 
-  setDirection({ model, direction }) {
-    const _axis = new THREE.Vector3()
+  get nextPosition() {
+    const time =
+      this.loop === true
+        ? this.time % 1
+        : Math.min(Math.max(this.time, 0.0), 1.0)
 
-    if (direction.y > 0.99999) {
-      model.quaternion.set(0, 0, 0, 1)
-    } else if (direction.y < -0.99999) {
-      model.quaternion.set(1, 0, 0, 0)
-    } else {
-      _axis.set(direction.z, 0, -direction.x).normalize()
+    const normalize = Math.floor((this.path.length * (time * 100)) / 100)
 
-      const radians = Math.acos(direction.y)
-
-      model.quaternion.setFromAxisAngle(_axis, radians)
-      //   model.rotation.x = 0
-      //   model.rotation.z = 0
-    }
+    return this.path[normalize]
   }
 
   stop() {
@@ -94,20 +90,29 @@ export default class AnimatedWorker {
     // })
 
     if (this.gsapPosition) {
+      this.toNextPosition()
       this.time += clock.deltaTime / this.duration
       this.gsapPosition.time(clock.deltaTime)
-      this.toNextPosition()
+    }
+  }
+
+  setDirection({ model, direction }) {
+    const _axis = new THREE.Vector3()
+
+    if (direction.y > 0.99999) {
+      model.quaternion.set(0, 0, 0, 1)
+    } else if (direction.y < -0.99999) {
+      model.quaternion.set(1, 0, 0, 0)
+    } else {
+      _axis.set(direction.z, 0, -direction.x).normalize()
+
+      const radians = Math.acos(direction.y)
+
+      model.quaternion.setFromAxisAngle(_axis, radians)
+      //   model.rotation.x = 0
+      //   model.rotation.z = 0
     }
   }
 
   destroy() {}
-
-  get nextPosition() {
-    const time =
-      this.loop === true
-        ? this.time % 1
-        : Math.min(Math.max(this.time, 0.0), 1.0)
-
-    return this.path.getPoint(time)
-  }
 }

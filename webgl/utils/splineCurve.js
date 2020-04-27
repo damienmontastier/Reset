@@ -7,12 +7,14 @@ export default class Spline {
   constructor({ spline, scale = 10 }) {
     this.time = 0
     this.isMoving = false
+
     this.object = spline
     this.object.scale.multiplyScalar(scale)
     this.scale = scale
 
     this.points = this.object.geometry.getAttribute('position').array
     this.vectors = this.convertPointsArrayToVector3(this.points, this.scale)
+    this.path = new THREE.CatmullRomCurve3(this.vectors)
   }
 
   convertPointsArrayToVector3(points, scale) {

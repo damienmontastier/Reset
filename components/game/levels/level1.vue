@@ -27,7 +27,7 @@ export default {
       const { scene: gameScene, raf } = useGame()
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
-      console.log(raf)
+
       this.map = new MapLevel01()
       await this.map.load()
 
@@ -54,7 +54,9 @@ export default {
       raf.add('level1', this.loop.bind(this))
     },
 
-    loop() {},
+    loop(clock) {
+      this.cameraAnimation.render(clock)
+    },
 
     initIntersections() {
       // this.player.hitbox

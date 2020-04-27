@@ -31,7 +31,7 @@ class Game {
     this.initLights()
     // this.initGridTerrain()
 
-    this.addBox()
+    // this.addBox()
     // this.addFloor()
     // await this.addFactory()
 

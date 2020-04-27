@@ -17,20 +17,16 @@ export default class Factory extends THREE.Object3D {
         {
           name: 'splines',
           path: 'obj/factory-spline.obj'
+        },
+        {
+          name: 'drone',
+          path: 'obj/drone/drone-spline.obj'
         }
       ]
     })
-
-    // const { skeleton } = files
-    // console.log(skeleton)
-
-    // skeleton.scene.traverse((child) => {
-    //   console.log(child)
-    // })
-
     return new Promise((resolve, reject) => {
       assetsManager.get('splines').then((models) => {
-        resolve(models.splines)
+        resolve(models)
       })
     })
   }

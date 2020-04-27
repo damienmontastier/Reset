@@ -6,12 +6,12 @@
 import useGame from '@/hooks/use-game'
 import FactorySpline from '@/game/components/factory-spline'
 import Worker from '@/game/components/worker'
-import Spline from '@/webgl/utils/spline'
+import Spline from '@/webgl/utils/splineCurve'
 import AnimatedWorker from '@/game/components/animated-worker'
 
 export default {
   async mounted() {
-    const { scene } = useGame()
+    const { scene, raf } = useGame()
 
     this.factory = new FactorySpline()
     const splines = await this.factory.load()
@@ -32,7 +32,7 @@ export default {
       spline: this.spline,
       loop: true,
       autoplay: true,
-      duration: 2
+      duration: 10
     })
 
     if (!this.animatedWorker.autoplay) {
@@ -43,6 +43,13 @@ export default {
       document.addEventListener('mouseup', () => {
         this.animatedWorker.stop()
       })
+    }
+
+    raf.add('test-damien', this.loop.bind(this))
+  },
+  methods: {
+    loop(clock) {
+      this.animatedWorker.render(clock)
     }
   }
 }
