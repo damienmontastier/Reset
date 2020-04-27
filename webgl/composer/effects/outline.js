@@ -42,7 +42,9 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
   vec3 outlineMask = sobel(normalBuffer, step/ resolution.x, step/resolution.y, uv);
   outlineMask *= 100.;
 
-  outputColor.rgb = (length(outlineMask) > 0.) ? outlineColor : inputColor.rgb;
+  outputColor.rgb = (outlineMask.r > 0.001) ? outlineColor : inputColor.rgb;
+
+  // outputColor.rgb = outlineMask;
 }
 `
 // https://www.shadertoy.com/view/Xdf3Rf
