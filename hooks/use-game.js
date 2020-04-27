@@ -39,7 +39,7 @@ class Game {
     this.initLights()
     // this.initGridTerrain()
 
-    this.addBox()
+    // this.addBox()
     // this.addFloor()
     // await this.addFactory()
 
@@ -81,16 +81,16 @@ class Game {
     this.directionalLight.shadow.camera.bottom = -2048
     this.directionalLight.shadow.bias = 0.005
 
-    this.directionalLightHelper = new THREE.DirectionalLightHelper(
-      this.directionalLight,
-      100
-    )
-    scene.add(this.directionalLightHelper)
+    // this.directionalLightHelper = new THREE.DirectionalLightHelper(
+    //   this.directionalLight,
+    //   100
+    // )
+    // scene.add(this.directionalLightHelper)
 
-    const shadowHelper = new THREE.CameraHelper(
-      this.directionalLight.shadow.camera
-    )
-    scene.add(shadowHelper)
+    // const shadowHelper = new THREE.CameraHelper(
+    //   this.directionalLight.shadow.camera
+    // )
+    // scene.add(shadowHelper)
   }
 
   addFloor() {
@@ -235,7 +235,7 @@ class Game {
 
     this.directionalLight.position.x = Math.sin(time * 0.1) * 1000
     this.directionalLight.position.z = Math.cos(time * 0.1) * 1000
-    this.directionalLightHelper.update()
+    // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1
     if (this.frameCount % 1 === 0) this.intersections.step()

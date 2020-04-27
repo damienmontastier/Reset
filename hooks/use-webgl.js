@@ -30,11 +30,11 @@ class WebGL {
     )
 
     // camera controls
-    const {
-      OrbitControls
-    } = require('three/examples/jsm/controls/OrbitControls.js')
-    this.cameraControls = new OrbitControls(camera, this.canvas)
-    this.cameraControls.enableKeys = false
+    // const {
+    //   OrbitControls
+    // } = require('three/examples/jsm/controls/OrbitControls.js')
+    // this.cameraControls = new OrbitControls(camera, this.canvas)
+    // this.cameraControls.enableKeys = false
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({
