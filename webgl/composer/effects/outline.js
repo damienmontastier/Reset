@@ -1,90 +1,69 @@
 import { Uniform, Color } from 'three'
-import { Effect, EffectAttribute, BlendFunction } from 'postprocessing'
+import { Effect, BlendFunction } from 'postprocessing'
 
 const fragment = `
 uniform sampler2D normalBuffer;
-uniform float threshold;
 uniform float step;
 uniform vec3 outlineColor;
 
-float sobel_intensity(in vec4 color){
+float intensity(in vec4 color){
 	return sqrt((color.x*color.x)+(color.y*color.y)+(color.z*color.z));
 }
 
-float when_gt(float x, float y) {
-  return max(sign(x - y), 0.0);
-}
+vec3 sobel(sampler2D inputBuffer, float stepx, float stepy, vec2 uv){
+	// get samples around pixel
+    float tleft = intensity(texture(inputBuffer,uv + vec2(-stepx,stepy)));
+    float left = intensity(texture(inputBuffer,uv + vec2(-stepx,0)));
+    float bleft = intensity(texture(inputBuffer,uv + vec2(-stepx,-stepy)));
+    float top = intensity(texture(inputBuffer,uv + vec2(0,stepy)));
+    float bottom = intensity(texture(inputBuffer,uv + vec2(0,-stepy)));
+    float tright = intensity(texture(inputBuffer,uv + vec2(stepx,stepy)));
+    float right = intensity(texture(inputBuffer,uv + vec2(stepx,0)));
+    float bright = intensity(texture(inputBuffer,uv + vec2(stepx,-stepy)));
+ 
+	// Sobel masks (see http://en.wikipedia.org/wiki/Sobel_operator)
+	//        1 0 -1     -1 -2 -1
+	//    X = 2 0 -2  Y = 0  0  0
+	//        1 0 -1      1  2  1
+	
+	// You could also use Scharr operator:
+	//        3 0 -3        3 10   3
+	//    X = 10 0 -10  Y = 0  0   0
+	//        3 0 -3        -3 -10 -3
+ 
+    float x = tleft + 2.0*left + bleft - tright - 2.0*right - bright;
+    float y = -tleft - 2.0*top - tright + bleft + 2.0 * bottom + bright;
+    float color = sqrt((x*x) + (y*y));
+    return vec3(color,color,color);
+ }
 
-vec4 defferedColor(vec2 uv) {
-  vec4 normalColor = texture2D(normalBuffer, uv);
-  return vec4(normalColor.rgb * 0.5 + vec3(readDepth(uv)), normalColor.a);
+void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
+  outputColor = inputColor;
+  vec3 outlineMask = sobel(normalBuffer, step/ resolution.x, step/resolution.y, uv);
+  outlineMask *= 100.;
 
-  // return vec4(vec3(readDepth(uv)),1.);
-}
-
-void mainImage(const in vec4 inputColor, const in vec2 uv,const in float depth, out vec4 outputColor) {
-  
-  float stepx = step*0.001;
-  float stepy = step*0.001*aspect;
-
-  float tleft =   sobel_intensity(defferedColor(uv + vec2(-stepx,stepy)));
-  float left =    sobel_intensity(defferedColor(uv + vec2(-stepx,0)));
-  float bleft =   sobel_intensity(defferedColor(uv + vec2(-stepx,-stepy)));
-  float top =     sobel_intensity(defferedColor(uv + vec2(0,stepy)));
-  float bottom =  sobel_intensity(defferedColor( uv + vec2(0,-stepy)));
-  float tright =  sobel_intensity(defferedColor( uv + vec2(stepx,stepy)));
-  float right =   sobel_intensity(defferedColor( uv + vec2(stepx,0)));
-  float bright =  sobel_intensity(defferedColor( uv + vec2(stepx,-stepy)));
-
-  float x = tleft + 2.0*left + bleft - tright - 2.0*right - bright;
-  float y = -tleft - 2.0*top - tright + bleft + 2.0 * bottom + bright;
-  float color = sqrt((x*x) + (y*y));
-
-  color = when_gt(color, threshold);
-
-  vec3 outColor = (color > 0.) ? outlineColor : inputColor.rgb;
-
-  outputColor = vec4(outColor,inputColor.a);
-
-  // outputColor= defferedColor(uv);
+  outputColor.rgb = (length(outlineMask) > 0.) ? outlineColor : inputColor.rgb;
 }
 `
-/**
- * A sobel effect
- *
- * Original shader code by Jeroen Baert - jeroen.baert@cs.kuleuven.be
- * http://www.forceflow.be
- */
+// https://www.shadertoy.com/view/Xdf3Rf
 
 export default class SobelEffect extends Effect {
-  /**
-   * Constructs a new bokeh effect.
-   *
-   * @param {Object} [options] - The options.
-   * @param {BlendFunction} [options.blendFunction=BlendFunction.NORMAL] - The blend function of this effect.
-   * @param {Number} [options.step=1] - The focus distance ratio, ranging from 0.0 to 1.0.
-   */
-
   constructor(
     normalBuffer = null,
     {
       blendFunction = BlendFunction.NORMAL,
       step = 1,
-      intensity = 1,
-      outlineColor = 0x000000,
-      threshold = 0.5
+      outlineColor = 0x000000
     } = {}
   ) {
     super('OutlineEffect', fragment, {
       blendFunction,
       // attributes: EffectAttribute.CONVOLUTION | EffectAttribute.DEPTH,
-      attributes: EffectAttribute.DEPTH,
+      // attributes: EffectAttribute.DEPTH,
       uniforms: new Map([
         ['normalBuffer', new Uniform(normalBuffer)],
         ['step', new Uniform(step)],
-        ['intensity', new Uniform(intensity)],
-        ['outlineColor', new Uniform(new Color(outlineColor))],
-        ['threshold', new Uniform(threshold)]
+        ['outlineColor', new Uniform(new Color(outlineColor))]
       ])
     })
   }

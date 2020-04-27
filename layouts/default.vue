@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img class="intro" src="/img/intro.png" alt="" v-if="!clicked" />
+    <!-- <img class="intro" src="/img/intro.png" alt="" v-if="!clicked" /> -->
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />

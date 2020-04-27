@@ -36,9 +36,8 @@ export default class Composer {
     this.outlineEffect = new OutlineEffect(
       this.normalPass.renderTarget.texture,
       {
-        step: 0.75,
-        outlineColor: 0x000000,
-        threshold: 0.15
+        step: 0.04,
+        outlineColor: 0x000000
       }
     )
 
@@ -135,9 +134,9 @@ export default class Composer {
       .name('step')
       .step(0.001)
 
-    sobelGUI
-      .add(this.outlineEffect.uniforms.get('threshold'), 'value')
-      .name('threshold')
+    // sobelGUI
+    //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
+    //   .name('threshold')
 
     sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
       this.outlineEffect.uniforms

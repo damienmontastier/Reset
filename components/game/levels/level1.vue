@@ -95,6 +95,7 @@ export default {
         position.applyMatrix4(m)
 
         if (zoneName.includes('floor')) {
+          // player is not on treadmill
           if (this.hookingTreadmill) {
             this.hookingTreadmill.unHook(this.player)
           }
@@ -149,7 +150,6 @@ export default {
       }
 
       // treadmills edges
-
       const treadmillsEdgesIntersections = intersections.filter(
         (intersection) =>
           intersection.target._layers.includes('treadmill_edge') &&
@@ -165,7 +165,6 @@ export default {
     onPlayerIntersectsWithParcelPost() {
       console.log('PLAYER INTERSECTS WITH BOX')
       if (this.hookingTreadmill) {
-        console.log(this.hookingTreadmill)
         this.hookingTreadmill.unHook(this.player)
       }
       if (this.player.positionTween) {
