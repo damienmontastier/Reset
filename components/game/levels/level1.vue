@@ -6,6 +6,7 @@
 // import gsap from 'gsap'
 // import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
+import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
 // import useCamera from '@/hooks/use-camera'
 import useRAF from '@/hooks/use-raf'
@@ -172,6 +173,9 @@ export default {
         this.player.positionTween = null
       }
       this.player.position.copy(this.map.spawnPoint)
+
+      const clock = useClock()
+      clock.add(10)
     }
   }
 }

@@ -30,7 +30,6 @@ export default class CameraMouvement {
   }
 
   loop() {
-    console.log('yo')
     this.goToNextPosition()
   }
 

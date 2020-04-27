@@ -27,11 +27,6 @@ class Game {
     // scene.add(this.intersections)
 
     this.init()
-
-    // console.log(gsap)
-    // // gsap.ticker.lagSmoothing(0)
-    // gsap.globalTimeline.pause()
-    // console.log(gsap.globalTimeline)
   }
 
   init() {

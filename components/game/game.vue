@@ -1,5 +1,6 @@
 <template>
   <div class="appGame">
+    <game-clock class="appGame__clock" />
     <div class="appGame__router">
       <router-link :to="'level1'">level1</router-link>
       <router-link :to="'level2'">level2</router-link>
@@ -10,8 +11,12 @@
 
 <script>
 import useGame from '@/hooks/use-game'
+import GameClock from '@/components/game/game-clock'
 
 export default {
+  components: {
+    GameClock
+  },
   mounted() {
     useGame()
   }
@@ -26,6 +31,17 @@ export default {
     padding: 8px;
     position: absolute;
     right: 0;
+  }
+
+  &__clock {
+    background: #fff;
+    color: #000;
+    font-family: sans-serif;
+    font-size: 20px;
+    left: 8px;
+    padding: 8px;
+    position: absolute;
+    top: 64px;
   }
 }
 </style>

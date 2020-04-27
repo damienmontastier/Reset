@@ -10,6 +10,7 @@
 <script>
 import appScene from '@/components/webgl/scene'
 import appGame from '@/components/game/game'
+import useClock from '@/hooks/use-clock'
 
 export default {
   components: {
@@ -24,6 +25,9 @@ export default {
   mounted() {
     window.addEventListener('click', () => {
       this.clicked = true
+
+      const clock = useClock()
+      clock.resume()
     })
   }
 }
