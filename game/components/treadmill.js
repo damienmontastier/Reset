@@ -13,7 +13,6 @@ export default class Treadmill extends THREE.Object3D {
     this.index = index
     this.model = model
     this.add(this.model)
-    console.log(this.model)
     this.model.matrixAutoUpdate = false
 
     this.init()
