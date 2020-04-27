@@ -1,6 +1,6 @@
-// import TWEEN from '@tweenjs/tween.js'
+import Events from 'events'
 import gsap from 'gsap'
-import useKeyboard from '@/hooks/use-keyboard'
+
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 
@@ -9,14 +9,13 @@ import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
-  constructor({ terrain } = {}) {
+  constructor() {
     super()
-    this.terrain = terrain
 
     this.init()
 
-    const { raf } = useGame()
-    raf.add('player', this.loop.bind(this))
+    // const { raf } = useGame()
+    // raf.add('player', this.loop.bind(this))
   }
 
   async load() {
@@ -56,16 +55,9 @@ export default class Player extends THREE.Object3D {
   }
 
   initModel() {
-    this.cellSize = new THREE.Vector3(1, 1, 1)
-    this.cellCenter = new THREE.Vector3(
-      -this.cellSize.x / 2,
-      0,
-      -this.cellSize.z / 2
-    )
-
     // group that wrap model this > innerGroup > model
     this.innerGroup = new THREE.Group()
-    this.innerGroup.position.copy(this.cellCenter)
+    // this.innerGroup.position.copy(this.cellCenter)
     this.add(this.innerGroup)
 
     this.innerGroup.add(this.model)
@@ -79,17 +71,23 @@ export default class Player extends THREE.Object3D {
       new THREE.BoxBufferGeometry(1, 1, 1),
       new THREE.MeshBasicMaterial()
     )
-    this.hitboxMesh.position.copy(new THREE.Vector3(-0.5, 0.5, -0.5))
+    this.hitboxMesh.position.copy(new THREE.Vector3(0, 0.5, 0))
     this.hitboxMesh.scale.setScalar(0.9)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
-    this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh)
+    this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
+      layers: ['player'],
+      filters: ['treadmill', 'parcel_post', 'treadmill_edge'],
+      sleeping: false,
+      kinematic: false
+    })
 
     const { intersections } = useGame()
     intersections.addHitbox(this.hitbox)
   }
 
   async init() {
+    this.events = new Events()
     await this.load()
 
     this.initAnimations()
@@ -97,13 +95,6 @@ export default class Player extends THREE.Object3D {
     this.initHitbox()
 
     this.animations.idle.play()
-
-    const { events: keyboardEvents } = useKeyboard()
-
-    // console.log('player.js', this.getWorldPosition(new THREE.Vector3()))
-
-    this.onKeydownHandler = this.onKeydown.bind(this)
-    keyboardEvents.on('keydown', this.onKeydownHandler)
   }
 
   destroy() {
@@ -111,132 +102,79 @@ export default class Player extends THREE.Object3D {
     raf.remove('player')
   }
 
-  loop(clock) {
-    if (this.positionTween) {
-      const time = this.positionTween.time()
-      this.positionTween.time(time + clock.deltaTime)
-    }
-
-    // if (this.animationMixer) {
-    //   this.animationMixer.update(deltaTime * (1 / JUMP_DURATION))
-    // }
-  }
-
-  onKeydown(e) {
-    const delta = new THREE.Vector3()
-
-    // keysHandler
-    switch (e.code) {
-      case 'ArrowLeft':
-        delta.x -= this.cellSize.x
-        break
-      case 'ArrowRight':
-        delta.x += this.cellSize.x
-        break
-      case 'ArrowDown':
-        delta.z += this.cellSize.z
-        break
-      case 'ArrowUp':
-        delta.z -= this.cellSize.z
-        break
-      default:
-        break
-    }
-
-    // move pathfinder
-    this.pathfinder.position.add(delta)
-    this.moveTo(this.pathfinder.getWorldPosition(new THREE.Vector3()))
-    // reset pathfinder
-    this.pathfinder.position.copy(new THREE.Vector3())
-  }
+  // loop(clock) {
+  //   if (this.positionTween) {
+  //     const time = this.positionTween.time()
+  //     this.positionTween.time(time + clock.deltaTime)
+  //   }
+  // }
 
   moveTo(position) {
-    const intersects = this.terrain.castCell(position)
-
-    if (intersects.length) {
-      // player can walk
-      const intersect = intersects[0]
-      const point = intersect.point
-
-      // get scale
-      const scale = new THREE.Vector3()
-      this.matrixWorld.decompose(
-        new THREE.Vector3(),
-        new THREE.Quaternion(),
-        scale
-      )
-
-      // apply scale
-      point.divide(scale)
-
-      // set next position
-      this.nextPosition = point.clone()
-
-      // set to center of the cell
-      this.nextPosition.sub(this.cellCenter)
-
-      if (!this.positionTween) {
-        this.positionTween = this.jumpAnimation()
-        this.positionTween.eventCallback('onStart', () => {
-          // this.animations.idle.stop()
-          // this.animations.walking.play()
-        })
-        this.positionTween.eventCallback('onComplete', () => {
-          // this.animations.walking.stop()
-          // this.animations.idle.play()
-          requestAnimationFrame(() => {
-            this.positionTween = false
-          })
-        })
-      }
-    }
-  }
-
-  jumpAnimation() {
-    const duration = JUMP_DURATION
-
     const tl = new gsap.timeline()
 
-    // tl.to(
-    //   this.position,
-    //   {
-    //     duration: duration * 0.3,
-    //     y: this.nextPosition.y + 0.5
-    //   },
-    //   duration * 0.4
-    // )
-
-    // tl.to(
-    //   this.position,
-    //   {
-    //     duration: duration * 0.3,
-    //     y: this.nextPosition.y
-    //   },
-    //   duration * 0.7
-    // )
-
-    // tl.to(
-    //   this.position,
-    //   {
-    //     duration: duration * 0.75,
-    //     x: this.nextPosition.x,
-    //     z: this.nextPosition.z,
-    //     ease: 'power2.in'
-    //   },
-    //   duration * 0.1
-    // )
-
     tl.to(this.position, {
-      duration,
-      x: this.nextPosition.x,
-      y: this.nextPosition.y,
-      z: this.nextPosition.z
+      duration: JUMP_DURATION,
+      x: position.x,
+      y: position.y,
+      z: position.z
     })
 
-    tl.pause()
+    this.positionTween = tl
 
-    return tl
+    this.positionTween.eventCallback('onStart', () => {})
+
+    this.positionTween.eventCallback('onComplete', () => {
+      requestAnimationFrame(() => {
+        this.positionTween = false
+      })
+    })
   }
+
+  // jumpAnimation() {
+  //   const duration = JUMP_DURATION
+
+  //   const tl = new gsap.timeline()
+
+  //   // tl.to(
+  //   //   this.position,
+  //   //   {
+  //   //     duration: duration * 0.3,
+  //   //     y: this.nextPosition.y + 0.5
+  //   //   },
+  //   //   duration * 0.4
+  //   // )
+
+  //   // tl.to(
+  //   //   this.position,
+  //   //   {
+  //   //     duration: duration * 0.3,
+  //   //     y: this.nextPosition.y
+  //   //   },
+  //   //   duration * 0.7
+  //   // )
+
+  //   // tl.to(
+  //   //   this.position,
+  //   //   {
+  //   //     duration: duration * 0.75,
+  //   //     x: this.nextPosition.x,
+  //   //     z: this.nextPosition.z,
+  //   //     ease: 'power2.in'
+  //   //   },
+  //   //   duration * 0.1
+  //   // )
+
+  //   tl.to(this.position, {
+  //     duration,
+  //     x: this.nextPosition.x,
+  //     y: this.nextPosition.y,
+  //     z: this.nextPosition.z
+  //   })
+
+  //   tl.pause()
+
+  //   return tl
+  // }
 
   get worldPosition() {
     return this.getWorldPosition(new THREE.Vector3())

@@ -1,31 +1,37 @@
 <template>
-  <div v-if="info" class="rendererInfo">
-    <div>calls: {{ info.render.calls }}</div>
-    <div>triangles: {{ info.render.triangles }}</div>
-    <div>geometries: {{ info.memory.geometries }}</div>
-    <div>textures: {{ info.memory.textures }}</div>
-    <div>programs: {{ info.programs.length }}</div>
+  <div v-if="rendererInfos && intersectionsInfos" class="rendererInfo">
+    <div>intersections: {{ intersectionsInfos.intersections }}</div>
+    <div>calls: {{ rendererInfos.render.calls }}</div>
+    <div>triangles: {{ rendererInfos.render.triangles }}</div>
+    <div>geometries: {{ rendererInfos.memory.geometries }}</div>
+    <div>textures: {{ rendererInfos.memory.textures }}</div>
+    <div>programs: {{ rendererInfos.programs.length }}</div>
   </div>
 </template>
 
 <script>
 import useWebGL from '@/hooks/use-webgl'
+import useGame from '@/hooks/use-game'
 
 export default {
   data() {
     return {
-      renderer: null,
-      info: null
+      rendererInfos: null,
+      intersectionsInfos: null
     }
   },
-  watch: {
-    'renderer.info.render.frame'() {
-      this.info = this.renderer.info
-    }
-  },
+  // watch: {
+  //   'renderer.info.render.frame'() {
+  //     this.info = this.renderer.info
+  //     console.log(this.info)
+  //   }
+  // },
   mounted() {
     const { renderer } = useWebGL()
-    this.renderer = renderer
+    this.rendererInfos = renderer.info
+
+    const { intersections } = useGame()
+    this.intersectionsInfos = intersections.infos
   }
 }
 </script>

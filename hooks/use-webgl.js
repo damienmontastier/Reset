@@ -1,6 +1,6 @@
 import Stats from 'stats.js'
 import viewport from '@/plugins/viewport'
-import Raf from '@/plugins/raf.js'
+import useRAF from '@/hooks/use-raf'
 import useCamera from '@/hooks/use-camera'
 
 let webgl
@@ -11,7 +11,7 @@ class WebGL {
     this.clock = new THREE.Clock()
 
     // raf
-    this.raf = new Raf(this.clock)
+    const RAF = useRAF()
 
     // scene
     this.scene = new THREE.Scene()
@@ -30,11 +30,11 @@ class WebGL {
     )
 
     // camera controls
-    const {
-      OrbitControls
-    } = require('three/examples/jsm/controls/OrbitControls.js')
-    this.cameraControls = new OrbitControls(camera, this.canvas)
-    this.cameraControls.enableKeys = false
+    // const {
+    //   OrbitControls
+    // } = require('three/examples/jsm/controls/OrbitControls.js')
+    // this.cameraControls = new OrbitControls(camera, this.canvas)
+    // this.cameraControls.enableKeys = false
 
     // renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -60,15 +60,15 @@ class WebGL {
     // stats
     this.stats = new Stats()
     document.body.appendChild(this.stats.dom)
-    this.raf.add('stats-begin', this.stats.begin, -1000)
-    this.raf.add('stats-end', this.stats.end, 1000)
+    RAF.add('stats-begin', this.stats.begin, -1000)
+    RAF.add('stats-end', this.stats.end, 1000)
 
     // raycaster
     const Raycaster = require('@/webgl/raycaster').default
     this.raycaster = new Raycaster(camera)
 
     // raf
-    this.raf.add('use-webgl', this.loop.bind(this), 0)
+    RAF.add('use-webgl', this.loop.bind(this), 0)
   }
 
   loop(clock) {
