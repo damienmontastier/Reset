@@ -72,7 +72,7 @@ export default class Player extends THREE.Object3D {
       new THREE.MeshBasicMaterial()
     )
     this.hitboxMesh.position.copy(new THREE.Vector3(0, 0.5, 0))
-    this.hitboxMesh.scale.setScalar(0.9)
+    this.hitboxMesh.scale.set(0.5, 1, 0.5)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {

@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <img class="intro" src="/img/intro.png" alt="" v-if="!clicked" />
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />
@@ -14,6 +15,16 @@ export default {
   components: {
     appScene,
     appGame
+  },
+  data() {
+    return {
+      clicked: false
+    }
+  },
+  mounted() {
+    window.addEventListener('click', () => {
+      this.clicked = true
+    })
   }
 }
 </script>
@@ -34,5 +45,15 @@ export default {
 
 #appView {
   z-index: 3;
+}
+
+.intro {
+  height: 100%;
+  left: 0;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 5;
 }
 </style>

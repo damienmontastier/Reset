@@ -1,8 +1,10 @@
 import Treadmill from './treadmill'
+import ToonMaterial from '@/webgl/materials/toon.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
+import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
 
 import BoxGeometry from '@/webgl/geometries/box'
@@ -42,7 +44,17 @@ export default class Level01 extends THREE.Object3D {
     this.zones.traverse((zone) => {
       const name = zone.name
       if (name.includes('floor')) {
-        zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+        // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+
+        const material = new ToonMaterial({
+          color: Math.floor(Math.random() * 16777215),
+          emissive: Math.floor(Math.random() * 16777215)
+        })
+
+        zone.material = material
+
+        const gui = useGUI()
+        gui.addMaterial(zone.uuid.substring(0, 10), material)
       }
 
       if (name.includes('treadmill')) {
@@ -50,12 +62,26 @@ export default class Level01 extends THREE.Object3D {
           color: 0x00ff00,
           visible: false
         })
+
+        // const material = new ToonMaterial({
+        //   color: Math.floor(Math.random() * 16777215),
+        //   emissive: Math.floor(Math.random() * 16777215)
+        // })
+
+        // zone.material = material
       }
 
       if (name.includes('terminal')) {
-        zone.material = new THREE.MeshBasicMaterial({
-          color: 0x0000ff
+        // zone.material = new THREE.MeshBasicMaterial({
+        //   color: 0x0000ff
+        // })
+
+        const material = new ToonMaterial({
+          color: Math.floor(Math.random() * 16777215),
+          emissive: Math.floor(Math.random() * 16777215)
         })
+
+        zone.material = material
       }
 
       if (name.includes('zone_spawn')) {
