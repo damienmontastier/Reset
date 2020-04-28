@@ -50,8 +50,12 @@ export default {
     window.addEventListener('click', () => {
       this.clicked = true
 
-      audioManager.stop(introSound)
-      audioManager.play(level01)
+      if (!this.keyDowned) {
+        audioManager.stop(introSound)
+        audioManager.play(level01)
+      }
+
+      this.keyDowned = true
 
       if (this.endgame) return
       const clock = useClock()
@@ -65,6 +69,8 @@ export default {
 
     this.$events.on('endgame', () => {
       this.endgame = true
+      audioManager.stop(level01)
+      audioManager.play(introSound)
     })
   }
 }
