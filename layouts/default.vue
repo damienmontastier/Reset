@@ -62,9 +62,9 @@ export default {
       clock.resume()
     })
     this.$events.on('tuto', () => {
-      // if (this.tuto === undefined) {
-      this.tuto = true
-      // }
+      requestAnimationFrame(() => {
+        this.tuto = true
+      })
     })
 
     this.$events.on('endgame', () => {
