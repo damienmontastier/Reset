@@ -6,6 +6,8 @@ import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 import BoxGeometry from '@/webgl/geometries/box'
 
+import colors from '@/config/colors'
+
 export default class ParcelPost extends THREE.Object3D {
   constructor(model) {
     super()
@@ -17,10 +19,18 @@ export default class ParcelPost extends THREE.Object3D {
   }
 
   initMaterial() {
+    const randomIndex = Math.floor(Math.random() * colors.posts.length)
+    const [color, emissive] = colors.posts[randomIndex]
+
     const material = new ToonMaterial({
-      color: Math.floor(Math.random() * 16777215),
-      emissive: Math.floor(Math.random() * 16777215)
+      color,
+      emissive
     })
+
+    // const material = new ToonMaterial({
+    //   color: Math.floor(Math.random() * 16777215),
+    //   emissive: Math.floor(Math.random() * 16777215)
+    // })
 
     this.model.material = material
 

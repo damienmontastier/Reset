@@ -44,9 +44,9 @@ export default {
       clock.resume()
     })
     this.$events.on('tuto', () => {
-      if (this.tuto === undefined) {
-        this.tuto = true
-      }
+      // if (this.tuto === undefined) {
+      this.tuto = true
+      // }
     })
 
     this.$events.on('endgame', () => {

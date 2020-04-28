@@ -20,7 +20,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_10.glb'
+          path: 'obj/level_01/level_01.glb'
         }
       ]
     })
@@ -73,8 +73,8 @@ export default class Level01 extends THREE.Object3D {
         // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 
         const material = new ToonMaterial({
-          color: Math.floor(Math.random() * 16777215),
-          emissive: Math.floor(Math.random() * 16777215)
+          color: 0x757575,
+          emissive: 0x757575
         })
 
         zone.material = material

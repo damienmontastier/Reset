@@ -226,10 +226,10 @@ class Game {
     const { clock } = useWebGL()
     clock.getDelta()
 
-    const time = clock.getElapsedTime()
+    // const time = clock.getElapsedTime()
 
-    this.directionalLight.position.x = Math.sin(time * 0.1) * 1000
-    this.directionalLight.position.z = Math.cos(time * 0.1) * 1000
+    this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
+    this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
     // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1

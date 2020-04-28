@@ -34,7 +34,7 @@ export default {
   }
 
   &__clock {
-    background: #fff;
+    background: #0f0;
     color: #000;
     font-family: sans-serif;
     font-size: 20px;
