@@ -10,11 +10,14 @@ import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
 // import useCamera from '@/hooks/use-camera'
 import useRAF from '@/hooks/use-raf'
+// import useAudioManager from '@/hooks/use-audio-manager'
 
 import Player from '@/game/components/player'
 import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
+
+// import introSound from '~/static/sounds/intro_son_01.mp3'
 
 export default {
   mounted() {
@@ -45,6 +48,11 @@ export default {
         mesh: this.player,
         duration: 1
       })
+
+      // const audioManager = useAudioManager()
+
+      // await audioManager.add(introSound)
+      // audioManager.play(introSound)
 
       const { events: keyboardEvents } = useKeyboard()
       keyboardEvents.on('keydown', this.onKeydown)

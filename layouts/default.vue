@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img class="intro" src="/img/intro.png" alt="" v-if="!clicked" />
+    <img class="intro" src="/img/intro.png" alt v-if="!clicked" />
     <div class="gameplay" v-if="clicked && !keyDowned" />
     <div class="tuto" v-if="tuto" />
     <nuxt id="appView" />
@@ -14,6 +14,10 @@ import appScene from '@/components/webgl/scene'
 import appGame from '@/components/game/game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
+import useAudioManager from '@/hooks/use-audio-manager'
+
+import introSound from '~/static/sounds/intro_son_01.mp3'
+import level01 from '~/static/sounds/level01_son_01.mp3'
 
 export default {
   components: {
@@ -27,7 +31,13 @@ export default {
       tuto: false
     }
   },
-  mounted() {
+  async mounted() {
+    const audioManager = useAudioManager()
+
+    await audioManager.add(introSound)
+    await audioManager.add(level01)
+    audioManager.play(introSound)
+
     const keyboard = useKeyboard()
     keyboard.events.on('keydown', () => {
       this.keyDowned = true
@@ -35,6 +45,9 @@ export default {
     })
     window.addEventListener('click', () => {
       this.clicked = true
+
+      audioManager.stop(introSound)
+      audioManager.play(level01)
 
       const clock = useClock()
       clock.resume()
