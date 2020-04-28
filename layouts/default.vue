@@ -40,6 +40,7 @@ export default {
     window.addEventListener('click', () => {
       this.clicked = true
 
+      if (this.endgame) return
       const clock = useClock()
       clock.resume()
     })
