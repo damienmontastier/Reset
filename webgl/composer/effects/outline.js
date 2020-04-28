@@ -12,14 +12,14 @@ float intensity(in vec4 color){
 
 vec3 sobel(sampler2D inputBuffer, float stepx, float stepy, vec2 uv){
 	// get samples around pixel
-    float tleft = intensity(texture(inputBuffer,uv + vec2(-stepx,stepy)));
-    float left = intensity(texture(inputBuffer,uv + vec2(-stepx,0)));
-    float bleft = intensity(texture(inputBuffer,uv + vec2(-stepx,-stepy)));
-    float top = intensity(texture(inputBuffer,uv + vec2(0,stepy)));
-    float bottom = intensity(texture(inputBuffer,uv + vec2(0,-stepy)));
-    float tright = intensity(texture(inputBuffer,uv + vec2(stepx,stepy)));
-    float right = intensity(texture(inputBuffer,uv + vec2(stepx,0)));
-    float bright = intensity(texture(inputBuffer,uv + vec2(stepx,-stepy)));
+    float tleft = intensity(texture2D(inputBuffer,uv + vec2(-stepx,stepy)));
+    float left = intensity(texture2D(inputBuffer,uv + vec2(-stepx,0)));
+    float bleft = intensity(texture2D(inputBuffer,uv + vec2(-stepx,-stepy)));
+    float top = intensity(texture2D(inputBuffer,uv + vec2(0,stepy)));
+    float bottom = intensity(texture2D(inputBuffer,uv + vec2(0,-stepy)));
+    float tright = intensity(texture2D(inputBuffer,uv + vec2(stepx,stepy)));
+    float right = intensity(texture2D(inputBuffer,uv + vec2(stepx,0)));
+    float bright = intensity(texture2D(inputBuffer,uv + vec2(stepx,-stepy)));
  
 	// Sobel masks (see http://en.wikipedia.org/wiki/Sobel_operator)
 	//        1 0 -1     -1 -2 -1
