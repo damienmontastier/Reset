@@ -38,30 +38,31 @@ export default {
 
     await audioManager.add(introSound)
     await audioManager.add(level01)
+
     audioManager.play(introSound)
 
     const keyboard = useKeyboard()
     keyboard.events.on('keydown', () => {
       this.keyDowned = true
+
       if (this.tuto === true) {
         this.tuto = false
       }
     })
     window.addEventListener('click', () => {
-      this.clicked = true
-
-      if (!this.keyDowned) {
+      if (!this.clicked) {
         audioManager.stop(introSound)
         audioManager.play(level01)
       }
 
-      this.keyDowned = true
+      this.clicked = true
 
       if (this.endgame) return
       const clock = useClock()
       clock.resume()
     })
     this.$events.on('tuto', () => {
+      console.log('tuuuuuto')
       // if (this.tuto === undefined) {
       this.tuto = true
       // }
