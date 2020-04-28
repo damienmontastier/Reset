@@ -34,11 +34,11 @@ export default {
   }
 
   &__clock {
-    background: #fff;
+    background: #0f0;
     color: #000;
     font-family: sans-serif;
     font-size: 20px;
-    left: 8px;
+    left: 64px;
     padding: 8px;
     position: absolute;
     top: 64px;

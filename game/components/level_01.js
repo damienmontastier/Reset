@@ -20,7 +20,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_10.glb'
+          path: 'obj/level_01/level_01.glb'
         }
       ]
     })
@@ -73,8 +73,8 @@ export default class Level01 extends THREE.Object3D {
         // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 
         const material = new ToonMaterial({
-          color: Math.floor(Math.random() * 16777215),
-          emissive: Math.floor(Math.random() * 16777215)
+          color: 0x757575,
+          emissive: 0x757575
         })
 
         zone.material = material
@@ -88,38 +88,21 @@ export default class Level01 extends THREE.Object3D {
           color: 0x00ff00,
           visible: false
         })
-
-        // const material = new ToonMaterial({
-        //   color: Math.floor(Math.random() * 16777215),
-        //   emissive: Math.floor(Math.random() * 16777215)
-        // })
-
-        // zone.material = material
       }
 
       if (name.includes('terminal')) {
-        // zone.material = new THREE.MeshBasicMaterial({
-        //   color: 0x0000ff
-        // })
-
-        const material = new ToonMaterial({
-          color: Math.floor(Math.random() * 16777215),
-          emissive: Math.floor(Math.random() * 16777215)
-        })
-
-        zone.material = material
+        zone.visible = false
       }
 
       if (name.includes('zone_spawn')) {
-        // zone.visible = false
-        // console.log('spawn', zone.position)
-        // this.spawnPoint = zone.position.clone()
-        // console.log('spawn', zone.position)
-        // zone.material = new THREE.MeshBasicMaterial({ color: 0x00ffff })
-        // zone.position.add(new THREE.Vector3(0.5, 1, 0.5))
+        zone.visible = false
       }
 
       if (name.includes('zone_tuto')) {
+        zone.visible = false
+      }
+
+      if (name.includes('zone_endgame')) {
         zone.visible = false
       }
     })

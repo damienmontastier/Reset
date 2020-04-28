@@ -114,6 +114,8 @@ export default {
         if (intersectZones.includes('zone_endgame')) {
           const clock = useClock()
           clock.pause()
+
+          this.$events.emit('endgame')
         }
 
         if (!zoneName.includes('treadmill')) {
