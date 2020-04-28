@@ -69,9 +69,11 @@ export default {
     })
 
     this.$events.on('endgame', () => {
+      if (!this.endgame) {
+        audioManager.stop(level01)
+        audioManager.play(introSound)
+      }
       this.endgame = true
-      audioManager.stop(level01)
-      audioManager.play(introSound)
     })
   }
 }
