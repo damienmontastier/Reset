@@ -12,7 +12,7 @@ class Clock {
   }
 
   get time() {
-    return this.elapsedTime + this.addionalTime
+    return 120 - this.elapsedTime - this.addionalTime
   }
 
   loop(clock) {

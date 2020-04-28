@@ -3,6 +3,7 @@
     <img class="intro" src="/img/intro.png" alt="" v-if="!clicked" />
     <div class="gameplay" v-if="clicked && !keyDowned" />
     <div class="tuto" v-if="tuto" />
+    <img class="endgame" src="/img/endgame.png" alt="" v-if="endgame" />
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />
@@ -24,14 +25,17 @@ export default {
     return {
       clicked: false,
       keyDowned: false,
-      tuto: false
+      tuto: undefined,
+      endgame: false
     }
   },
   mounted() {
     const keyboard = useKeyboard()
     keyboard.events.on('keydown', () => {
       this.keyDowned = true
-      this.tuto = false
+      if (this.tuto === true) {
+        this.tuto = false
+      }
     })
     window.addEventListener('click', () => {
       this.clicked = true
@@ -40,7 +44,13 @@ export default {
       clock.resume()
     })
     this.$events.on('tuto', () => {
-      this.tuto = true
+      if (this.tuto === undefined) {
+        this.tuto = true
+      }
+    })
+
+    this.$events.on('endgame', () => {
+      this.endgame = true
     })
   }
 }
@@ -57,14 +67,16 @@ export default {
 }
 
 #appGame {
-  z-index: 2;
+  position: absolute;
+  z-index: 6;
 }
 
 #appView {
   z-index: 3;
 }
 
-.intro {
+.intro,
+.endgame {
   height: 100%;
   left: 0;
   object-fit: cover;
