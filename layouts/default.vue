@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <img class="intro" src="/img/intro.png" alt v-if="!clicked" />
-    <div class="gameplay" v-if="clicked && !keyDowned" />
-    <div class="tuto" v-if="tuto" />
-    <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />
@@ -13,9 +9,7 @@
 <script>
 import appScene from '@/components/webgl/scene'
 import appGame from '@/components/game/game'
-import useClock from '@/hooks/use-clock'
-import useKeyboard from '@/hooks/use-keyboard'
-import useAudioManager from '@/hooks/use-audio-manager'
+import useAudio from '@/hooks/use-audio'
 
 import introSound from '~/static/sounds/intro_son_01.mp3'
 import level01 from '~/static/sounds/level01_son_01.mp3'
@@ -34,47 +28,25 @@ export default {
     }
   },
   async mounted() {
-    const audioManager = useAudioManager()
+    const audioManager = useAudio()
 
-    await audioManager.add(introSound)
-    await audioManager.add(level01)
+    await audioManager.add(
+      [
+        { path: introSound, id: audioManager.pathToId(introSound) },
+        { path: level01, id: audioManager.pathToId(level01) }
+      ],
+      this.soundLoaded.bind(this)
+    )
+  },
+  methods: {
+    soundLoaded() {
+      const audioManager = useAudio()
 
-    audioManager.play(introSound)
+      audioManager.play('intro_son_01')
 
-    const keyboard = useKeyboard()
-    keyboard.events.on('keydown', () => {
-      this.keyDowned = true
-
-      if (this.tuto === true) {
-        this.tuto = false
-      }
-    })
-    window.addEventListener('click', () => {
-      if (!this.clicked) {
-        audioManager.stop(introSound)
-        audioManager.play(level01)
-      }
-
-      this.clicked = true
-
-      if (this.endgame) return
-      const clock = useClock()
-      clock.resume()
-    })
-    this.$events.on('tuto', () => {
-      console.log('tuuuuuto')
-      // if (this.tuto === undefined) {
-      this.tuto = true
-      // }
-    })
-
-    this.$events.on('endgame', () => {
-      if (!this.endgame) {
-        audioManager.stop(level01)
-        audioManager.play(introSound)
-      }
-      this.endgame = true
-    })
+      // audioManager.sounds.intro_son_01.play()
+      // audioManager.play(audioManager.getId(introSound))
+    }
   }
 }
 </script>
