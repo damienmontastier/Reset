@@ -8,7 +8,6 @@ export default class Raf {
     this.fps = 60
     this.latest = 0
     this.delta = 0
-    // this.frameDuration = 1000 / this.fps
     this.optimumDeltaTime = this.frameDuration / 1000
 
     this.loop()

@@ -58,8 +58,8 @@ export default class Treadmill extends THREE.Object3D {
       (this.speedMinimum + this.speedRandomness * Math.random()) *
       this.speedScale
 
-    this.appearIntervalMinimum = 1
-    this.appearIntervalRandomness = 1
+    this.appearIntervalMinimum = 0.5
+    this.appearIntervalRandomness = 3
 
     this.appearInterval = this.getNewInterval()
 
