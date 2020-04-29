@@ -49,8 +49,6 @@ export default class Treadmill extends THREE.Object3D {
     this.parcelPosts = new THREE.Group()
     this.add(this.parcelPosts)
 
-    // this.simplex = new SimplexNoise()
-
     this.direction = Math.random() > 0.5 ? 1 : -1
 
     this.speedScale = 0.05
@@ -82,15 +80,20 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   update(clock) {
-    // if (this.index > 0) return
-    // console.log(this.parcelPosts.children.length)
+    // if (this.index > 1) return
+
+    const deltaPosition = this.deltaPosition.multiply(
+      new THREE.Vector3(clock.lagSmoothing, 0, 0)
+    )
+
     this.parcelPosts.children.forEach((post) => {
-      post.position.add(this.deltaPosition)
+      post.position.add(deltaPosition)
       post.updateMatrixWorld()
     })
 
     this.hookedGroup.forEach((child) => {
-      child.position.add(this.deltaPosition)
+      child.position.add(deltaPosition)
+      child.updateMatrixWorld()
     })
 
     this.time = (this.time || 0) + clock.deltaTime

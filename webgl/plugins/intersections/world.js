@@ -28,7 +28,7 @@ export default class World extends THREE.Object3D {
 
   intersects() {
     let i = 0
-    console.time('intersections')
+    // console.time('intersections')
     // console.log(this.hitboxes.children.length)
     // get intersections
     let hitboxes = this.hitboxes.children
@@ -86,7 +86,7 @@ export default class World extends THREE.Object3D {
         hitbox.events.emit('intersection', intersections)
       }
     })
-    console.timeEnd('intersections')
+    // console.timeEnd('intersections')
     this.infos.intersections = i
   }
 

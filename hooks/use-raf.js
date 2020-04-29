@@ -1,5 +1,6 @@
 import gsap from 'gsap'
 import RAF from '@/assets/js/raf'
+import useGUI from '@/hooks/use-gui'
 
 let raf
 
@@ -18,6 +19,12 @@ const useRAF = () => {
       },
       -1
     )
+
+    const gui = useGUI()
+    gui.rendering
+      .add(raf, 'fps')
+      .min(0)
+      .max(60)
   }
   return raf
 }
