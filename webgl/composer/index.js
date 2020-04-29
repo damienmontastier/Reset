@@ -66,11 +66,11 @@ export default class Composer {
     )
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    if (this.composer) {
-      this.composer.render(clock.deltaTime)
-    } else {
-      this.renderer.render(this.scene, this.camera)
-    }
+    // if (this.composer) {
+    //   this.composer.render(clock.deltaTime)
+    // } else {
+    this.renderer.render(this.scene, this.camera)
+    // }
 
     // this.renderer.render(this.scene, this.camera)
   }

@@ -1,12 +1,10 @@
 import useGame from '@/hooks/use-game'
 // import useGUI from '@/hooks/use-gui'
-import ToonMaterial from '@/webgl/materials/toon.js'
+// import ToonMaterial from '@/webgl/materials/toon.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-import BoxGeometry from '@/webgl/geometries/box'
-
-import colors from '@/config/colors'
+// import BoxGeometry from '@/webgl/geometries/box'
 
 export default class ParcelPost extends THREE.Object3D {
   constructor(model) {
@@ -14,32 +12,25 @@ export default class ParcelPost extends THREE.Object3D {
     this.model = model
     this.add(this.model)
 
-    this.initMaterial()
+    // this.initMaterial()
     this.initHitbox()
   }
 
   initMaterial() {
-    const randomIndex = Math.floor(Math.random() * colors.posts.length)
-    const [color, emissive] = colors.posts[randomIndex]
-
-    const material = new ToonMaterial({
-      color,
-      emissive
-    })
-
     // const material = new ToonMaterial({
     //   color: Math.floor(Math.random() * 16777215),
     //   emissive: Math.floor(Math.random() * 16777215)
     // })
-
-    this.model.material = material
-
+    // this.model.material = material
     // const gui = useGUI()
     // gui.addMaterial(this.model.uuid.substring(0, 10), material)
   }
 
   initHitbox() {
-    this.hitboxMesh = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
+    this.hitboxMesh = new THREE.Mesh(
+      new THREE.BoxBufferGeometry(1, 1, 1),
+      new THREE.MeshBasicMaterial()
+    )
 
     // this.hitboxMesh.position.copy(new THREE.Vector3(-0.5, 0.5, -0.5))
     this.hitboxMesh.scale.setScalar(0.6)
@@ -73,9 +64,15 @@ export default class ParcelPost extends THREE.Object3D {
 
   destroy() {
     const { intersections: intersectionsWorld } = useGame()
-    intersectionsWorld.addHitbox(this.hitbox)
+    // intersectionsWorld.addHitbox(this.hitbox)
 
+    this.model.geometry.dispose()
+    this.model.material.dispose()
     this.parent.remove(this)
+
+    this.hitboxMesh.geometry.dispose()
+    this.hitboxMesh.material.dispose()
+
     intersectionsWorld.removeHitbox(this.hitbox)
 
     this.hitbox.events.off('intersecting', this.onIntersectingHandler)

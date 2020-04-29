@@ -73,6 +73,7 @@ class WebGL {
 
   loop(clock) {
     this.composer.render(clock)
+    this.renderer.renderLists.dispose()
   }
 
   get viewsize() {
