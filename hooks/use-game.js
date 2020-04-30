@@ -233,7 +233,7 @@ class Game {
     // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1
-    if (this.frameCount % 1 === 0) this.intersections.step()
+    if (this.frameCount % 2 === 0) this.intersections.step()
   }
 
   destroy() {
