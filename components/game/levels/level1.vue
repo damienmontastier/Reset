@@ -1,5 +1,7 @@
 <template>
-  <div>hello level1</div>
+  <div class="gameLevel1">
+    <terminal v-if="playerIsOnTerminal" />
+  </div>
 </template>
 
 <script>
@@ -13,7 +15,12 @@ import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
+import Terminal from '@/components/game/terminal'
+
 export default {
+  components: {
+    Terminal
+  },
   data() {
     return {
       currentZones: [],
@@ -25,22 +32,20 @@ export default {
     }
   },
   watch: {
-    currentZones: {
-      handler() {
-        this.playerIsOnFloor = this.currentZones.includes('zone_floor')
-        this.playerIsOnTerminal = this.currentZones.includes('zone_terminal')
-        this.playerIsOnTuto = this.currentZones.includes('zone_tuto')
-        this.playerIsOnEndgame = this.currentZones.includes('zone_endgame')
-        this.playerIsOnTreadmill = this.currentZones.some((zone) =>
-          zone.includes('zone_treadmill')
-        )
+    currentZones() {
+      this.playerIsOnFloor = this.currentZones.includes('zone_floor')
+      this.playerIsOnTerminal = this.currentZones.includes('zone_terminal')
+      this.playerIsOnTuto = this.currentZones.includes('zone_tuto')
+      this.playerIsOnEndgame = this.currentZones.includes('zone_endgame')
+      this.playerIsOnTreadmill = this.currentZones.some((zone) =>
+        zone.includes('zone_treadmill')
+      )
 
-        console.log('floor', this.playerIsOnFloor)
-        console.log('terminal', this.playerIsOnTerminal)
-        console.log('tuto', this.playerIsOnTuto)
-        console.log('treadmill', this.playerIsOnTreadmill)
-        console.log('endgame', this.playerIsOnEndgame)
-      }
+      // console.log('floor', this.playerIsOnFloor)
+      // console.log('terminal', this.playerIsOnTerminal)
+      // console.log('tuto', this.playerIsOnTuto)
+      // console.log('treadmill', this.playerIsOnTreadmill)
+      // console.log('endgame', this.playerIsOnEndgame)
     },
     playerIsOnTuto(newVal, oldVal) {
       if (this.playerIsOnTuto === true) {
@@ -48,10 +53,31 @@ export default {
       } else if (this.playerIsOnTuto === false && oldVal !== undefined) {
         console.log('TUTO LEAVE')
       }
+    },
+    playerIsOnTreadmill(newVal, oldVal) {
+      if (this.playerIsOnTreadmill === true) {
+        console.log('TREADMILL ENTER')
+      } else if (this.playerIsOnTreadmill === false && oldVal !== undefined) {
+        console.log('TREADMILL LEAVE')
+      }
+    },
+    playerIsOnTerminal(newVal, oldVal) {
+      if (this.playerIsOnTerminal === true) {
+        console.log('TERMINAL ENTER')
+      } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
+        console.log('TERMINAL LEAVE')
+      }
     }
   },
   mounted() {
     this.init()
+    console.log('mounted')
+  },
+  beforeDestroy() {
+    this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
+
+    const { events: keyboardEvents } = useKeyboard()
+    keyboardEvents.off('keydown', this.onKeydown)
   },
   methods: {
     async init() {

@@ -17,6 +17,8 @@ class Keyboard {
   onKeyUp(e) {
     this.events.emit('keyup', e)
   }
+
+  destroy() {}
 }
 
 const useKeyboard = () => {

@@ -94,7 +94,10 @@ class WebGL {
   }
 
   destroy() {
-    this.raf.remove('use-webgl')
+    const RAF = useRAF()
+    RAF.remove('stats-begin')
+    RAF.remove('stats-end')
+    RAF.remove('use-webgl')
   }
 }
 

@@ -18,8 +18,7 @@ export default {
     this.$el.appendChild(canvas)
   },
   beforeDestroy() {
-    const { destroy } = useWebGL()
-    destroy()
+    useWebGL().destroy()
   }
 }
 </script>

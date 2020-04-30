@@ -237,7 +237,8 @@ class Game {
   }
 
   destroy() {
-    this.raf.remove('use-game')
+    const RAF = useRAF()
+    RAF.remove('use-game')
 
     const { scene } = useWebGL()
     scene.remove(this.scene)

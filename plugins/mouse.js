@@ -1,112 +1,54 @@
 import Events from 'events'
-import gsap from 'gsap'
-import { Vector2 } from 'three'
 import Vue from 'vue'
-import Viewport from '@/plugins/viewport'
+import viewport from '@/plugins/viewport'
 
-/* eslint nuxt/no-globals-in-created:0 */
+/* eslint-disable nuxt/no-env-in-hooks */
+/* eslint-disable nuxt/no-globals-in-created */
 
 const mouse = new Vue({
   data() {
     return {
-      lerpedPosition: new Vector2(-1000, -1000),
-      position: new Vector2(-1000, -1000),
-      velocity: new Vector2(0, 0)
+      hasMove: false,
+      position: new THREE.Vector2(-1000, -1000)
     }
   },
   computed: {
     normalized() {
-      return new Vector2(
-        (this.position.x / Viewport.width) * 2 - 1,
-        -(this.position.y / Viewport.height) * 2 + 1
+      return new THREE.Vector2(
+        (this.position.x / viewport.width) * 2 - 1,
+        -(this.position.y / viewport.height) * 2 + 1
       )
-    },
-    lerpedNormalized() {
-      return new Vector2(
-        (this.lerpedPosition.x / Viewport.width) * 2 - 1,
-        -(this.lerpedPosition.y / Viewport.height) * 2 + 1
-      )
-    },
-    computed() {
-      return {
-        normalized: this.normalized
-      }
     }
   },
   created() {
+    if (!process.client) return
+
     this.events = new Events()
-    window.addEventListener('touchstart', this.onMouseMove.bind(this), false)
-    window.addEventListener('touchmove', this.onMouseMove.bind(this), false)
-    window.addEventListener('mousemove', this.onMouseMove.bind(this), false)
+
+    window.addEventListener('touchstart', this.onMouseMove, false)
+    window.addEventListener('touchmove', this.onMouseMove, false)
+    window.addEventListener('mousemove', this.onMouseMove, false)
+  },
+  beforeDestroy() {
+    if (!process.client) return
+
+    window.removeEventListener('touchstart', this.onMouseMove, false)
+    window.removeEventListener('touchmove', this.onMouseMove, false)
+    window.removeEventListener('mousemove', this.onMouseMove, false)
   },
   methods: {
-    // loop() {
-
-    //   if (!this.velocity.needsUpdate) {
-    //     this.velocity.set(0, 0)
-    //   }
-    //   this.velocity.needsUpdate = false
-
-    //   this.velocity.lerp(this.velocity, this.velocity.length() ? 0.5 : 0.1)
-    // },
     onMouseMove(e) {
-      const originalEvent = e
+      const event = e
 
-      if (e.changedTouches && e.changedTouches.length) {
-        e.x = e.changedTouches[0].pageX
-        e.y = e.changedTouches[0].pageY
-      }
+      this.hasMove = true
 
-      if (e.x === undefined) {
-        e.x = e.pageX
-        e.y = e.pageY
-      }
+      const evt = e.targetTouches ? e.targetTouches[0] : e
 
-      this.position.set(e.x, e.y)
-
-      gsap.to(this.lerpedPosition, !this.lastTime ? 0 : 0.6, {
-        x: e.x,
-        y: e.y,
-        ease: 'power4.out'
-      })
-
-      if (!this.lastTime) {
-        this.lastTime = performance.now()
-        if (!this.lastPosition) this.lastPosition = new Vector2()
-        this.lastPosition.set(e.x, e.y)
-      }
-
-      const deltaX = e.x - this.lastPosition.x
-      const deltaY = e.y - this.lastPosition.y
-
-      this.lastPosition.set(e.x, e.y)
-
-      const time = performance.now()
-
-      const delta = Math.max(14, time - this.lastTime)
-      this.lastTime = time
-
-      if (this.velocityTween) this.velocityTween.kill()
-      this.velocityTween = gsap.to(this.velocity, 0.6, {
-        x: deltaX / delta,
-        y: deltaY / delta,
-        ease: 'power4.out',
-        onUpdate: () => {
-          this.events.emit('mousemove-lerped', {
-            ...this.$data,
-            ...this.computed,
-            originalEvent
-          })
-        },
-        onComplete: () => {
-          this.velocity.set(0, 0)
-        }
-      })
+      this.position.set(evt.x, evt.y)
 
       this.events.emit('mousemove', {
         ...this.$data,
-        ...this.computed,
-        originalEvent
+        event
       })
     }
   }
