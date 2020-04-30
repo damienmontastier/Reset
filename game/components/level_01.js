@@ -114,11 +114,11 @@ export default class Level01 extends THREE.Object3D {
     const { intersections } = useGame()
 
     const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
-    box.scale.set(1, 1, 30)
+    box.scale.set(10, 1, 30)
 
     // up stream
     this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-5.3, 1, -4))
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-10, 1, -4))
 
     this.add(this.outHitboxUpstreamMesh)
     this.outHitboxUpstreamMesh.visible = false
@@ -134,7 +134,7 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(5, 1, -4))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(10, 1, -4))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false

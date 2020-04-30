@@ -4,16 +4,24 @@ export default class Raf {
     this.isRunning = false
     this.clock = clock
     this.paused = false
+
+    this.fps = 60
+    this.latest = 0
+    this.delta = 0
+    this.optimumDeltaTime = this.frameDuration / 1000
+
+    this.loop()
   }
 
-  loop() {
-    if (this.paused && !this.isRunning) return
+  get frameDuration() {
+    return 1000 / this.fps
+  }
 
-    this.isRunning = true
-
+  dispatch() {
     // clock
     const deltaTime = this.clock.getDelta()
     const time = this.clock.getElapsedTime()
+    const lagSmoothing = deltaTime / (1000 / 60 / 1000)
 
     // callbacks
     Object.values(this.rafs)
@@ -21,10 +29,22 @@ export default class Raf {
         return a.priority - b.priority
       })
       .forEach((raf) => {
-        raf.callback({ time, deltaTime })
+        raf.callback({ time, deltaTime, lagSmoothing })
       })
+  }
 
-    this.rafId = requestAnimationFrame(this.loop.bind(this))
+  loop() {
+    const now = performance.now()
+
+    this.delta = now - this.latest
+
+    if (this.delta > this.frameDuration) {
+      this.dispatch()
+    }
+
+    this.latest = now - (this.delta % this.frameDuration)
+
+    requestAnimationFrame(this.loop.bind(this))
   }
 
   add(id, callback, priority = 0) {
@@ -33,34 +53,25 @@ export default class Raf {
       return
     }
     this.rafs[id] = { id, callback, priority }
-
-    if (!this.isRunning) {
-      this.loop()
-    }
   }
 
-  set pause(bool) {
-    this.paused = bool
-    this.isRunning = !bool
+  // set pause(bool) {
+  //   this.paused = bool
+  //   this.isRunning = !bool
 
-    if (bool) {
-      this.clock.stop()
-      cancelAnimationFrame(this.rafId)
-    } else {
-      this.clock.start()
-      this.loop()
-    }
-  }
+  //   if (bool) {
+  //     this.clock.stop()
+  //     cancelAnimationFrame(this.rafId)
+  //   } else {
+  //     this.clock.start()
+  //     this.loop()
+  //   }
+  // }
 
   remove(id) {
     if (!this.rafs[id]) {
       console.warn(`raf.remove(): ${id} callback doesn't exist`)
     }
     delete this.rafs[id]
-
-    if (Object.keys(this.rafs).length === 0) {
-      this.isRunning = false
-      cancelAnimationFrame(this.rafId)
-    }
   }
 }

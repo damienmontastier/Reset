@@ -1,5 +1,7 @@
 import { Howl } from 'howler'
 
+// Gerer le son global de howler
+
 let audio
 
 class AudioManager {

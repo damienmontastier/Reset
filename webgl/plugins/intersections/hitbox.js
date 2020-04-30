@@ -44,4 +44,10 @@ export default class Hitbox extends THREE.Object3D {
       intersecting ? 0xff0000 : 0x00ff00
     )
   }
+
+  destroy() {
+    this.helper.geometry.dispose()
+    this.helper.material.dispose()
+    this.remove(this.helper)
+  }
 }

@@ -105,7 +105,7 @@ export default {
         const intersectZones = intersects.map(
           (intersect) => intersect.object.name
         )
-        console.log(intersectZones)
+        // console.log(intersectZones)
 
         if (intersectZones.includes('zone_tuto')) {
           this.$events.emit('tuto')

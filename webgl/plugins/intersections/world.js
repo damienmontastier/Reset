@@ -18,11 +18,18 @@ export default class World extends THREE.Object3D {
   }
 
   removeHitbox(hitbox) {
+    hitbox.destroy()
     this.hitboxes.remove(hitbox)
+    this.hitboxes.children.forEach((h) => {
+      delete h.intersections[hitbox.uuid]
+      //   hitbox.intersections = hitbox.intersections.filter((intersection) => {})
+    })
   }
 
   intersects() {
     let i = 0
+    // console.time('intersections')
+    // console.log(this.hitboxes.children.length)
     // get intersections
     let hitboxes = this.hitboxes.children
 
@@ -40,7 +47,11 @@ export default class World extends THREE.Object3D {
       }
 
       targets.forEach((target) => {
+        // const distance = hitbox.box.distanceToPoint(
+        //   target.box.getCenter(new THREE.Vector3())
+        // )
         if (hitbox.uuid !== target.uuid) {
+          // console.log(distance)
           i++
 
           const lastIntersecting = hitbox.intersections[target.uuid]
@@ -50,6 +61,8 @@ export default class World extends THREE.Object3D {
           const intersecting = hitbox.box.intersectsBox(target.box)
 
           const needsUpdate = intersecting !== lastIntersecting
+
+          // console.log(Object.keys(hitbox.intersections))
 
           hitbox.intersections[target.uuid] = {
             lastIntersecting,
@@ -73,7 +86,7 @@ export default class World extends THREE.Object3D {
         hitbox.events.emit('intersection', intersections)
       }
     })
-
+    // console.timeEnd('intersections')
     this.infos.intersections = i
   }
 

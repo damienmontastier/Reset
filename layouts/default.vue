@@ -1,5 +1,9 @@
 <template>
   <div id="app">
+    <!-- <img class="intro" src="/img/intro.png" alt v-if="!clicked" />
+    <div class="gameplay" v-if="clicked && !keyDowned" />
+    <div class="tuto" v-if="tuto" />
+    <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />
@@ -43,9 +47,6 @@ export default {
       const audioManager = useAudio()
 
       audioManager.play('intro_son_01')
-
-      // audioManager.sounds.intro_son_01.play()
-      // audioManager.play(audioManager.getId(introSound))
     }
   }
 }

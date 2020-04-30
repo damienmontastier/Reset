@@ -1,11 +1,14 @@
-import SimplexNoise from 'simplex-noise'
+// import SimplexNoise from 'simplex-noise'
 
 import useGame from '@/hooks/use-game'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import ParcelPost from '@/game/components/parcel-post'
 
-import BoxGeometry from '@/webgl/geometries/box'
+// import BoxGeometry from '@/webgl/geometries/box'
+
+import colors from '@/config/colors'
+import ToonMaterial from '@/webgl/materials/toon.js'
 
 export default class Treadmill extends THREE.Object3D {
   constructor(model, index) {
@@ -46,12 +49,17 @@ export default class Treadmill extends THREE.Object3D {
     this.parcelPosts = new THREE.Group()
     this.add(this.parcelPosts)
 
-    this.simplex = new SimplexNoise()
-
     this.direction = Math.random() > 0.5 ? 1 : -1
-    this.speed = Math.max(Math.random(), 0.4) / 20
 
-    this.appearIntervalBasis = 6
+    this.speedScale = 0.05
+    this.speedMinimum = 0.5
+    this.speedRandomness = 0.5
+    this.speed =
+      (this.speedMinimum + this.speedRandomness * Math.random()) *
+      this.speedScale
+
+    this.appearIntervalMinimum = 0.5
+    this.appearIntervalRandomness = 3
 
     this.appearInterval = this.getNewInterval()
 
@@ -62,9 +70,9 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   getNewInterval() {
-    const random = (this.simplex.noise2D(this.i, 0) + 1) * 0.5
-    const interval = random * this.appearIntervalBasis
-    return Math.max(interval, this.speed * 40)
+    return (
+      this.appearIntervalMinimum + this.appearIntervalRandomness * Math.random()
+    )
   }
 
   get deltaPosition() {
@@ -72,18 +80,25 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   update(clock) {
-    // if (this.index > 0) return
+    // if (this.index > 1) return
+
+    const deltaPosition = this.deltaPosition.multiply(
+      new THREE.Vector3(clock.lagSmoothing, 0, 0)
+    )
+
     this.parcelPosts.children.forEach((post) => {
-      post.position.add(this.deltaPosition)
+      post.position.add(deltaPosition)
       post.updateMatrixWorld()
     })
 
     this.hookedGroup.forEach((child) => {
-      child.position.add(this.deltaPosition)
+      child.position.add(deltaPosition)
+      child.updateMatrixWorld()
     })
 
     this.time = (this.time || 0) + clock.deltaTime
 
+    // console.log(this.appearInterval)
     if (this.time > this.appearInterval) {
       this.i = (this.i || 0) + 1
       this.appearInterval = this.getNewInterval()
@@ -93,9 +108,17 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   addParcelPost() {
+    const randomIndex = Math.floor(Math.random() * colors.posts.length)
+    const [color, emissive] = colors.posts[randomIndex]
+
+    const material = new ToonMaterial({
+      color,
+      emissive
+    })
+
     const postMesh = new THREE.Mesh(
-      BoxGeometry,
-      new THREE.MeshBasicMaterial({ color: 0xffffff })
+      new THREE.BoxBufferGeometry(1, 1, 1),
+      material
     )
     postMesh.scale.set(0.7, 0.4, 0.5)
 
