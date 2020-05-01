@@ -16,7 +16,8 @@ class Camera {
     )
 
     // events
-    viewport.events.on('resize', this.onWindowResize.bind(this))
+    this.onWindowResizeHandler = this.onWindowResize.bind(this)
+    viewport.events.on('resize', this.onWindowResizeHandler)
   }
 
   onWindowResize() {
@@ -27,7 +28,9 @@ class Camera {
     this.camera.updateProjectionMatrix()
   }
 
-  destroy() {}
+  destroy() {
+    viewport.events.off('resize', this.onWindowResizeHandler)
+  }
 }
 
 const useCamera = () => {

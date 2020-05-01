@@ -33,7 +33,10 @@ class Clock {
     this.paused = false
   }
 
-  destroy() {}
+  destroy() {
+    const RAF = useRAF()
+    RAF.remove('use-clock')
+  }
 }
 
 let clock

@@ -13,7 +13,11 @@
 <script>
 import appScene from '@/components/webgl/scene'
 import appGame from '@/components/game/game'
+
 import useAudio from '@/hooks/use-audio'
+// import useClock from '@/hooks/use-clock'
+// import useKeyboard from '@/hooks/use-keyboard'
+import useGUI from '@/hooks/use-gui'
 
 import introSound from '~/static/sounds/intro_son_01.mp3'
 import level01 from '~/static/sounds/level01_son_01.mp3'
@@ -48,6 +52,10 @@ export default {
 
       audioManager.play('intro_son_01')
     }
+  },
+  beforeDestroy() {
+    const GUI = useGUI()
+    GUI.destroy()
   }
 }
 </script>
@@ -63,12 +71,17 @@ export default {
 }
 
 #appGame {
+  height: 100%;
+  left: 0;
   position: absolute;
+  top: 0;
+  width: 100%;
   z-index: 6;
 }
 
 #appView {
-  z-index: 3;
+  position: relative;
+  z-index: 10;
 }
 
 .intro,

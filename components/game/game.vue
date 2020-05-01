@@ -19,6 +19,9 @@ export default {
   },
   mounted() {
     useGame()
+  },
+  beforeDestroy() {
+    useGame().destroy()
   }
 }
 </script>
