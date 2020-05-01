@@ -1,6 +1,7 @@
 <template>
   <div class="gameLevel1">
-    <terminal v-if="playerIsOnTerminal" />
+    <!-- <terminal v-if="playerIsOnTerminal" /> -->
+    <terminal />
   </div>
 </template>
 
@@ -15,7 +16,7 @@ import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
-import Terminal from '@/components/game/terminal'
+import Terminal from '@/components/game/terminal/terminal'
 
 export default {
   components: {
