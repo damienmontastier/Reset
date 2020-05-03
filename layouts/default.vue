@@ -4,6 +4,7 @@
     <div class="gameplay" v-if="clicked && !keyDowned" />
     <div class="tuto" v-if="tuto" />
     <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
+    <appHeader id="appHeader" />
     <nuxt id="appView" />
     <appScene id="appScene" />
     <appGame id="appGame" />
@@ -11,9 +12,6 @@
 </template>
 
 <script>
-import appScene from '@/components/webgl/scene'
-import appGame from '@/components/game/game'
-
 import useAudio from '@/hooks/use-audio'
 // import useClock from '@/hooks/use-clock'
 // import useKeyboard from '@/hooks/use-keyboard'
@@ -24,8 +22,9 @@ import level01 from '~/static/sounds/level01_son_01.mp3'
 
 export default {
   components: {
-    appScene,
-    appGame
+    appScene: () => import('@/components/webgl/scene'),
+    appGame: () => import('@/components/game/game'),
+    appHeader: () => import('@/components/elements/header')
   },
   data() {
     return {
@@ -46,16 +45,16 @@ export default {
       this.soundLoaded.bind(this)
     )
   },
+  beforeDestroy() {
+    const GUI = useGUI()
+    GUI.destroy()
+  },
   methods: {
     soundLoaded() {
       const audioManager = useAudio()
 
       audioManager.play('intro_son_01')
     }
-  },
-  beforeDestroy() {
-    const GUI = useGUI()
-    GUI.destroy()
   }
 }
 </script>

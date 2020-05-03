@@ -12,16 +12,16 @@ export default {
   validate({ params, store }) {
     return store.state.levels.find((level) => level.slug === params.slug)
   },
+
+  components: {
+    level1: () => import('@/components/game/levels/level1.vue'),
+    level2: () => import('@/components/game/levels/level2.vue')
+  },
   asyncData({ store, params }) {
     const index = store.state.levels.findIndex(
       (level) => level.slug === params.slug
     )
     return { currentLevel: store.state.levels[index], currentIndex: index }
-  },
-
-  components: {
-    level1: () => import('@/components/game/levels/level1.vue'),
-    level2: () => import('@/components/game/levels/level2.vue')
   },
   mounted() {}
 }

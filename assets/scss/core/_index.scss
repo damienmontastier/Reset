@@ -2,7 +2,12 @@
 
 :root {
   --font-violet: '#{nth($font-faces, 1)}', serif;
-  --font-cindie-d: '#{nth($font-faces, 2)}', serif;
+  --font-cindie-a: '#{nth($font-faces, 2)}', serif;
+  --font-cindie-b: '#{nth($font-faces, 3)}', serif;
+  --font-cindie-c: '#{nth($font-faces, 4)}', serif;
+  --font-cindie-d: '#{nth($font-faces, 5)}', serif;
+  --font-cindie-e: '#{nth($font-faces, 6)}', serif;
+  --font-cindie-f: '#{nth($font-faces, 7)}', serif;
   @include colors-properties();
   @include responsive-properties();
 }

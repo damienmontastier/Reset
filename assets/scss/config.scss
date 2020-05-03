@@ -3,7 +3,8 @@ $colors: (
   'white': rgba(255, 255, 255, 1),
   'green': #2ff000,
   'black': #161616,
-  'grey': #1f1f1f
+  'grey': #1f1f1f,
+  'grey-light': #979797
 );
 
 $breakpoints: (
@@ -95,4 +96,12 @@ $responsive-values: (
   )
 );
 
-$font-faces: ('VioletSans-Regular', 'CindieMono-D');
+$font-faces: (
+  'VioletSans-Regular',
+  'CindieMono-A',
+  'CindieMono-B',
+  'CindieMono-C',
+  'CindieMono-D',
+  'CindieMono-E',
+  'CindieMono-F'
+);

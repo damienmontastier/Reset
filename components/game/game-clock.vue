@@ -13,13 +13,13 @@ export default {
       time: 0
     }
   },
-  mounted() {
-    this.clock = useClock()
-  },
   watch: {
     'clock.time'() {
       this.time = this.clock.time
     }
+  },
+  mounted() {
+    this.clock = useClock()
   },
   methods: {
     sec2time(timeInSeconds) {
