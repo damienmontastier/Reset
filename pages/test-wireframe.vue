@@ -4,6 +4,7 @@
 
 <script>
 import useGame from '@/hooks/use-game'
+import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
@@ -16,8 +17,8 @@ export default {
     const material = new DistanceMaterial()
     this.cube = new THREE.Mesh(geometry, material)
 
-    const { scene } = useGame()
-    scene.add(this.cube)
+    // const { scene } = useGame()
+    // scene.add(this.cube)
 
     const {
       OrbitControls
@@ -29,6 +30,7 @@ export default {
     // console.log(camera, canvas)
     const cameraControls = new OrbitControls(camera, document.body)
     cameraControls.enableKeys = false
+    cameraControls.enabled = false
 
     this.init()
   },
@@ -60,7 +62,30 @@ export default {
 
       const files = await assetsManager.get('test-wireframe')
       this.solidModel = files.solid
+
+      const params = {
+        distance: 5.5
+      }
+
+      const GUI = useGUI()
+      GUI.add(params, 'distance')
+        .min(0)
+        .max(20)
+        .step(0.01)
+        .onChange(() => {
+          this.$events.emit('VISIBLE_DISTANCE', params.distance)
+        })
+
+      this.solidModel.traverse((child) => {
+        // child.material = new DistanceMaterial()
+        child.material = new DistanceMaterial()
+      })
+
       this.wireframeModel = files.wireframe
+
+      this.wireframeModel.traverse((child) => {
+        child.material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      })
 
       console.log(this.solidModel, this.wireframeModel)
     }
