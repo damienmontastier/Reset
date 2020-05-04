@@ -152,6 +152,11 @@ export default {
           name: '[path][name].[ext]'
         }
       })
+
+      config.module.rules.push({
+        test: /\.(glsl|vs|fs)$/,
+        loader: 'raw-loader'
+      })
     },
 
     babel: {
