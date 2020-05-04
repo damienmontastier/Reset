@@ -28,6 +28,8 @@ export default {
 
 <style lang="scss">
 .appGame {
+  pointer-events: none;
+
   &__router {
     bottom: 0;
     color: #fff;
