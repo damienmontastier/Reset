@@ -36,9 +36,9 @@ export default {
     async init() {
       await this.load()
 
-      //   const { scene } = useGame()
-      //   scene.add(this.solidModel)
-      //   scene.add(this.wireframeModel)
+      const { scene } = useGame()
+      scene.add(this.solidModel)
+      scene.add(this.wireframeModel)
     },
     async load() {
       const assetsManager = useAssetsManager()
