@@ -64,7 +64,7 @@ export default {
       this.solidModel = files.solid
 
       const params = {
-        distance: 5.5
+        distance: 0
       }
 
       const GUI = useGUI()
@@ -78,7 +78,7 @@ export default {
 
       this.solidModel.traverse((child) => {
         // child.material = new DistanceMaterial()
-        child.material = new DistanceMaterial()
+        child.material = new DistanceMaterial({ uDistance: params.distance })
       })
 
       this.wireframeModel = files.wireframe
