@@ -1,12 +1,13 @@
 import {
   EffectComposer,
   EffectPass,
-  RenderPass,
-  NormalPass
+  RenderPass
+  // NormalPass
 } from 'postprocessing'
 
-import OutlineEffect from './effects/outline'
+// import OutlineEffect from './effects/outline'
 import AntialiasingEffect from './effects/antialiasing'
+import DitheringEffect from './effects/dithering'
 
 import viewport from '@/plugins/viewport'
 
@@ -32,31 +33,36 @@ export default class Composer {
     // effects
     this.antialiasingEffect = await new AntialiasingEffect()
 
-    this.normalPass = new NormalPass(this.scene, this.camera)
-    this.outlineEffect = new OutlineEffect(
-      this.normalPass.renderTarget.texture,
-      {
-        step: 0.01,
-        outlineColor: 0x00ff00
-      }
-    )
+    // this.normalPass = new NormalPass(this.scene, this.camera)
+    // this.outlineEffect = new OutlineEffect(
+    //   this.normalPass.renderTarget.texture,
+    //   {
+    //     step: 0.01,
+    //     outlineColor: 0x00ff00
+    //   }
+    // )
 
     // composer
     this.composer = new EffectComposer(this.renderer)
 
     // passes
-    this.effectPass = new EffectPass(this.camera, this.outlineEffect)
+    // this.effectPass = new EffectPass(this.camera, this.outlineEffect)
 
-    // this.AAPass = new EffectPass(
-    //   this.camera,
-    //   this.antialiasingEffect.smaaEffect
-    // )
+    this.AAPass = new EffectPass(
+      this.camera,
+      this.antialiasingEffect.smaaEffect
+    )
+
+    this.ditheringEffect = new DitheringEffect()
+    this.ditheringPass = new EffectPass(this.camera, this.ditheringEffect)
 
     // addPasses
-    this.composer.addPass(this.normalPass)
+    // this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    this.composer.addPass(this.effectPass)
-    // this.composer.addPass(this.AAPass)
+    this.composer.addPass(this.AAPass)
+    // this.composer.addPass(this.ditheringPass)
+
+    // this.composer.addPass(this.ditheringPass)
   }
 
   render(clock) {
@@ -66,13 +72,11 @@ export default class Composer {
     )
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    // if (this.composer) {
-    //   this.composer.render(clock.deltaTime)
-    // } else {
-    this.renderer.render(this.scene, this.camera)
-    // }
-
-    // this.renderer.render(this.scene, this.camera)
+    if (this.composer) {
+      this.composer.render(clock.deltaTime)
+    } else {
+      this.renderer.render(this.scene, this.camera)
+    }
   }
 
   initGUI() {
@@ -117,28 +121,32 @@ export default class Composer {
       .max(1)
       .step(0.1)
 
-    const sobelGUI = gui.postprocessing.addFolder('outline')
-    const color = new THREE.Color()
-    const outlineParams = {
-      'outline color': color
-        .copyLinearToSRGB(this.outlineEffect.uniforms.get('outlineColor').value)
-        .getHex()
+    if (this.outlineEffect) {
+      const sobelGUI = gui.postprocessing.addFolder('outline')
+      const color = new THREE.Color()
+      const outlineParams = {
+        'outline color': color
+          .copyLinearToSRGB(
+            this.outlineEffect.uniforms.get('outlineColor').value
+          )
+          .getHex()
+      }
+
+      sobelGUI
+        .add(this.outlineEffect.uniforms.get('step'), 'value')
+        .name('step')
+        .step(0.001)
+
+      // sobelGUI
+      //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
+      //   .name('threshold')
+
+      sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
+        this.outlineEffect.uniforms
+          .get('outlineColor')
+          .value.setHex(outlineParams['outline color'])
+          .convertSRGBToLinear()
+      })
     }
-
-    sobelGUI
-      .add(this.outlineEffect.uniforms.get('step'), 'value')
-      .name('step')
-      .step(0.001)
-
-    // sobelGUI
-    //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
-    //   .name('threshold')
-
-    sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
-      this.outlineEffect.uniforms
-        .get('outlineColor')
-        .value.setHex(outlineParams['outline color'])
-        .convertSRGBToLinear()
-    })
   }
 }

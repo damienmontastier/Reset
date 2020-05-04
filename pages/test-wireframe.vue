@@ -28,7 +28,10 @@ export default {
     // const { canvas } = useWebgl()
 
     // console.log(camera, canvas)
-    const cameraControls = new OrbitControls(camera, document.body)
+    const cameraControls = new OrbitControls(
+      camera,
+      document.querySelector('#__nuxt')
+    )
     cameraControls.enableKeys = false
     // cameraControls.enabled = false
 
@@ -79,6 +82,8 @@ export default {
       const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0x00ff00,
         transparent: true
+        // side: THREE.BackSide,
+        // depthWrite: false
       })
       GUI.add(wireframeMaterial, 'opacity')
         .min(0)
@@ -87,7 +92,12 @@ export default {
 
       this.solidModel.traverse((child) => {
         // child.material = new DistanceMaterial({ uDistance: params.distance })
-        child.material = new THREE.MeshPhongMaterial({})
+        child.material = new THREE.MeshPhongMaterial({
+          // depthTest: false,
+          // depthWrite: false,
+          // side: THREE.DoubleSide
+          // depthFunc: THREE.NeverDepth
+        })
       })
 
       this.wireframeModel = files.wireframe
