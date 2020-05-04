@@ -30,7 +30,7 @@ export default {
     // console.log(camera, canvas)
     const cameraControls = new OrbitControls(camera, document.body)
     cameraControls.enableKeys = false
-    cameraControls.enabled = false
+    // cameraControls.enabled = false
 
     this.init()
   },
@@ -63,31 +63,38 @@ export default {
       const files = await assetsManager.get('test-wireframe')
       this.solidModel = files.solid
 
-      const params = {
-        distance: 0
-      }
+      // const params = {
+      //   distance: 0,
+      // }
 
       const GUI = useGUI()
-      GUI.add(params, 'distance')
+      // GUI.add(params, 'distance')
+      //   .min(0)
+      //   .max(20)
+      //   .step(0.01)
+      //   .onChange(() => {
+      //     this.$events.emit('VISIBLE_DISTANCE', params.distance)
+      //   })
+
+      const wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ff00,
+        transparent: true
+      })
+      GUI.add(wireframeMaterial, 'opacity')
         .min(0)
-        .max(20)
+        .max(1)
         .step(0.01)
-        .onChange(() => {
-          this.$events.emit('VISIBLE_DISTANCE', params.distance)
-        })
 
       this.solidModel.traverse((child) => {
-        // child.material = new DistanceMaterial()
-        child.material = new DistanceMaterial({ uDistance: params.distance })
+        // child.material = new DistanceMaterial({ uDistance: params.distance })
+        child.material = new THREE.MeshPhongMaterial({})
       })
 
       this.wireframeModel = files.wireframe
 
       this.wireframeModel.traverse((child) => {
-        child.material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        child.material = wireframeMaterial
       })
-
-      console.log(this.solidModel, this.wireframeModel)
     }
   }
 }

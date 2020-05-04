@@ -40,11 +40,11 @@ vec3 sobel(sampler2D inputBuffer, float stepx, float stepy, vec2 uv){
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
   outputColor = inputColor;
   vec3 outlineMask = sobel(normalBuffer, step/ resolution.x, step/resolution.y, uv);
-  outlineMask *= 100.;
+  outlineMask *= 20.;
 
   outputColor.rgb = (outlineMask.r > 0.001) ? outlineColor : inputColor.rgb;
 
-  // outputColor.rgb = outlineMask;
+  outputColor.rgb = outlineMask * outlineColor;
 }
 `
 // https://www.shadertoy.com/view/Xdf3Rf

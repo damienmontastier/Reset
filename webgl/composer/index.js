@@ -36,8 +36,8 @@ export default class Composer {
     this.outlineEffect = new OutlineEffect(
       this.normalPass.renderTarget.texture,
       {
-        step: 0.04,
-        outlineColor: 0x000000
+        step: 0.01,
+        outlineColor: 0x00ff00
       }
     )
 
