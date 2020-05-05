@@ -6,32 +6,53 @@ import {
 } from 'postprocessing'
 
 // import OutlineEffect from './effects/outline'
-import AntialiasingEffect from './effects/antialiasing'
-import DitheringEffect from './effects/dithering'
+// import AntialiasingEffect from './effects/antialiasing'
+// import DitheringEffect from './effects/dithering'
+
+import HightlightCircleEffect from './effects/hightlight-circle'
 
 import viewport from '@/plugins/viewport'
 
 import useGUI from '@/hooks/use-gui'
 
 export default class Composer {
-  constructor({ renderer, camera, scene }) {
+  constructor({ renderer, camera, scene, wireframeScene }) {
     this.renderer = renderer
     this.camera = camera
     this.scene = scene
+    this.wireframeScene = wireframeScene
 
     this.renderingScale = 1
 
     this.init()
   }
 
-  async init() {
-    await this.initComposer()
+  init() {
+    this.initWireframeComposer()
+    this.initComposer()
     this.initGUI()
   }
 
-  async initComposer() {
+  initWireframeComposer() {
+    this.wireframeSceneRenderTarget = new THREE.WebGLRenderTarget({
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter
+    })
+
+    this.wireframeComposer = new EffectComposer(
+      this.renderer,
+      this.wireframeSceneRenderTarget
+    )
+    const renderPass = new RenderPass(this.wireframeScene, this.camera)
+
+    this.wireframeComposer.addPass(renderPass)
+
+    renderPass.renderToScreen = false
+  }
+
+  initComposer() {
     // effects
-    this.antialiasingEffect = await new AntialiasingEffect()
+    // this.antialiasingEffect = await new AntialiasingEffect()
 
     // this.normalPass = new NormalPass(this.scene, this.camera)
     // this.outlineEffect = new OutlineEffect(
@@ -48,22 +69,32 @@ export default class Composer {
     // passes
     // this.effectPass = new EffectPass(this.camera, this.outlineEffect)
 
-    this.AAPass = new EffectPass(
-      this.camera,
-      this.antialiasingEffect.smaaEffect
-    )
+    // this.AAPass = new EffectPass(
+    //   this.camera,
+    //   this.antialiasingEffect.smaaEffect
+    // )
 
-    this.ditheringEffect = new DitheringEffect()
-    this.ditheringPass = new EffectPass(this.camera, this.ditheringEffect)
+    // this.ditheringEffect = new DitheringEffect()
+    // this.ditheringPass = new EffectPass(this.camera, this.ditheringEffect)
+
+    this.hightlightCircleEffect = new HightlightCircleEffect({
+      wireframeBuffer: this.wireframeComposer.outputBuffer.texture
+    })
+
+    this.hightlightCirclePass = new EffectPass(
+      this.camera,
+      this.hightlightCircleEffect
+    )
 
     // addPasses
     // this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    this.composer.addPass(this.AAPass)
-    // this.composer.addPass(this.ditheringPass)
-
+    this.composer.addPass(this.hightlightCirclePass)
+    // this.composer.addPass(this.AAPass)
     // this.composer.addPass(this.ditheringPass)
   }
+
+  renderWireframe() {}
 
   render(clock) {
     this.renderer.setSize(
@@ -72,7 +103,11 @@ export default class Composer {
     )
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
+    this.wireframeComposer.setSize(viewport.width, viewport.height)
+    this.wireframeComposer.render(clock.deltaTime)
+
     if (this.composer) {
+      this.composer.setSize(viewport.width, viewport.height)
       this.composer.render(clock.deltaTime)
     } else {
       this.renderer.render(this.scene, this.camera)

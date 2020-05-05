@@ -4,7 +4,7 @@
 
 <script>
 import useGame from '@/hooks/use-game'
-import useGUI from '@/hooks/use-gui'
+// import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
@@ -41,9 +41,43 @@ export default {
     async init() {
       await this.load()
 
-      const { scene } = useGame()
+      this.wSolidModel = this.solidModel.clone()
+      this.wWireframeModel = this.wireframeModel.clone()
+
+      const { scene, wireframeScene } = useGame()
       scene.add(this.solidModel)
       scene.add(this.wireframeModel)
+
+      const wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        transparent: true
+      })
+
+      this.wireframeModel.traverse((child) => {
+        child.material = wireframeMaterial
+      })
+
+      // wireframeScene
+
+      wireframeScene.add(this.wSolidModel)
+      wireframeScene.add(this.wWireframeModel)
+
+      const greenMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ff00,
+        transparent: true
+      })
+
+      const blackMaterial = new THREE.MeshBasicMaterial({
+        color: 0x000000
+      })
+
+      this.wSolidModel.traverse((child) => {
+        child.material = blackMaterial
+      })
+
+      this.wWireframeModel.traverse((child) => {
+        child.material = greenMaterial
+      })
     },
     async load() {
       const assetsManager = useAssetsManager()
@@ -65,12 +99,13 @@ export default {
 
       const files = await assetsManager.get('test-wireframe')
       this.solidModel = files.solid
+      this.wireframeModel = files.wireframe
 
       // const params = {
       //   distance: 0,
       // }
 
-      const GUI = useGUI()
+      // const GUI = useGUI()
       // GUI.add(params, 'distance')
       //   .min(0)
       //   .max(20)
@@ -79,27 +114,25 @@ export default {
       //     this.$events.emit('VISIBLE_DISTANCE', params.distance)
       //   })
 
-      const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        transparent: true
-        // side: THREE.BackSide,
-        // depthWrite: false
-      })
-      GUI.add(wireframeMaterial, 'opacity')
-        .min(0)
-        .max(1)
-        .step(0.01)
+      // const wireframeMaterial = new THREE.MeshBasicMaterial({
+      //   color: 0x00ff00,
+      //   transparent: true
+      //   // side: THREE.BackSide,
+      //   // depthWrite: false
+      // })
+      // GUI.add(wireframeMaterial, 'opacity')
+      //   .min(0)
+      //   .max(1)
+      //   .step(0.01)
 
-      this.solidModel.traverse((child) => {
-        // child.material = new DistanceMaterial({ uDistance: params.distance })
-        child.material = new THREE.MeshPhongMaterial({})
-      })
-
-      this.wireframeModel = files.wireframe
+      // this.solidModel.traverse((child) => {
+      // child.material = new DistanceMaterial({ uDistance: params.distance })
+      // child.material = new THREE.MeshPhongMaterial({})
+      // })
 
       this.wireframeModel.traverse((child) => {
         child.scale.setScalar(1.0025)
-        child.material = wireframeMaterial
+        // child.material = wireframeMaterial
       })
     }
   }
