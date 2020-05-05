@@ -4,19 +4,17 @@
       <div class="gameTerminal__title">
         <terminal-title />
       </div>
-      <terminal-p1 />
+      <terminal-p2 />
     </div>
   </div>
 </template>
 
 <script>
-import TerminalTitle from '@/components/game/terminal/terminal-title'
-import TerminalP1 from '@/components/game/terminal/terminal-p1'
-
 export default {
   components: {
-    TerminalTitle,
-    TerminalP1
+    TerminalTitle: () => import('@/components/game/terminal/terminal-title'),
+    // TerminalP1: () => import('@/components/game/terminal/terminal-p1')
+    TerminalP2: () => import('@/components/game/terminal/terminal-p2')
   }
 }
 </script>
@@ -42,6 +40,10 @@ export default {
     cursor: pointer;
     text-decoration: underline;
 
+    &.not-underline {
+      text-decoration: none;
+    }
+
     @media (hover: hover) {
       &:hover {
         text-decoration: none;
@@ -54,7 +56,6 @@ export default {
     font-size: 14px;
     line-height: 22px;
     margin-bottom: 48px;
-    padding: 16px 24px;
     position: relative;
   }
 }

@@ -1,11 +1,13 @@
 <template>
   <div class="gameLevel1">
     <!-- <terminal v-if="playerIsOnTerminal" /> -->
-    <terminal />
+    <terminal v-if="terminalIsOpened" />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
@@ -16,11 +18,9 @@ import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
-import Terminal from '@/components/game/terminal/terminal'
-
 export default {
   components: {
-    Terminal
+    Terminal: () => import('@/components/game/terminal/terminal')
   },
   data() {
     return {
@@ -31,6 +31,12 @@ export default {
       playerIsOnTreadmill: undefined,
       playerIsOnEndgame: undefined
     }
+  },
+
+  computed: {
+    ...mapState({
+      terminalIsOpened: (state) => state.terminalIsOpened
+    })
   },
   watch: {
     currentZones() {
