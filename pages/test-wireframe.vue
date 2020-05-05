@@ -103,6 +103,7 @@ export default {
       this.wireframeModel = files.wireframe
 
       this.wireframeModel.traverse((child) => {
+        child.scale.setScalar(1.0025)
         child.material = wireframeMaterial
       })
     }
