@@ -46,7 +46,7 @@ export default {
 
       const { scene, wireframeScene } = useGame()
       scene.add(this.solidModel)
-      scene.add(this.wireframeModel)
+      // scene.add(this.wireframeModel)
 
       const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff0000,

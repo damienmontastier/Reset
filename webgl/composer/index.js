@@ -1,7 +1,8 @@
 import {
   EffectComposer,
-  EffectPass,
-  RenderPass
+  // EffectPass,
+  RenderPass,
+  ShaderPass
   // NormalPass
 } from 'postprocessing'
 
@@ -9,7 +10,7 @@ import {
 // import AntialiasingEffect from './effects/antialiasing'
 // import DitheringEffect from './effects/dithering'
 
-import HightlightCircleEffect from './effects/hightlight-circle'
+// import HightlightCircleEffect from './effects/hightlight-circle'
 
 import viewport from '@/plugins/viewport'
 
@@ -22,8 +23,6 @@ export default class Composer {
     this.scene = scene
     this.wireframeScene = wireframeScene
 
-    this.renderingScale = 1
-
     this.init()
   }
 
@@ -34,73 +33,87 @@ export default class Composer {
   }
 
   initWireframeComposer() {
-    this.wireframeSceneRenderTarget = new THREE.WebGLRenderTarget({
+    this.wireframeRenderTarget = new THREE.WebGLRenderTarget({
       minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat
     })
 
     this.wireframeComposer = new EffectComposer(
       this.renderer,
-      this.wireframeSceneRenderTarget
+      this.wireframeRenderTarget
     )
     const renderPass = new RenderPass(this.wireframeScene, this.camera)
 
-    this.wireframeComposer.addPass(renderPass)
-
     renderPass.renderToScreen = false
+
+    this.wireframeComposer.addPass(renderPass)
   }
 
   initComposer() {
-    // effects
-    // this.antialiasingEffect = await new AntialiasingEffect()
-
-    // this.normalPass = new NormalPass(this.scene, this.camera)
-    // this.outlineEffect = new OutlineEffect(
-    //   this.normalPass.renderTarget.texture,
-    //   {
-    //     step: 0.01,
-    //     outlineColor: 0x00ff00
-    //   }
-    // )
-
-    // composer
-    this.composer = new EffectComposer(this.renderer)
-
-    // passes
-    // this.effectPass = new EffectPass(this.camera, this.outlineEffect)
-
-    // this.AAPass = new EffectPass(
-    //   this.camera,
-    //   this.antialiasingEffect.smaaEffect
-    // )
-
-    // this.ditheringEffect = new DitheringEffect()
-    // this.ditheringPass = new EffectPass(this.camera, this.ditheringEffect)
-
-    this.hightlightCircleEffect = new HightlightCircleEffect({
-      wireframeBuffer: this.wireframeComposer.outputBuffer.texture
+    this.sceneRenderTarget = new THREE.WebGLRenderTarget({
+      minFilter: THREE.LinearFilter,
+      magFilter: THREE.LinearFilter,
+      format: THREE.RGBAFormat
     })
 
-    this.hightlightCirclePass = new EffectPass(
-      this.camera,
-      this.hightlightCircleEffect
+    // composer
+    this.composer = new EffectComposer(this.renderer, this.sceneRenderTarget)
+
+    const finalPass = new ShaderPass(
+      new THREE.ShaderMaterial({
+        vertexShader: `varying vec2 vUv;
+
+        void main() {
+        
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        
+        }`,
+        fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform sampler2D tAdd;
+        
+        varying vec2 vUv;
+        
+        void main() {
+          vec4 texel = texture2D( tDiffuse, vUv );
+          vec4 add = texture2D( tAdd, vUv );
+          // gl_FragColor = vec4(vec3(1.0,1.,0.),add.a);
+          gl_FragColor = texel;
+        }`,
+        transparent: true,
+        uniforms: {
+          tDiffuse: { type: 't', value: 0, texture: null },
+          tAdd: { type: 't', value: 1, texture: null },
+          fCoeff: { type: 'f', value: 1.0 }
+        }
+      })
     )
+    finalPass.needsSwap = true
+    finalPass.renderToScreen = true
+    finalPass.setInput('tDiffuse')
+    finalPass.screen.material.uniforms.tAdd.value = this.wireframeComposer.outputBuffer.texture
+
+    // this.hightlightCircleEffect = new HightlightCircleEffect({
+    //   wireframeBuffer: this.wireframeComposer.outputBuffer.texture
+    // })
+
+    // this.hightlightCirclePass = new EffectPass(
+    //   this.camera,
+    //   this.hightlightCircleEffect
+    // )
 
     // addPasses
-    // this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    this.composer.addPass(this.hightlightCirclePass)
-    // this.composer.addPass(this.AAPass)
-    // this.composer.addPass(this.ditheringPass)
+    // this.composer.addPass(this.hightlightCirclePass)
+    this.composer.addPass(finalPass)
   }
 
-  renderWireframe() {}
-
   render(clock) {
-    this.renderer.setSize(
-      viewport.width * this.renderingScale,
-      viewport.height * this.renderingScale
-    )
+    this.renderer.clear()
+
+    this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
     this.wireframeComposer.setSize(viewport.width, viewport.height)
@@ -149,12 +162,6 @@ export default class Composer {
           ? Math.min(4, context.getParameter(context.MAX_SAMPLES))
           : 0
     })
-
-    gui.rendering
-      .add(this, 'renderingScale')
-      .min(0.2)
-      .max(1)
-      .step(0.1)
 
     if (this.outlineEffect) {
       const sobelGUI = gui.postprocessing.addFolder('outline')
