@@ -92,12 +92,7 @@ export default {
 
       this.solidModel.traverse((child) => {
         // child.material = new DistanceMaterial({ uDistance: params.distance })
-        child.material = new THREE.MeshPhongMaterial({
-          // depthTest: false,
-          // depthWrite: false,
-          // side: THREE.DoubleSide
-          // depthFunc: THREE.NeverDepth
-        })
+        child.material = new THREE.MeshPhongMaterial({})
       })
 
       this.wireframeModel = files.wireframe
