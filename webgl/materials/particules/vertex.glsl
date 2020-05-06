@@ -74,16 +74,19 @@ float snoise(vec3 v){
 }
 
 varying vec3 vPosition;
+varying vec2 vUv;
+
 uniform float uTime;
-uniform float uFrequency;
-uniform float uAmplitude;
+uniform float uNoiseFrequency;
+uniform float uNoiseAmplitude;
 
 void main() {
   vPosition = position;
+  vUv = uv;
 
-  vPosition.z = snoise(vec3(vPosition.xy * uFrequency,uTime));
-  vPosition.z *= uAmplitude;
+  vPosition.z = snoise(vec3(vPosition.xy * uNoiseFrequency,uTime));
+  vPosition.z *= uNoiseAmplitude;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
-  gl_PointSize = 1.0;
+  // gl_PointSize = 1.0;
 }

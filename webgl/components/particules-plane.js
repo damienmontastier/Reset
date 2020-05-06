@@ -5,24 +5,34 @@ export default class PatriculesPlane extends THREE.Object3D {
   constructor() {
     super()
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100)
-    this.material = new THREE.PointsMaterial({ color: 0xffffff })
+
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: {
           value: 0
         },
-        uAmplitude: {
-          value: 0.005
+        uNoiseAmplitude: {
+          value: 0.0025
         },
-        uFrequency: {
+        uNoiseFrequency: {
           value: 10
+        },
+        uDotsFrenquency: {
+          value: 100
+        },
+        uDotsRadius: {
+          value: 0.1
         }
       },
       vertexShader,
       fragmentShader,
-      transparent: true
+      transparent: true,
+      extensions: {
+        derivatives: true
+      }
     })
-    this.mesh = new THREE.Points(this.geometry, this.material)
+    // this.mesh = new THREE.Points(this.geometry, this.material)
+    this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.add(this.mesh)
   }
 

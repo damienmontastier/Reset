@@ -6,6 +6,7 @@
 </template>
 
 <script>
+// import useWebGL from '@/hooks/use-webgl'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
@@ -93,6 +94,11 @@ export default {
       this.particulesPlane.rotation.z = -Math.PI / 4
 
       this.particulesPlane.position.y = -2
+
+      // const { composer } = useWebGL()
+      // const { bloomEffect } = composer
+
+      // bloomEffect.selection.add(this.particulesPlane)
 
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
