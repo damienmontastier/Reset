@@ -3,10 +3,10 @@ import {
   // EffectPass,
   RenderPass,
   // SelectiveBloomEffect,
+  BloomEffect,
   EffectPass,
   KernelSize,
-  BlendFunction,
-  BloomEffect
+  BlendFunction
   // NormalPass
 } from 'postprocessing'
 
