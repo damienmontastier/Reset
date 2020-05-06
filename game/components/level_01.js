@@ -31,10 +31,11 @@ export default class Level01 extends THREE.Object3D {
     this.add(this.model)
 
     const background = this.model.getObjectByName('model_background')
-    const gui = useGUI()
-    gui.addObject3D('background', background)
-    background.material.side = THREE.DoubleSide
-    background.rotation.x = Math.PI * 1.5
+    // const gui = useGUI()
+    // gui.addObject3D('background', background)
+    // background.material.side = THREE.DoubleSide
+    // background.rotation.x = Math.PI * 1.5
+    background.visible = false
 
     // zones
     this.zones = this.model.getObjectByName('zones')

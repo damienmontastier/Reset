@@ -16,6 +16,8 @@ import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
+import ParticulesPlane from '@/webgl/components/particules-plane'
+
 // import Terminal from '@/components/game/terminal/terminal'
 
 export default {
@@ -72,7 +74,6 @@ export default {
   },
   mounted() {
     this.init()
-    console.log('mounted')
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
@@ -83,6 +84,16 @@ export default {
   methods: {
     async init() {
       const { scene: gameScene } = useGame()
+
+      this.particulesPlane = new ParticulesPlane()
+      gameScene.add(this.particulesPlane)
+
+      this.particulesPlane.scale.setScalar(50)
+      this.particulesPlane.rotation.x = -Math.PI / 2
+      this.particulesPlane.rotation.z = -Math.PI / 4
+
+      this.particulesPlane.position.y = -2
+
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
       this.map = new MapLevel01()
@@ -193,6 +204,7 @@ export default {
 
     loop(clock) {
       this.cameraMouvement.loop()
+      this.particulesPlane.update(clock)
     },
 
     initIntersections() {

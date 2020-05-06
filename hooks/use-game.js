@@ -47,7 +47,7 @@ class Game {
     const { scene } = useWebGL()
     const { camera } = useCamera()
 
-    camera.position.set(250, 250, 250)
+    camera.position.set(1, 2.8, 2.9)
     camera.lookAt(scene.position)
   }
 
