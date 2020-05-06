@@ -10,7 +10,6 @@ class Keyboard {
   }
 
   onKeyDown(e) {
-    if (!e.repeat) this.events.emit('keypress', e)
     this.events.emit('keydown', e)
   }
 
@@ -18,7 +17,10 @@ class Keyboard {
     this.events.emit('keyup', e)
   }
 
-  destroy() {}
+  destroy() {
+    window.removeEventListener('keydown', this.onKeyDown.bind(this))
+    window.removeEventListener('keyup', this.onKeyUp.bind(this))
+  }
 }
 
 const useKeyboard = () => {

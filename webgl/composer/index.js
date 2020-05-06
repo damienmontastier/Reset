@@ -43,7 +43,7 @@ export default class Composer {
     this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    if (this.composer) {
+    if (this.composer && !this.disabled) {
       this.composer.setSize(viewport.width, viewport.height)
       this.composer.render(clock.deltaTime)
     } else {

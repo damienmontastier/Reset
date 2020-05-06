@@ -4,10 +4,13 @@
 
 <script>
 import useGame from '@/hooks/use-game'
+import useRAF from '@/hooks/use-raf'
 // import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
+
+import ParticulesPlane from '@/webgl/components/particules-plane'
 
 export default {
   mounted() {
@@ -41,7 +44,7 @@ export default {
 
       const { scene } = useGame()
       scene.add(this.solidModel)
-      scene.add(this.wireframeModel)
+      // scene.add(this.wireframeModel)
 
       const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff0000,
@@ -51,6 +54,21 @@ export default {
       this.wireframeModel.traverse((child) => {
         child.material = wireframeMaterial
       })
+
+      this.particulesPlane = new ParticulesPlane()
+      scene.add(this.particulesPlane)
+
+      this.particulesPlane.scale.setScalar(50)
+      this.particulesPlane.rotation.x = -Math.PI / 2
+      this.particulesPlane.rotation.z = -Math.PI / 4
+
+      this.particulesPlane.position.y = -2
+
+      const RAF = useRAF()
+      RAF.add('test-wireframe', this.loop)
+    },
+    loop(clock) {
+      this.particulesPlane.update(clock)
     },
     async load() {
       const assetsManager = useAssetsManager()
