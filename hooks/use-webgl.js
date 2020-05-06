@@ -15,7 +15,6 @@ class WebGL {
 
     // scene
     this.scene = new THREE.Scene()
-    this.wireframeScene = new THREE.Scene()
 
     // camera
     const { camera } = useCamera()
@@ -42,7 +41,6 @@ class WebGL {
       canvas: this.canvas,
       context,
       scene: this.scene,
-      preserveDrawingBuffer: true,
       powerPreference: 'high-performance'
     })
     this.renderer.setSize(viewport.width, viewport.height)
@@ -55,8 +53,7 @@ class WebGL {
     this.composer = new Composer({
       camera,
       renderer: this.renderer,
-      scene: this.scene,
-      wireframeScene: this.wireframeScene
+      scene: this.scene
     })
 
     // stats

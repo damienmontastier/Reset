@@ -19,12 +19,8 @@ class Game {
     this.scene = new THREE.Group()
     this.scene.scale.setScalar(100)
 
-    this.wireframeScene = new THREE.Group()
-    this.wireframeScene.scale.setScalar(100)
-
-    const { scene, wireframeScene } = useWebGL()
+    const { scene } = useWebGL()
     scene.add(this.scene)
-    wireframeScene.add(this.wireframeScene)
 
     this.intersections = new INTERSECTIONS.World()
     // scene.add(this.intersections)

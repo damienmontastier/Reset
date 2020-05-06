@@ -1,8 +1,7 @@
 import {
   EffectComposer,
   // EffectPass,
-  RenderPass,
-  ShaderPass
+  RenderPass
   // NormalPass
 } from 'postprocessing'
 
@@ -17,97 +16,25 @@ import viewport from '@/plugins/viewport'
 import useGUI from '@/hooks/use-gui'
 
 export default class Composer {
-  constructor({ renderer, camera, scene, wireframeScene }) {
+  constructor({ renderer, camera, scene }) {
     this.renderer = renderer
     this.camera = camera
     this.scene = scene
-    this.wireframeScene = wireframeScene
 
     this.init()
   }
 
   init() {
-    this.initWireframeComposer()
     this.initComposer()
     this.initGUI()
   }
 
-  initWireframeComposer() {
-    this.wireframeRenderTarget = new THREE.WebGLRenderTarget({
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat
-    })
-
-    this.wireframeComposer = new EffectComposer(
-      this.renderer,
-      this.wireframeRenderTarget
-    )
-    const renderPass = new RenderPass(this.wireframeScene, this.camera)
-
-    renderPass.renderToScreen = false
-
-    this.wireframeComposer.addPass(renderPass)
-  }
-
   initComposer() {
-    this.sceneRenderTarget = new THREE.WebGLRenderTarget({
-      minFilter: THREE.LinearFilter,
-      magFilter: THREE.LinearFilter,
-      format: THREE.RGBAFormat
-    })
-
     // composer
     this.composer = new EffectComposer(this.renderer, this.sceneRenderTarget)
 
-    const finalPass = new ShaderPass(
-      new THREE.ShaderMaterial({
-        vertexShader: `varying vec2 vUv;
-
-        void main() {
-        
-          vUv = uv;
-          gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
-        
-        }`,
-        fragmentShader: `
-        uniform sampler2D tDiffuse;
-        uniform sampler2D tAdd;
-        
-        varying vec2 vUv;
-        
-        void main() {
-          vec4 texel = texture2D( tDiffuse, vUv );
-          vec4 add = texture2D( tAdd, vUv );
-          // gl_FragColor = vec4(vec3(1.0,1.,0.),add.a);
-          gl_FragColor = texel;
-        }`,
-        transparent: true,
-        uniforms: {
-          tDiffuse: { type: 't', value: 0, texture: null },
-          tAdd: { type: 't', value: 1, texture: null },
-          fCoeff: { type: 'f', value: 1.0 }
-        }
-      })
-    )
-    finalPass.needsSwap = true
-    finalPass.renderToScreen = true
-    finalPass.setInput('tDiffuse')
-    finalPass.screen.material.uniforms.tAdd.value = this.wireframeComposer.outputBuffer.texture
-
-    // this.hightlightCircleEffect = new HightlightCircleEffect({
-    //   wireframeBuffer: this.wireframeComposer.outputBuffer.texture
-    // })
-
-    // this.hightlightCirclePass = new EffectPass(
-    //   this.camera,
-    //   this.hightlightCircleEffect
-    // )
-
     // addPasses
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    // this.composer.addPass(this.hightlightCirclePass)
-    this.composer.addPass(finalPass)
   }
 
   render(clock) {
@@ -115,9 +42,6 @@ export default class Composer {
 
     this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
-
-    this.wireframeComposer.setSize(viewport.width, viewport.height)
-    this.wireframeComposer.render(clock.deltaTime)
 
     if (this.composer) {
       this.composer.setSize(viewport.width, viewport.height)

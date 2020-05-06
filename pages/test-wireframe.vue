@@ -9,12 +9,10 @@ import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
-import DistanceMaterial from '@/webgl/materials/distance'
-
 export default {
   mounted() {
     const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = new DistanceMaterial()
+    const material = new THREE.MeshBasicMaterial()
     this.cube = new THREE.Mesh(geometry, material)
 
     // const { scene } = useGame()
@@ -41,12 +39,9 @@ export default {
     async init() {
       await this.load()
 
-      this.wSolidModel = this.solidModel.clone()
-      this.wWireframeModel = this.wireframeModel.clone()
-
-      const { scene, wireframeScene } = useGame()
+      const { scene } = useGame()
       scene.add(this.solidModel)
-      // scene.add(this.wireframeModel)
+      scene.add(this.wireframeModel)
 
       const wireframeMaterial = new THREE.MeshBasicMaterial({
         color: 0xff0000,
@@ -55,28 +50,6 @@ export default {
 
       this.wireframeModel.traverse((child) => {
         child.material = wireframeMaterial
-      })
-
-      // wireframeScene
-
-      wireframeScene.add(this.wSolidModel)
-      wireframeScene.add(this.wWireframeModel)
-
-      const greenMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        transparent: true
-      })
-
-      const blackMaterial = new THREE.MeshBasicMaterial({
-        color: 0x000000
-      })
-
-      this.wSolidModel.traverse((child) => {
-        child.material = blackMaterial
-      })
-
-      this.wWireframeModel.traverse((child) => {
-        child.material = greenMaterial
       })
     },
     async load() {
