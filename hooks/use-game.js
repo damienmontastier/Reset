@@ -50,7 +50,9 @@ class Game {
     // camera.position.set(1, 2.8, 2.9)
     // camera.lookAt(scene.position)
 
-    camera.originPosition = new THREE.Vector3(5, 10, 5)
+    // camera.angle = new THREE.Vector3(1, 2.8, 2.9).normalize()
+    // camera.originPosition = camera.angle.setScalar(8)
+    camera.originPosition = new THREE.Vector3(3, 8.4, 8.7)
 
     camera.position.copy(camera.originPosition)
     camera.lookAt(scene.position)

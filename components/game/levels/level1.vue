@@ -8,6 +8,8 @@
 <script>
 // import useWebGL from '@/hooks/use-webgl'
 import gsap from 'gsap'
+// import useWebGL from '@/hooks/use-webgl'
+import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
@@ -86,16 +88,16 @@ export default {
   },
   methods: {
     async init() {
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
 
       const { scene: gameScene } = useGame()
 
@@ -143,6 +145,8 @@ export default {
 
       const { events: keyboardEvents } = useKeyboard()
       keyboardEvents.on('keydown', this.onKeydown)
+
+      this.initGUI()
 
       const RAF = useRAF()
       RAF.add('level1', this.loop.bind(this))
@@ -230,8 +234,12 @@ export default {
         .clone()
         .add(camera.originPosition)
 
+      // const { scene } = useWebGL()
+      // camera.lookAt(scene.position)
+
       gsap.to(camera.position, {
         x: nextPosition.x,
+        y: camera.originPosition.y,
         z: nextPosition.z,
         duration: 1,
         ease: 'power2.out'
@@ -300,6 +308,21 @@ export default {
 
       const clock = useClock()
       clock.add(10)
+    },
+
+    initGUI() {
+      const GUI = useGUI()
+
+      const { camera } = useCamera()
+
+      const params = {
+        lookAtPlayer: () => {
+          camera.lookAt(this.player.position)
+        }
+      }
+
+      GUI.camera.addVector('position', camera.originPosition)
+      GUI.camera.add(params, 'lookAtPlayer')
     }
   }
 }
