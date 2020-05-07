@@ -30,7 +30,7 @@ class Game {
 
   init() {
     this.initCamera()
-    this.initLights()
+    // this.initLights()
     // this.initGridTerrain()
 
     // this.addBox()
@@ -227,8 +227,8 @@ class Game {
 
     // const time = clock.getElapsedTime()
 
-    this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
-    this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
+    // this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
+    // this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
     // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1

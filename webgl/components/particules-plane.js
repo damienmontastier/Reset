@@ -23,7 +23,7 @@ export default class PatriculesPlane extends THREE.Object3D {
           value: 100
         },
         uDotsRadius: {
-          value: 0.1
+          value: 0.05
         }
       },
       vertexShader,

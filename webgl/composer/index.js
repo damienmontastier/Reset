@@ -60,7 +60,7 @@ export default class Composer {
 
     // addPasses
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    this.composer.addPass(this.bloomPass)
+    // this.composer.addPass(this.bloomPass)
   }
 
   render(clock) {
@@ -69,12 +69,12 @@ export default class Composer {
     this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    if (this.composer && !this.disabled) {
-      this.composer.setSize(viewport.width, viewport.height)
-      this.composer.render(clock.deltaTime)
-    } else {
-      this.renderer.render(this.scene, this.camera)
-    }
+    // if (this.composer && !this.disabled) {
+    //   this.composer.setSize(viewport.width, viewport.height)
+    //   this.composer.render(clock.deltaTime)
+    // } else {
+    this.renderer.render(this.scene, this.camera)
+    // }
   }
 
   initGUI() {

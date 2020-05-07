@@ -45,8 +45,11 @@ class WebGL {
     })
     this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
-    this.renderer.shadowMap.enabled = true
-    this.renderer.shadowMap.type = THREE.BasicShadowMap
+    this.renderer.toneMapping = THREE.LinearToneMapping
+    this.renderer.outputEncoding = THREE.sRGBEncoding
+
+    // this.renderer.shadowMap.enabled = true
+    // this.renderer.shadowMap.type = THREE.BasicShadowMap
 
     // composer
     const Composer = require('@/webgl/composer').default
