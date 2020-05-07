@@ -17,7 +17,7 @@ let game
 class Game {
   constructor() {
     this.scene = new THREE.Group()
-    this.scene.scale.setScalar(100)
+    // this.scene.scale.setScalar(100)
 
     const { scene } = useWebGL()
     scene.add(this.scene)
@@ -30,7 +30,7 @@ class Game {
 
   init() {
     this.initCamera()
-    // this.initLights()
+    this.initLights()
     // this.initGridTerrain()
 
     // this.addBox()
@@ -47,7 +47,12 @@ class Game {
     const { scene } = useWebGL()
     const { camera } = useCamera()
 
-    camera.position.set(1, 2.8, 2.9)
+    // camera.position.set(1, 2.8, 2.9)
+    // camera.lookAt(scene.position)
+
+    camera.originPosition = new THREE.Vector3(5, 10, 5)
+
+    camera.position.copy(camera.originPosition)
     camera.lookAt(scene.position)
   }
 
@@ -227,8 +232,8 @@ class Game {
 
     // const time = clock.getElapsedTime()
 
-    // this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
-    // this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
+    this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
+    this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
     // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1

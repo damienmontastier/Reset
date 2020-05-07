@@ -7,13 +7,15 @@
 
 <script>
 // import useWebGL from '@/hooks/use-webgl'
+import gsap from 'gsap'
+import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
-import CameraMouvement from '@/game/components/camera-movement'
+// import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
@@ -84,6 +86,17 @@ export default {
   },
   methods: {
     async init() {
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
+
+      const { camera } = useCamera()
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
+
       const { scene: gameScene } = useGame()
 
       this.particulesPlane = new ParticulesPlane()
@@ -118,10 +131,10 @@ export default {
 
       this.levelGroup.add(this.player)
 
-      this.cameraMouvement = new CameraMouvement({
-        mesh: this.player,
-        duration: 1
-      })
+      // this.cameraMouvement = new CameraMouvement({
+      //   mesh: this.player,
+      //   duration: 1
+      // })
 
       // const audioManager = useAudioManager()
 
@@ -209,8 +222,20 @@ export default {
     },
 
     loop(clock) {
-      this.cameraMouvement.loop()
+      // this.cameraMouvement.loop()
       this.particulesPlane.update(clock)
+
+      const { camera } = useCamera()
+      const nextPosition = this.player.worldPosition
+        .clone()
+        .add(camera.originPosition)
+
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
