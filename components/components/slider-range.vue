@@ -2,7 +2,7 @@
   <div class="slider-range">
     <div ref="circle" class="circle">
       <svg width="40" height="40" xmlns="http://www.w3.org/2000/svg">
-        <circle fill="#2FF000" cy="20" cx="20" r="20" />
+        <circle fill="#d8d8d8" cy="20" cx="20" r="20" />
         <text
           font-family="CindieMono-C, Cindie Mono"
           font-size="10"
@@ -29,7 +29,7 @@
         />
       </svg>
     </div>
-    <div class="line__dash line-green">
+    <div ref="lineGreen" class="line__dash line-green">
       <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
         <path
           stroke="#2FF000"
@@ -56,11 +56,11 @@ export default {
   props: {
     quotient: {
       type: Number,
-      default: 1
+      require: true
     },
     letter: {
       type: String,
-      require: 'O'
+      require: true
     }
   },
   data() {
@@ -68,8 +68,7 @@ export default {
       pos: { x: 0, y: 0 },
       circleBounding: {},
       circleOuterBounding: {},
-      goStart: false,
-      goEnd: false
+      isFinish: false
     }
   },
   components: {},
@@ -96,9 +95,24 @@ export default {
     this.circleBounding.finalX =
       this.circleOuterBounding.initialX - this.circleBounding.initalX
   },
+  watch: {
+    isFinish(bool) {
+      if (bool) {
+        this.$refs.circle.classList.add('unlock')
+      } else {
+        this.$refs.circle.classList.remove('unlock')
+      }
+    }
+  },
   methods: {
     onDragStart(e) {},
     onDragMove(e) {
+      if (this.pos.x === this.circleBounding.finalX && !this.isFinish) {
+        this.isFinish = true
+      } else if (this.pos.x < this.circleBounding.finalX) {
+        this.isFinish = false
+      }
+
       if (e.event.clientX < this.circleBounding.x && this.quotient === 1) {
         this.pos.x = 0
       } else if (
@@ -116,8 +130,18 @@ export default {
         x: `${this.pos.x}`,
         duration: 0.5
       })
+
+      gsap.to(this.$refs.lineGreen, {
+        width: `${this.widthLine}%`,
+        duration: 0.5
+      })
     },
     onDragStop() {}
+  },
+  computed: {
+    widthLine() {
+      return (this.pos.x / this.circleBounding.finalX) * 100
+    }
   }
 }
 </script>
@@ -143,6 +167,14 @@ export default {
     left: -39px;
     z-index: 9;
 
+    &.unlock {
+      svg {
+        circle {
+          fill: var(--color-green);
+        }
+      }
+    }
+
     span {
       color: var(--color-black);
       font-family: var(--font-cindie-c);
@@ -160,6 +192,10 @@ export default {
     height: 100%;
     position: absolute;
     width: 100%;
+
+    &.line-green {
+      width: 0%;
+    }
 
     svg {
       path {
