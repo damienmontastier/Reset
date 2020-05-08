@@ -28,7 +28,7 @@ export default {
     },
     error: {
       type: Object,
-      default: undefined
+      require: false
     }
   },
   mounted() {},
@@ -48,7 +48,11 @@ export default {
     }
 
     input[type='checkbox']:checked + label::before {
-      background: var(--color-green);
+      background-color: var(--color-green);
+      background-image: url('/img/icons/check.svg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: auto;
     }
 
     label {
