@@ -62,8 +62,7 @@ export default {
     }
 
     label {
-      align-items: center;
-      display: flex;
+      display: block;
       font-size: 10px;
 
       &::before {
@@ -73,6 +72,7 @@ export default {
         display: inline-block;
         height: 12px;
         margin-right: 10px;
+        vertical-align: middle;
         width: 12px;
       }
     }

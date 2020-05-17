@@ -19,7 +19,7 @@
           />
           <label for="notAccept">
             Je n’accepte pas les
-            <a class="terminal__a">Conditions Générales</a>
+            <a class="terminal__a"> Conditions Générales </a>
             d’utilisation</label
           >
         </div>
