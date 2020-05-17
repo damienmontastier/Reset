@@ -43,6 +43,10 @@ export default {
   &__inner {
     padding: 16px 24px;
 
+    &.clipped {
+      display: flex;
+    }
+
     input {
       display: none;
     }

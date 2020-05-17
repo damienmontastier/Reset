@@ -42,8 +42,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
   components: {
     Btn: () => import('@/components/components/btn'),
@@ -95,18 +93,14 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
-
     closeTerminal() {
-      this.setTerminalOpened(false)
+      this.$parent.closeTerminal()
     },
 
     nextPage() {
       if (this.elements.length === 3) {
         this.displayError = false
-        console.log('next')
+        this.$emit('increment')
       } else {
         this.displayError = true
       }
@@ -145,19 +139,17 @@ export default {
 
 <style lang="scss">
 .terminalP2 {
-  .terminalFieldset {
-    &.terminalFieldset--cross {
-      .terminalFieldset__inner {
-        display: flex;
-        flex-flow: wrap;
-        padding: 25px 24px;
+  .terminalFieldset.terminalFieldset--cross {
+    .terminalFieldset__inner {
+      display: flex;
+      flex-flow: wrap;
+      padding: 25px 24px;
 
-        .input {
-          align-items: center;
-          display: flex;
-          flex: 0 0 33%;
-          margin-bottom: 10px;
-        }
+      .input {
+        align-items: center;
+        display: flex;
+        flex: 0 0 33%;
+        margin-bottom: 10px;
       }
     }
   }

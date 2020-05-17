@@ -7,13 +7,19 @@
         </div>
       </terminal-fieldset>
 
-      <terminal-fieldset type="cross" clipped="true" class="terminal__block">
-        <div class="block block--left"></div>
-        <div class="block block--right"></div>
+      <terminal-fieldset type="cross" :clipped="true" class="terminal__block">
+        <div class="block block--left">
+          <checkBig></checkBig>
+        </div>
+        <div class="block block--right">
+          <span
+            >Illustration/Motion schématique qui montre qu’ily a moins de posts
+          </span>
+        </div>
       </terminal-fieldset>
 
       <div class="terminalP4__submit">
-        <btn :inverted="true">Commencer</btn>
+        <btn @click.native="start" :inverted="true">Commencer</btn>
       </div>
     </div>
   </div>
@@ -24,19 +30,19 @@ export default {
   components: {
     TerminalFieldset: () =>
       import('@/components/game/terminal/terminal-fieldset'),
-    Btn: () => import('@/components/components/btn')
+    Btn: () => import('@/components/components/btn'),
+    checkBig: () => import('@/components/svg/checkBig')
   },
-  data() {
-    return {}
-  },
-  created() {},
-  computed: {},
 
-  methods: {}
+  methods: {
+    start() {
+      this.$emit('increment')
+    }
+  }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .terminalFieldset {
   &--cross {
     .terminalFieldset__inner {
@@ -49,19 +55,23 @@ export default {
         padding: 16px 24px;
 
         &--left {
+          align-items: center;
           background: var(--color-black);
           border-right: 8px solid var(--color-grey);
+          display: flex;
+          justify-content: center;
           width: calc(35% + 8px);
 
           &::after {
-            background-image: url('/img/icons/cross-horizontal.svg');
+            background-image: url('/img/icons/cross-vertical.svg');
             background-repeat: no-repeat;
             background-size: 100%;
             content: '';
-            height: 10px;
-            left: -10px;
+            height: calc(100% + 20px);
             position: absolute;
-            width: calc(100% + 20px);
+            right: -10px;
+            top: -10px;
+            width: 10px;
           }
         }
 

@@ -47,8 +47,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
   components: {
     Btn: () => import('@/components/components/btn'),
@@ -62,12 +60,8 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
-
     closeTerminal() {
-      this.setTerminalOpened(false)
+      this.$parent.closeTerminal()
     },
 
     restartLevel() {
@@ -84,10 +78,11 @@ export default {
       } else {
         this.displayError = false
         console.log('ok next page terminal')
+        this.$emit('increment')
       }
     }
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>

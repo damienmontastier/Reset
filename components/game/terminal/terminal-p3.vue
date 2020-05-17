@@ -40,8 +40,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 export default {
   components: {
     Btn: () => import('@/components/components/btn'),
@@ -76,10 +74,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
-
     sliderIsCompleted(index) {
       this.sliders[index].finish = true
     },
@@ -87,11 +81,11 @@ export default {
     proceed() {
       if (!this.slidersIsCompleted) this.displayError = true
       else {
-        console.log('continue')
+        this.$emit('increment')
       }
     }
   }
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped></style>
