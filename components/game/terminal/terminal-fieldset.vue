@@ -45,6 +45,8 @@ export default {
 
     &.clipped {
       display: flex;
+      height: 150px;
+      padding: 0;
     }
 
     input {
@@ -60,6 +62,10 @@ export default {
     }
 
     label {
+      align-items: center;
+      display: flex;
+      font-size: 10px;
+
       &::before {
         background: var(--color-grey-lighten);
         border-radius: 2px;

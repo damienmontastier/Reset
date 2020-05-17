@@ -143,13 +143,17 @@ export default {
     .terminalFieldset__inner {
       display: flex;
       flex-flow: wrap;
-      padding: 25px 24px;
+      padding: 35px 24px;
 
       .input {
         align-items: center;
         display: flex;
         flex: 0 0 33%;
         margin-bottom: 10px;
+
+        &:nth-last-child(-n + 3) {
+          margin-bottom: 0;
+        }
       }
     }
   }

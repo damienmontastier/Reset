@@ -7,6 +7,16 @@
       <!-- eslint-disable-next-line vue/require-component-is -->
       <component @increment="index++" v-bind:is="terminal" />
     </div>
+    <div class="gameTerminal__paginations">
+      <div
+        class="pagination"
+        v-for="(item, i) in terminals.length"
+        :key="i"
+        :class="{ 'is-active': i == index }"
+      >
+        <span v-html="i + 1"></span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -39,7 +49,7 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     terminalCompleted() {
-      console.log('finish, close terminal')
+      console.log('finish, close terminal, apply modification')
       this.closeTerminal()
     },
     closeTerminal() {
@@ -69,14 +79,58 @@ export default {
   font-family: var(--font-violet);
   height: 100vh;
   margin-left: 64px;
+  position: relative;
   width: 595px;
 
   &__inner {
-    padding: 64px;
+    padding: 75px;
   }
 
   &__title {
     margin-bottom: 48px;
+  }
+
+  &__paginations {
+    bottom: 0;
+    position: absolute;
+    right: -40px;
+
+    .pagination {
+      align-items: center;
+      background-color: var(--color-black);
+      display: flex;
+      height: 40px;
+      justify-content: center;
+      margin-bottom: 5px;
+      position: relative;
+      width: 40px;
+
+      span {
+        color: var(--color-grey);
+        display: inline-block;
+        font-family: var(--font-cindie-f);
+        font-size: 8px;
+        transform: rotate(90deg);
+      }
+
+      &.is-active {
+        background-color: var(--color-grey);
+
+        &::after {
+          background-color: var(--color-green);
+          content: '';
+          height: 100%;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 2px;
+        }
+
+        span {
+          color: var(--color-green);
+        }
+      }
+    }
   }
 
   .terminal__submit {

@@ -101,7 +101,6 @@ export default {
   },
   watch: {
     isDraggable(bool) {
-      console.log(bool)
       if (!bool) {
         this.$refs.circle.classList.add('unlock')
         this.$emit('finish', this.index)
@@ -110,6 +109,7 @@ export default {
       }
     }
   },
+
   methods: {
     onDragStart(e) {},
     onDragMove(e) {
@@ -150,6 +150,11 @@ export default {
     widthLine() {
       return (this.pos.x / this.circleBounding.finalX) * 100
     }
+  },
+  beforeDestroy() {
+    this.dragger.events.off('drag:start', this.onDragStart)
+    this.dragger.events.off('drag:move', this.onDragMove)
+    this.dragger.events.off('drag:stop', this.onDragStop)
   }
 }
 </script>

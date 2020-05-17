@@ -54,12 +54,17 @@ export default {
         height: 100%;
         padding: 16px 24px;
 
-        &--left {
+        &--left,
+        &--right {
           align-items: center;
-          background: var(--color-black);
-          border-right: 8px solid var(--color-grey);
           display: flex;
           justify-content: center;
+        }
+
+        &--left {
+          background: var(--color-black);
+          border-right: 8px solid var(--color-grey);
+          height: 100%;
           width: calc(35% + 8px);
 
           &::after {
