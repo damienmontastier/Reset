@@ -9,18 +9,31 @@
       </terminal-fieldset>
 
       <terminal-fieldset
-        :error="{ displayError, errorMessage }"
-        v-for="(p, index) in sliderRangeParams"
+        v-for="(p, index) in sliders"
         :key="index"
         type="cross"
         class="terminal__block"
       >
-        <slider-range :quotient="p.quotient" :letter="p.letter"></slider-range>
+        <slider-range
+          @finish="sliderIsCompleted"
+          :quotient="p.quotient"
+          :letter="p.letter"
+          :index="index"
+        ></slider-range>
+        <div
+          class="terminalFieldset__error"
+          v-if="!sliders[index].finish && displayError"
+          slot="error"
+        >
+          <span
+            >N’oubliez PAS d’accepter nos conditions générales
+            d’utilisation</span
+          >
+        </div>
       </terminal-fieldset>
 
       <div class="terminalP3__submit">
-        <btn @click.native="closeTerminal" :inverted="true">Annuler</btn>
-        <btn @click.native="nextPage">Continuer</btn>
+        <btn @click.native="proceed" :inverted="true">Confirmer</btn>
       </div>
     </div>
   </div>
@@ -39,27 +52,46 @@ export default {
   data() {
     return {
       displayError: false,
-      errorMessage: 'Coucou',
-      sliderRangeParams: [
-        { quotient: 1, letter: 'O' },
-        { quotient: 0.6, letter: 'U' },
-        { quotient: 0.3, letter: 'I' }
-      ]
+      sliders: [
+        { quotient: 1, letter: 'O', finish: false },
+        { quotient: 0.6, letter: 'U', finish: false },
+        { quotient: 0.3, letter: 'I', finish: false }
+      ],
+      slidersIsCompleted: false
     }
   },
   created() {},
   computed: {},
-  watch: {},
+
+  watch: {
+    sliders: {
+      deep: true,
+      handler(val) {
+        const a = val.every((v) => {
+          return v.finish
+        })
+        if (a) this.slidersIsCompleted = true
+      }
+    }
+  },
+
   methods: {
     ...mapMutations({
       setTerminalOpened: 'setTerminalOpened'
-    })
+    }),
+
+    sliderIsCompleted(index) {
+      this.sliders[index].finish = true
+    },
+
+    proceed() {
+      if (!this.slidersIsCompleted) this.displayError = true
+      else {
+        console.log('continue')
+      }
+    }
   }
 }
 </script>
 
-<style lang="scss">
-.terminalP3 {
-  display: block;
-}
-</style>
+<style lang="scss"></style>

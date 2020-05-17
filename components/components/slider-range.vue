@@ -58,6 +58,10 @@ export default {
       type: Number,
       require: true
     },
+    index: {
+      type: Number,
+      require: true
+    },
     letter: {
       type: String,
       require: true
@@ -68,7 +72,7 @@ export default {
       pos: { x: 0, y: 0 },
       circleBounding: {},
       circleOuterBounding: {},
-      isFinish: false
+      isDraggable: true
     }
   },
   components: {},
@@ -96,9 +100,11 @@ export default {
       this.circleOuterBounding.initialX - this.circleBounding.initalX
   },
   watch: {
-    isFinish(bool) {
-      if (bool) {
+    isDraggable(bool) {
+      console.log(bool)
+      if (!bool) {
         this.$refs.circle.classList.add('unlock')
+        this.$emit('finish', this.index)
       } else {
         this.$refs.circle.classList.remove('unlock')
       }
@@ -107,10 +113,12 @@ export default {
   methods: {
     onDragStart(e) {},
     onDragMove(e) {
-      if (this.pos.x === this.circleBounding.finalX && !this.isFinish) {
-        this.isFinish = true
+      if (!this.isDraggable) return
+
+      if (this.pos.x === this.circleBounding.finalX && this.isDraggable) {
+        this.isDraggable = false
       } else if (this.pos.x < this.circleBounding.finalX) {
-        this.isFinish = false
+        this.isDraggable = true
       }
 
       if (e.event.clientX < this.circleBounding.x && this.quotient === 1) {

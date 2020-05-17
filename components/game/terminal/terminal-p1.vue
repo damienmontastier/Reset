@@ -8,27 +8,34 @@
         </div>
       </terminal-fieldset>
 
-      <terminal-fieldset
-        type="cross"
-        class="terminal__block"
-        :error="{ displayError, errorMessage }"
-      >
-        <div>
+      <terminal-fieldset type="cross" class="terminal__block">
+        <div class="input">
           <input
-            v-model="notAcceptConditions"
+            v-model="inputChecked"
             @change="checkHandler"
             type="checkbox"
+            id="notAccept"
+            name="notAccept"
           />
-          Je n’accepte pas les
-          <a class="terminal__a">Conditions Générales</a>
-          d’utilisation
+          <label for="notAccept">
+            Je n’accepte pas les
+            <a class="terminal__a">Conditions Générales</a>
+            d’utilisation</label
+          >
+        </div>
+
+        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+          <span
+            >N’oubliez PAS d’accepter nos conditions générales
+            d’utilisation</span
+          >
         </div>
       </terminal-fieldset>
 
-      <div class="terminalP1__submit">
+      <div class="terminal__submit">
         <btn @click.native="restartLevel" :inverted="true">recommencer</btn>
         <btn @click.native="closeTerminal">fermer</btn>
-        <div class="terminalP1__submit__continue">
+        <div class="terminal__submit__continue">
           Pour
           <a class="terminal__a">Continuer</a>, CLIQUEZ
           <a @click="nextPart" class="terminal__a not-underline" href="#">ici</a
@@ -50,10 +57,8 @@ export default {
   },
   data() {
     return {
-      notAcceptConditions: true,
-      displayError: false,
-      errorMessage:
-        'N’oubliez PAS d’accepter nos conditions générales d’utilisation'
+      inputChecked: true,
+      displayError: false
     }
   },
   methods: {
@@ -74,7 +79,7 @@ export default {
     },
 
     nextPart() {
-      if (this.notAcceptConditions) {
+      if (this.inputChecked) {
         this.displayError = true
       } else {
         this.displayError = false
@@ -85,19 +90,4 @@ export default {
 }
 </script>
 
-<style lang="scss">
-.terminalP1 {
-  &__submit {
-    font-size: 8px;
-    line-height: 10px;
-
-    > * {
-      margin-bottom: 8px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss"></style>

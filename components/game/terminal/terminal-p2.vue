@@ -7,26 +7,33 @@
         </div>
       </terminal-fieldset>
 
-      <terminal-fieldset
-        :error="{ displayError, errorMessage }"
-        type="cross"
-        class="terminal__block"
-      >
-        <div class="input" v-for="(c, index) in pointsOfInterest" :key="index">
+      <terminal-fieldset type="cross" class="terminal__block">
+        <div
+          class="input"
+          v-for="(point, index) in pointsOfInterest"
+          :key="index"
+        >
           <input
             v-model="pointsOfInterestSelected"
             type="checkbox"
-            :id="stringToSlug(c)"
-            :name="stringToSlug(c)"
-            :ref="stringToSlug(c)"
-            :value="c"
+            :id="stringToSlug(point)"
+            :name="stringToSlug(point)"
+            :ref="stringToSlug(point)"
+            :value="point"
             @change="checkboxHandler"
           />
-          <label :for="stringToSlug(c)">{{ c }}</label>
+          <label :for="stringToSlug(point)">{{ point }}</label>
+        </div>
+
+        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+          <span
+            >N’oubliez PAS d’accepter nos conditions générales
+            d’utilisation</span
+          >
         </div>
       </terminal-fieldset>
 
-      <div class="terminalP2__submit">
+      <div class="terminal__submit">
         <btn @click.native="closeTerminal" :inverted="true">Annuler</btn>
         <btn @click.native="nextPage">Continuer</btn>
       </div>
@@ -47,7 +54,6 @@ export default {
     return {
       checkbox: true,
       displayError: false,
-      errorMessage: 'Vous devez sélectionner 3 centres d’intérêts différents',
       pointsOfInterest: [
         'Poneys',
         'Chats',
@@ -100,6 +106,7 @@ export default {
     nextPage() {
       if (this.elements.length === 3) {
         this.displayError = false
+        console.log('next')
       } else {
         this.displayError = true
       }
@@ -151,19 +158,6 @@ export default {
           flex: 0 0 33%;
           margin-bottom: 10px;
         }
-      }
-    }
-  }
-
-  &__submit {
-    font-size: 8px;
-    line-height: 10px;
-
-    > * {
-      margin-bottom: 8px;
-
-      &:last-child {
-        margin-bottom: 0;
       }
     }
   }

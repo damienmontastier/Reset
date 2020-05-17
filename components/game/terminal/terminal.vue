@@ -4,7 +4,7 @@
       <div class="gameTerminal__title">
         <terminal-title />
       </div>
-      <terminal-p3 />
+      <terminal-p4 />
     </div>
   </div>
 </template>
@@ -14,8 +14,9 @@ export default {
   components: {
     TerminalTitle: () => import('@/components/game/terminal/terminal-title'),
     // TerminalP1: () => import('@/components/game/terminal/terminal-p1')
-    // TerminalP2: () => import('@/components/game/terminal/terminal-p2'),
-    TerminalP3: () => import('@/components/game/terminal/terminal-p3')
+    // TerminalP2: () => import('@/components/game/terminal/terminal-p2')
+    // TerminalP3: () => import('@/components/game/terminal/terminal-p3')
+    TerminalP4: () => import('@/components/game/terminal/terminal-p4')
   }
 }
 </script>
@@ -35,6 +36,19 @@ export default {
 
   &__title {
     margin-bottom: 48px;
+  }
+
+  .terminal__submit {
+    font-size: 8px;
+    line-height: 10px;
+
+    > * {
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
   }
 
   .terminal__a {

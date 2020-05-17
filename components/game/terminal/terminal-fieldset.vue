@@ -6,16 +6,16 @@
     }"
     class="terminalFieldset"
   >
-    <div class="terminalFieldset__inner">
+    <div
+      class="terminalFieldset__inner"
+      :class="{
+        clipped: clipped
+      }"
+    >
       <slot />
     </div>
 
-    <div
-      class="terminalFieldset__error"
-      v-if="type === 'cross' && error.displayError"
-    >
-      <span>{{ error.errorMessage }} </span>
-    </div>
+    <slot name="error"> </slot>
   </fieldset>
 </template>
 
@@ -26,9 +26,9 @@ export default {
       type: String,
       default: undefined
     },
-    error: {
-      type: Object,
-      require: false
+    clipped: {
+      type: Boolean,
+      default: false
     }
   },
   mounted() {},
