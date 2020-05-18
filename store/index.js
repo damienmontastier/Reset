@@ -1,12 +1,22 @@
 export const strict = false
 
 export const state = () => ({
-  levels: []
+  levels: [],
+  terminalIsOpened: true,
+  overlayIsOpened: false
 })
 
 export const mutations = {
   setLevelsContent(state, levels) {
     state.levels = levels
+  },
+
+  setTerminalOpened(state, value) {
+    state.terminalIsOpened = value
+  },
+
+  setOverlayOpened(state, value) {
+    state.overlayIsOpened = value
   }
 }
 

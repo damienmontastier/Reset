@@ -9,22 +9,37 @@
       </terminal-fieldset>
 
       <terminal-fieldset type="cross" class="terminal__block">
-        <div>
-          <input type="checkbox" /> Je n’accepte pas les
-          <a class="terminal__a">Conditions Générales</a>
-          d’utilisation
+        <div class="input">
+          <input
+            v-model="inputChecked"
+            @change="checkHandler"
+            type="checkbox"
+            id="notAccept"
+            name="notAccept"
+          />
+          <label for="notAccept">
+            Je n’accepte pas les
+            <a class="terminal__a"> Conditions Générales </a>
+            d’utilisation</label
+          >
+        </div>
+
+        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+          <span
+            >N’oubliez PAS d’accepter nos conditions générales
+            d’utilisation</span
+          >
         </div>
       </terminal-fieldset>
 
-      <div class="terminalP1__submit">
-        <btn :inverted="true">
-          recommencer
-        </btn>
-        <btn>
-          fermer
-        </btn>
-        <div class="terminalP1__submit__continue">
-          Pour <a class="terminal__a">Continuer</a>, CLIQUEZ ici.
+      <div class="terminal__submit">
+        <btn @click.native="restartLevel" :inverted="true">recommencer</btn>
+        <btn @click.native="closeTerminal">fermer</btn>
+        <div class="terminal__submit__continue">
+          Pour
+          <a class="terminal__a">Continuer</a>, CLIQUEZ
+          <a @click="nextPart" class="terminal__a not-underline" href="#">ici</a
+          >.
         </div>
       </div>
     </div>
@@ -32,29 +47,42 @@
 </template>
 
 <script>
-import TerminalFieldset from '@/components/game/terminal/terminal-fieldset'
-import Btn from '@/components/components/btn'
 export default {
   components: {
-    Btn,
-    TerminalFieldset
-  }
-}
-</script>
+    Btn: () => import('@/components/components/btn'),
+    TerminalFieldset: () =>
+      import('@/components/game/terminal/terminal-fieldset')
+  },
+  data() {
+    return {
+      inputChecked: true,
+      displayError: false
+    }
+  },
+  methods: {
+    closeTerminal() {
+      this.$parent.closeTerminal()
+    },
 
-<style lang="scss">
-.terminalP1 {
-  &__submit {
-    font-size: 8px;
-    line-height: 10px;
+    restartLevel() {
+      console.log('restart level')
+    },
 
-    > * {
-      margin-bottom: 8px;
+    checkHandler(e) {
+      if (!e.target.checked) this.displayError = false
+    },
 
-      &:last-child {
-        margin-bottom: 0;
+    nextPart() {
+      if (this.inputChecked) {
+        this.displayError = true
+      } else {
+        this.displayError = false
+        console.log('ok next page terminal')
+        this.$emit('increment')
       }
     }
   }
 }
-</style>
+</script>
+
+<style lang="scss" scoped></style>

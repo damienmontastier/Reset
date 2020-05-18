@@ -1,16 +1,15 @@
 <template>
   <div class="gameLevel1">
-    <!-- <terminal v-if="playerIsOnTerminal" /> -->
-    <!-- <terminal /> -->
+    <terminal v-if="terminalIsOpened" />
   </div>
 </template>
 
 <script>
-// import useWebGL from '@/hooks/use-webgl'
+import { mapState } from 'vuex'
 import gsap from 'gsap'
-// import useWebGL from '@/hooks/use-webgl'
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
+
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
@@ -27,7 +26,7 @@ import ParticulesPlane from '@/webgl/components/particules-plane'
 
 export default {
   components: {
-    // Terminal
+    Terminal: () => import('@/components/game/terminal/terminal')
   },
   data() {
     return {
@@ -38,6 +37,12 @@ export default {
       playerIsOnTreadmill: undefined,
       playerIsOnEndgame: undefined
     }
+  },
+
+  computed: {
+    ...mapState({
+      terminalIsOpened: (state) => state.terminalIsOpened
+    })
   },
   watch: {
     currentZones() {

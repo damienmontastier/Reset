@@ -27,6 +27,7 @@ const viewport = new Vue({
 
       let vh = this.height * 0.01
       document.documentElement.style.setProperty('--vh', `${vh}px`)
+      // height: calc(var(--vh, 1vh) * 100);
 
       this.events.emit('resize', this.$data)
     }

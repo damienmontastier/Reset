@@ -10,17 +10,18 @@ export default {
       threshold: params.threshold || 0
     }
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          if (params.triggerOnce) {
-            observer.unobserve(el)
-          }
-        }
+      console.log(entries)
+      // entries.forEach((entry) => {
+      //   if (entry.isIntersecting) {
+      //     if (params.triggerOnce) {
+      //       observer.unobserve(el)
+      //     }
+      //   }
 
-        if (params.onChange) {
-          params.onChange(entry.isIntersecting, entry)
-        }
-      })
+      //   if (params.onChange) {
+      //     params.onChange(entry.isIntersecting, entry)
+      //   }
+      // })
     }, options)
 
     binding.value.observer = observer
