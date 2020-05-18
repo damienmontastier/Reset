@@ -8,21 +8,17 @@
       </terminal-fieldset>
 
       <terminal-fieldset type="cross" class="terminal__block">
-        <div
-          class="input"
-          v-for="(point, index) in pointsOfInterest"
-          :key="index"
-        >
+        <div class="input" v-for="(p, index) in pointsOfInterest" :key="index">
           <input
             v-model="pointsOfInterestSelected"
             type="checkbox"
-            :id="stringToSlug(point)"
-            :name="stringToSlug(point)"
-            :ref="stringToSlug(point)"
-            :value="point"
+            :id="stringToSlug(p)"
+            :name="stringToSlug(p)"
+            :ref="stringToSlug(p)"
+            :value="p"
             @change="checkboxHandler"
           />
-          <label :for="stringToSlug(point)">{{ point }}</label>
+          <label :for="stringToSlug(p)">{{ p }}</label>
         </div>
 
         <div class="terminalFieldset__error" v-if="displayError" slot="error">
@@ -104,6 +100,7 @@ export default {
 
     checkboxHandler(e) {
       if (e.target.name === 'tout-selectionner' && e.target.checked) {
+        e.target.checked = true
         this.pointsOfInterestSelected = this.pointsOfInterest
       } else if (e.target.name === 'tout-deselectionner') {
         this.pointsOfInterestSelected = []

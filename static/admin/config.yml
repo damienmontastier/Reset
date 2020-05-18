@@ -49,3 +49,21 @@ collections:
     fields:
       - { label: 'Title', name: 'title', widget: 'string' }
       - { label: 'Description', name: 'description', widget: 'text' }
+  - name: 'posts'
+    label: 'Posts'
+    format: 'json'
+    extension: 'json'
+    folder: 'assets/content/posts'
+    create: true
+    slug: '{{slug}}'
+    editor:
+      preview: false
+    fields:
+      - { label: 'Titre', name: 'title', widget: 'string' }
+      - { label: 'Image', name: 'picture', widget: 'image', required: false }
+      - {
+          label: 'Réseaux social',
+          name: 'social_network',
+          widget: 'select',
+          options: ['Facebook', 'Twitter', 'Instagram', 'Snapchat'],
+        }
