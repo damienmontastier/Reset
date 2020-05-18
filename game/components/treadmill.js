@@ -72,8 +72,8 @@ export default class Treadmill extends THREE.Object3D {
 
     this.spawnPoint =
       this.direction > 0
-        ? new THREE.Vector3(-4, 1, 0)
-        : new THREE.Vector3(4, 1, 0)
+        ? new THREE.Vector3(-7, 1, 0)
+        : new THREE.Vector3(7, 1, 0)
   }
 
   get speed() {
@@ -104,6 +104,11 @@ export default class Treadmill extends THREE.Object3D {
     this.parcelPosts.children.forEach((post) => {
       post.position.add(deltaPosition)
       post.updateMatrixWorld()
+
+      if (post.position.x > 50 || post.position.x < -50) {
+        console.log('destroy')
+        post.destroy()
+      }
     })
 
     this.hookedGroup.forEach((child) => {

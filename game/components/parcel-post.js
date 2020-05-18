@@ -57,7 +57,6 @@ export default class ParcelPost extends THREE.Object3D {
     )
 
     if (outHitboxesIntersections.length > 0) {
-      this.model.material.color = new THREE.Color(0xff0000)
       this.destroy()
     }
   }

@@ -1,12 +1,12 @@
 <template>
   <div class="gameLevel1">
-    <terminal v-if="terminalIsOpened" />
+    <!-- <terminal v-if="terminalIsOpened" /> -->
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import gsap from 'gsap'
+// import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
@@ -28,7 +28,7 @@ import treadmillConfig from '@/config/treadmills'
 
 export default {
   components: {
-    Terminal: () => import('@/components/game/terminal/terminal')
+    // Terminal: () => import('@/components/game/terminal/terminal')
   },
   data() {
     return {
@@ -95,16 +95,16 @@ export default {
   },
   methods: {
     async init() {
-      // const {
-      //   OrbitControls
-      // } = require('three/examples/jsm/controls/OrbitControls.js')
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      // const { camera } = useCamera()
-      // const cameraControls = new OrbitControls(
-      //   camera,
-      //   document.querySelector('#__nuxt')
-      // )
-      // cameraControls.enableKeys = false
+      const { camera } = useCamera()
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
 
       const { scene: gameScene } = useGame()
 
@@ -190,6 +190,7 @@ export default {
 
       if (intersects.length > 0) {
         // if intersects = can walk on next zone
+        console.log(intersects)
         const intersect = intersects[0]
         const zoneName = intersect.object.name
 
@@ -236,21 +237,21 @@ export default {
       // this.cameraMouvement.loop()
       this.particulesPlane.update(clock)
 
-      const { camera } = useCamera()
-      const nextPosition = this.player.worldPosition
-        .clone()
-        .add(camera.originPosition)
+      // const { camera } = useCamera()
+      // const nextPosition = this.player.worldPosition
+      //   .clone()
+      //   .add(camera.originPosition)
 
       // const { scene } = useWebGL()
       // camera.lookAt(scene.position)
 
-      gsap.to(camera.position, {
-        x: nextPosition.x,
-        y: camera.originPosition.y,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(camera.position, {
+      //   x: nextPosition.x,
+      //   y: camera.originPosition.y,
+      //   z: nextPosition.z,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
     },
 
     initIntersections() {
@@ -331,13 +332,6 @@ export default {
       GUI.camera.addVector('position', camera.originPosition)
       GUI.camera.add(params, 'lookAtPlayer')
 
-      // speedScale: 0.05,
-      // speedMinimum: 0.5,
-      // speedRandomness: 0.5,
-      // appearIntervalMinimum: 0.5,
-      // appearIntervalRandomness: 3
-
-      // treadmill config
       const treadmillGUI = GUI.addFolder('treadmills config')
       treadmillGUI
         .add(treadmillConfig.part1, 'speedScale')
