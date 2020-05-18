@@ -95,16 +95,16 @@ export default {
   },
   methods: {
     async init() {
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
 
       const { scene: gameScene } = useGame()
 
@@ -136,7 +136,9 @@ export default {
       this.player = new Player()
       await this.player.load()
       this.initIntersections()
-      this.player.position.copy(this.map.spawnPoint)
+
+      this.spawnPoint = this.map.spawnPoint.clone()
+      this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
 
@@ -190,7 +192,17 @@ export default {
 
       if (intersects.length > 0) {
         // if intersects = can walk on next zone
-        console.log(intersects)
+
+        const checkpointIndex = intersects.findIndex((intersect) =>
+          intersect.object.name.includes('zone_chekpoint')
+        )
+        const checkpoint = intersects[checkpointIndex]
+        if (checkpoint) {
+          console.log(checkpoint)
+          this.spawnPoint = checkpoint.object.position
+            .clone()
+            .add(new THREE.Vector3(-0.5, 0, 0))
+        }
         const intersect = intersects[0]
         const zoneName = intersect.object.name
 
@@ -314,7 +326,8 @@ export default {
       }
 
       // TODO checkpoint
-      this.player.position.copy(this.map.spawnPoint)
+
+      this.player.position.copy(this.spawnPoint)
 
       const clock = useClock()
       clock.add(10)

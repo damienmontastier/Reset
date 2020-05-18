@@ -52,10 +52,12 @@ class Game {
 
     // camera.angle = new THREE.Vector3(1, 2.8, 2.9).normalize()
     // camera.originPosition = camera.angle.setScalar(8)
-    camera.originPosition = new THREE.Vector3(3, 8.4, 8.7)
+    // camera.originPosition = new THREE.Vector3(3, 8.4, 8.7)
+    camera.originPosition = new THREE.Vector3(1.1, 6.6, 6)
 
     camera.position.copy(camera.originPosition)
-    camera.lookAt(scene.position)
+
+    camera.lookAt(scene.position.clone().add(new THREE.Vector3(0, 1.5, 0)))
   }
 
   initLights() {
