@@ -12,6 +12,8 @@ import ToonMaterial from '@/webgl/materials/toon.js'
 
 import treadmillConfig from '@/config/treadmills'
 
+import windowFocus from '@/plugins/window-focus'
+
 export default class Treadmill extends THREE.Object3D {
   constructor(model, index) {
     super()
@@ -97,6 +99,8 @@ export default class Treadmill extends THREE.Object3D {
   update(clock) {
     // if (this.index > 1) return
 
+    if (!windowFocus.visible) return
+
     const deltaPosition = this.deltaPosition.multiply(
       new THREE.Vector3(clock.lagSmoothing, 0, 0)
     )
@@ -106,7 +110,6 @@ export default class Treadmill extends THREE.Object3D {
       post.updateMatrixWorld()
 
       if (post.position.x > 50 || post.position.x < -50) {
-        console.log('destroy')
         post.destroy()
       }
     })

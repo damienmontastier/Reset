@@ -1,6 +1,6 @@
 <template>
   <div class="gameLevel1">
-    <!-- <terminal v-if="terminalIsOpened" /> -->
+    <terminal v-if="playerIsOnTerminal" />
   </div>
 </template>
 
@@ -28,7 +28,7 @@ import treadmillConfig from '@/config/treadmills'
 
 export default {
   components: {
-    // Terminal: () => import('@/components/game/terminal/terminal')
+    Terminal: () => import('@/components/game/terminal/terminal')
   },
   data() {
     return {
