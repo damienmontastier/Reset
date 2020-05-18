@@ -21,9 +21,9 @@
           :index="index"
         ></slider-range>
         <div
-          class="terminalFieldset__error"
-          v-if="!sliders[index].finish && displayError"
           slot="error"
+          v-if="!sliders[index].finish && displayError"
+          class="terminalFieldset__error"
         >
           <span
             >N’oubliez PAS d’accepter nos conditions générales
@@ -58,7 +58,6 @@ export default {
       slidersIsCompleted: false
     }
   },
-  created() {},
   computed: {},
 
   watch: {
@@ -72,6 +71,7 @@ export default {
       }
     }
   },
+  created() {},
 
   methods: {
     sliderIsCompleted(index) {

@@ -53,6 +53,7 @@ import gsap from 'gsap'
 import Dragger from '@/assets/js/dragger'
 
 export default {
+  components: {},
   props: {
     quotient: {
       type: Number,
@@ -75,7 +76,21 @@ export default {
       isDraggable: true
     }
   },
-  components: {},
+  computed: {
+    widthLine() {
+      return (this.pos.x / this.circleBounding.finalX) * 100
+    }
+  },
+  watch: {
+    isDraggable(bool) {
+      if (!bool) {
+        this.$refs.circle.classList.add('unlock')
+        this.$emit('finish', this.index)
+      } else {
+        this.$refs.circle.classList.remove('unlock')
+      }
+    }
+  },
   mounted() {
     this.dragger = new Dragger(this.$refs.circle)
 
@@ -99,15 +114,10 @@ export default {
     this.circleBounding.finalX =
       this.circleOuterBounding.initialX - this.circleBounding.initalX
   },
-  watch: {
-    isDraggable(bool) {
-      if (!bool) {
-        this.$refs.circle.classList.add('unlock')
-        this.$emit('finish', this.index)
-      } else {
-        this.$refs.circle.classList.remove('unlock')
-      }
-    }
+  beforeDestroy() {
+    this.dragger.events.off('drag:start', this.onDragStart)
+    this.dragger.events.off('drag:move', this.onDragMove)
+    this.dragger.events.off('drag:stop', this.onDragStop)
   },
 
   methods: {
@@ -145,16 +155,6 @@ export default {
       })
     },
     onDragStop() {}
-  },
-  computed: {
-    widthLine() {
-      return (this.pos.x / this.circleBounding.finalX) * 100
-    }
-  },
-  beforeDestroy() {
-    this.dragger.events.off('drag:start', this.onDragStart)
-    this.dragger.events.off('drag:move', this.onDragMove)
-    this.dragger.events.off('drag:stop', this.onDragStop)
   }
 }
 </script>

@@ -7,7 +7,7 @@
         </div>
       </terminal-fieldset>
 
-      <terminal-fieldset type="cross" :clipped="true" class="terminal__block">
+      <terminal-fieldset :clipped="true" type="cross" class="terminal__block">
         <div class="block block--left">
           <checkBig></checkBig>
         </div>

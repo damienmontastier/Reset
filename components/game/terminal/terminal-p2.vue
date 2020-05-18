@@ -9,23 +9,23 @@
 
       <terminal-fieldset type="cross" class="terminal__block">
         <div
-          class="input"
           v-for="(point, index) in pointsOfInterest"
           :key="index"
+          class="input"
         >
           <input
             v-model="pointsOfInterestSelected"
-            type="checkbox"
             :id="stringToSlug(point)"
             :name="stringToSlug(point)"
             :ref="stringToSlug(point)"
             :value="point"
             @change="checkboxHandler"
+            type="checkbox"
           />
           <label :for="stringToSlug(point)">{{ point }}</label>
         </div>
 
-        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+        <div slot="error" v-if="displayError" class="terminalFieldset__error">
           <span
             >N’oubliez PAS d’accepter nos conditions générales
             d’utilisation</span
@@ -67,9 +67,6 @@ export default {
       pointsOfInterestSelected: []
     }
   },
-  created() {
-    this.pointsOfInterestSelected = this.pointsOfInterest
-  },
   computed: {
     elements() {
       return this.pointsOfInterestSelected.filter(
@@ -91,6 +88,9 @@ export default {
         this.$refs['tout-deselectionner'][0].checked = true
       }
     }
+  },
+  created() {
+    this.pointsOfInterestSelected = this.pointsOfInterest
   },
   methods: {
     closeTerminal() {
