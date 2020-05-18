@@ -312,6 +312,8 @@ export default {
         this.player.positionTween.kill()
         this.player.positionTween = null
       }
+
+      // TODO checkpoint
       this.player.position.copy(this.map.spawnPoint)
 
       const clock = useClock()
