@@ -7,9 +7,9 @@
 <script>
 import { mapState } from 'vuex'
 import gsap from 'gsap'
+
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
-
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
@@ -23,6 +23,8 @@ import GridTerrain from '@/game/features/grid-terrain'
 import ParticulesPlane from '@/webgl/components/particules-plane'
 
 // import Terminal from '@/components/game/terminal/terminal'
+
+import treadmillConfig from '@/config/treadmills'
 
 export default {
   components: {
@@ -328,6 +330,40 @@ export default {
 
       GUI.camera.addVector('position', camera.originPosition)
       GUI.camera.add(params, 'lookAtPlayer')
+
+      // speedScale: 0.05,
+      // speedMinimum: 0.5,
+      // speedRandomness: 0.5,
+      // appearIntervalMinimum: 0.5,
+      // appearIntervalRandomness: 3
+
+      // treadmill config
+      const treadmillGUI = GUI.addFolder('treadmills config')
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedScale')
+        .min(0)
+        .max(0.2)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedRandomness')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'appearIntervalMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'appearIntervalRandomness')
+        .min(0)
+        .max(10)
+        .step(0.01)
     }
   }
 }
