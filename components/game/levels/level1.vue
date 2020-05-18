@@ -6,7 +6,7 @@
 
 <script>
 import { mapState } from 'vuex'
-// import gsap from 'gsap'
+import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
@@ -237,21 +237,21 @@ export default {
       // this.cameraMouvement.loop()
       this.particulesPlane.update(clock)
 
-      // const { camera } = useCamera()
-      // const nextPosition = this.player.worldPosition
-      //   .clone()
-      //   .add(camera.originPosition)
+      const { camera } = useCamera()
+      const nextPosition = this.player.worldPosition
+        .clone()
+        .add(camera.originPosition)
 
       // const { scene } = useWebGL()
       // camera.lookAt(scene.position)
 
-      // gsap.to(camera.position, {
-      //   x: nextPosition.x,
-      //   y: camera.originPosition.y,
-      //   z: nextPosition.z,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: camera.originPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
