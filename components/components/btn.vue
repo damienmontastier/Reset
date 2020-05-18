@@ -38,9 +38,15 @@ export default {
   text-transform: uppercase;
 
   &:hover {
-    .btn__inner .btn__arrows {
-      .arrows__inner {
-        transform: translateX(0%);
+    .btn__inner {
+      margin-left: 8px;
+
+      .btn__arrows {
+        margin-left: 8px;
+
+        .arrows__inner {
+          transform: translateX(0%);
+        }
       }
     }
   }
@@ -59,6 +65,7 @@ export default {
   &__inner {
     display: flex;
     justify-content: space-between;
+    transition: margin 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
   }
 
   &__arrows {

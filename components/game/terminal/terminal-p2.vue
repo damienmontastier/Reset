@@ -26,10 +26,7 @@
         </div>
 
         <div class="terminalFieldset__error" v-if="displayError" slot="error">
-          <span
-            >N’oubliez PAS d’accepter nos conditions générales
-            d’utilisation</span
-          >
+          <span>Vous devez sélectionner 3 centres d’intérêts différents </span>
         </div>
       </terminal-fieldset>
 
@@ -79,18 +76,17 @@ export default {
     }
   },
   watch: {
-    pointsOfInterestSelected(value) {
-      if (!Object.keys(this.$refs).length) return
-
-      if (
-        this.pointsOfInterestSelected !== this.pointsOfInterest &&
-        this.$refs['tout-selectionner'][0].checked
-      ) {
-        this.$refs['tout-selectionner'][0].checked = false
-      } else if (this.pointsOfInterestSelected.length === 1) {
-        this.$refs['tout-deselectionner'][0].checked = true
-      }
-    }
+    // pointsOfInterestSelected(value) {
+    //   // if (!Object.keys(this.$refs).length) return
+    //   // if (
+    //   //   this.pointsOfInterestSelected !== this.pointsOfInterest &&
+    //   //   this.$refs['tout-selectionner'][0].checked
+    //   // ) {
+    //   //   this.$refs['tout-selectionner'][0].checked = false
+    //   // } else if (this.pointsOfInterestSelected.length === 1) {
+    //   //   this.$refs['tout-deselectionner'][0].checked = true
+    //   // }
+    // }
   },
   methods: {
     closeTerminal() {
@@ -109,8 +105,9 @@ export default {
     checkboxHandler(e) {
       if (e.target.name === 'tout-selectionner' && e.target.checked) {
         this.pointsOfInterestSelected = this.pointsOfInterest
-      } else if (e.target.name === 'tout-deselectionner' && !e.target.checked) {
+      } else if (e.target.name === 'tout-deselectionner') {
         this.pointsOfInterestSelected = []
+        e.target.checked = false
       } else if (this.elements.length === 3) {
         this.displayError = false
       }

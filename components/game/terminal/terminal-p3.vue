@@ -22,13 +22,12 @@
         ></slider-range>
         <div
           class="terminalFieldset__error"
-          v-if="!sliders[index].finish && displayError"
+          v-if="
+            !slidersIsCompleted && displayError && index === sliders.length - 1
+          "
           slot="error"
         >
-          <span
-            >N’oubliez PAS d’accepter nos conditions générales
-            d’utilisation</span
-          >
+          <span>Faites glisser les lettres pour valider votre réponse </span>
         </div>
       </terminal-fieldset>
 

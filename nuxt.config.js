@@ -49,27 +49,6 @@ export default {
         rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/Tobias-Light/Tobias-Light.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossorigin: 'anonymous'
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/Tobias-Bold/Tobias-Bold.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossorigin: 'anonymous'
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/Tobias-Heavy/Tobias-Heavy.woff2',
-        as: 'font',
-        type: 'font/woff2',
-        crossorigin: 'anonymous'
       }
     ],
     script: [
