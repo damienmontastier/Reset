@@ -96,8 +96,8 @@ export default class Level01 extends THREE.Object3D {
         // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 
         const material = new ToonMaterial({
-          color: 0x0f0f0f,
-          emissive: 0x1c1c1c
+          color: 0x0d0d0d,
+          emissive: 0x080808
         })
 
         zone.material = material
