@@ -111,6 +111,8 @@ export default {
       this.particulesPlane = new ParticulesPlane()
       gameScene.add(this.particulesPlane)
 
+      this.particulesPlane.position.z = -10
+
       this.particulesPlane.scale.setScalar(50)
       this.particulesPlane.rotation.x = -Math.PI / 2
       this.particulesPlane.rotation.z = -Math.PI / 4
