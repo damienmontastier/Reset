@@ -42,7 +42,7 @@ export default {
   display: inline-block;
   margin-top: 5px;
   position: relative;
-  transition: all 1s;
+  transition: all 0.8s;
   width: 100%;
 
   &::before {

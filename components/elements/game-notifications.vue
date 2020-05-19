@@ -28,7 +28,7 @@ export default {
       setTimeout(() => {
         const index = this.posts.indexOf(post)
         this.posts.splice(index, 1)
-      }, 3000)
+      }, 2500)
     }
   }
 }
@@ -46,7 +46,11 @@ export default {
 
 .notification-enter-active,
 .notification-leave-active {
-  transition: all 1s;
+  transition: all 0.5s;
+}
+
+.notification-move {
+  transition-delay: 1s !important;
 }
 
 .notifications {
