@@ -11,6 +11,7 @@ import useKeyboard from '@/hooks/use-keyboard'
 import BoxGeometry from '@/webgl/geometries/box'
 
 import GreenMaterial from '@/webgl/materials/green'
+import BlackMaterial from '@/webgl/materials/black'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
@@ -37,7 +38,14 @@ export default class Level01 extends THREE.Object3D {
     this.wireframe = this.files.wireframe
 
     this.wireframe.traverse((child) => {
-      child.material = GreenMaterial
+      console.log(child)
+      if (child.name.includes('green')) {
+        child.material = GreenMaterial
+      }
+
+      if (child.name.includes('black')) {
+        child.material = BlackMaterial
+      }
     })
 
     this.add(this.model)
