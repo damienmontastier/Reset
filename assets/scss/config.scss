@@ -5,7 +5,12 @@ $colors: (
   'black': #161616,
   'grey': #1f1f1f,
   'grey-light': #979797,
-  'grey-lighten': #d8d8d8
+  'grey-lighten': #d8d8d8,
+  'snapchat': #fffc00,
+  'youtube': #f00,
+  'facebook': #587cd3,
+  'instagram': #e1306c,
+  'twitter': #00acee
 );
 
 $breakpoints: (
@@ -104,5 +109,6 @@ $font-faces: (
   'CindieMono-C',
   'CindieMono-D',
   'CindieMono-E',
-  'CindieMono-F'
+  'CindieMono-F',
+  'Orbitron-Bold'
 );

@@ -1,13 +1,20 @@
 import {
   EffectComposer,
+  // EffectPass,
+  RenderPass,
+  // SelectiveBloomEffect,
+  BloomEffect,
   EffectPass,
-  RenderPass
+  KernelSize,
+  BlendFunction
   // NormalPass
 } from 'postprocessing'
 
 // import OutlineEffect from './effects/outline'
-import AntialiasingEffect from './effects/antialiasing'
-import DitheringEffect from './effects/dithering'
+// import AntialiasingEffect from './effects/antialiasing'
+// import DitheringEffect from './effects/dithering'
+
+// import HightlightCircleEffect from './effects/hightlight-circle'
 
 import viewport from '@/plugins/viewport'
 
@@ -19,134 +26,165 @@ export default class Composer {
     this.camera = camera
     this.scene = scene
 
-    this.renderingScale = 1
-
     this.init()
   }
 
-  async init() {
-    await this.initComposer()
+  init() {
+    this.initComposer()
     this.initGUI()
   }
 
-  async initComposer() {
-    // effects
-    this.antialiasingEffect = await new AntialiasingEffect()
-
-    // this.normalPass = new NormalPass(this.scene, this.camera)
-    // this.outlineEffect = new OutlineEffect(
-    //   this.normalPass.renderTarget.texture,
-    //   {
-    //     step: 0.01,
-    //     outlineColor: 0x00ff00
-    //   }
-    // )
-
+  initComposer() {
     // composer
     this.composer = new EffectComposer(this.renderer)
 
+    // effects
+    // this.bloomEffect = new SelectiveBloomEffect(this.scene, this.camera, {
+    //   blendFunction: BlendFunction.SCREEN,
+    //   kernelSize: KernelSize.MEDIUM,
+    //   luminanceThreshold: 0.8,
+    //   luminanceSmoothing: 0.075,
+    //   height: 480
+    // })
+
+    this.bloomEffect = new BloomEffect({
+      blendFunction: BlendFunction.SCREEN,
+      kernelSize: KernelSize.MEDIUM,
+      luminanceThreshold: 0.8,
+      luminanceSmoothing: 0.075,
+      height: 480
+    })
+
     // passes
-    // this.effectPass = new EffectPass(this.camera, this.outlineEffect)
-
-    this.AAPass = new EffectPass(
-      this.camera,
-      this.antialiasingEffect.smaaEffect
-    )
-
-    this.ditheringEffect = new DitheringEffect()
-    this.ditheringPass = new EffectPass(this.camera, this.ditheringEffect)
+    this.bloomPass = new EffectPass(this.camera, this.bloomEffect)
 
     // addPasses
-    // this.composer.addPass(this.normalPass)
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    this.composer.addPass(this.AAPass)
-    // this.composer.addPass(this.ditheringPass)
-
-    // this.composer.addPass(this.ditheringPass)
+    // this.composer.addPass(this.bloomPass)
   }
 
   render(clock) {
-    this.renderer.setSize(
-      viewport.width * this.renderingScale,
-      viewport.height * this.renderingScale
-    )
+    this.renderer.clear()
+
+    this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    if (this.composer) {
-      this.composer.render(clock.deltaTime)
-    } else {
-      this.renderer.render(this.scene, this.camera)
-    }
+    // if (this.composer && !this.disabled) {
+    //   this.composer.setSize(viewport.width, viewport.height)
+    //   this.composer.render(clock.deltaTime)
+    // } else {
+    this.renderer.render(this.scene, this.camera)
+    // }
   }
 
   initGUI() {
-    const gui = useGUI()
-
-    const composer = this.composer
-    const renderer = composer.getRenderer()
-    const context = renderer.getContext()
-
-    const effectPass = this.effectPass
-
-    const AAMode = Object.assign(
-      {
-        DISABLED: 0,
-        SMAA: 1
-      },
-      !renderer.capabilities.isWebGL2
-        ? {}
-        : {
-            MSAA: 2
-          }
-    )
-
-    const AAparams = {
-      antialiasing: AAMode.SMAA
+    if (this.outlineEffect) {
+      this.initSobelGUI()
     }
 
-    gui.postprocessing.add(AAparams, 'antialiasing', AAMode).onChange(() => {
-      const mode = Number(AAparams.antialiasing)
+    if (this.bloomEffect) {
+      this.initBloomGUI()
+    }
+  }
 
-      effectPass.enabled = mode === AAMode.SMAA
+  initSobelGUI() {
+    const GUI = useGUI()
 
-      composer.multisampling =
-        mode === AAMode.MSAA
-          ? Math.min(4, context.getParameter(context.MAX_SAMPLES))
-          : 0
+    const sobelGUI = GUI.postprocessing.addFolder('outline')
+    const color = new THREE.Color()
+    const outlineParams = {
+      'outline color': color
+        .copyLinearToSRGB(this.outlineEffect.uniforms.get('outlineColor').value)
+        .getHex()
+    }
+
+    sobelGUI
+      .add(this.outlineEffect.uniforms.get('step'), 'value')
+      .name('step')
+      .step(0.001)
+
+    // sobelGUI
+    //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
+    //   .name('threshold')
+
+    sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
+      this.outlineEffect.uniforms
+        .get('outlineColor')
+        .value.setHex(outlineParams['outline color'])
+        .convertSRGBToLinear()
+    })
+  }
+
+  initBloomGUI() {
+    const GUI = useGUI()
+    const bloomGUI = GUI.postprocessing.addFolder('Bloom')
+
+    const bloomParams = {
+      resolution: this.bloomEffect.resolution.height,
+      'kernel size': this.bloomEffect.blurPass.kernelSize,
+      'blur scale': this.bloomEffect.blurPass.scale,
+      intensity: this.bloomEffect.intensity,
+      luminance: {
+        filter: this.bloomEffect.luminancePass.enabled,
+        threshold: this.bloomEffect.luminanceMaterial.threshold,
+        smoothing: this.bloomEffect.luminanceMaterial.smoothing
+      }
+    }
+
+    bloomGUI
+      .add(bloomParams, 'resolution', [240, 360, 480, 720, 1080])
+      .onChange(() => {
+        this.bloomEffect.resolution.height = Number(bloomParams.resolution)
+      })
+
+    bloomGUI.add(bloomParams, 'kernel size', KernelSize).onChange(() => {
+      this.bloomEffect.blurPass.kernelSize = Number(bloomParams['kernel size'])
     })
 
-    gui.rendering
-      .add(this, 'renderingScale')
-      .min(0.2)
-      .max(1)
-      .step(0.1)
-
-    if (this.outlineEffect) {
-      const sobelGUI = gui.postprocessing.addFolder('outline')
-      const color = new THREE.Color()
-      const outlineParams = {
-        'outline color': color
-          .copyLinearToSRGB(
-            this.outlineEffect.uniforms.get('outlineColor').value
-          )
-          .getHex()
-      }
-
-      sobelGUI
-        .add(this.outlineEffect.uniforms.get('step'), 'value')
-        .name('step')
-        .step(0.001)
-
-      // sobelGUI
-      //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
-      //   .name('threshold')
-
-      sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
-        this.outlineEffect.uniforms
-          .get('outlineColor')
-          .value.setHex(outlineParams['outline color'])
-          .convertSRGBToLinear()
+    bloomGUI
+      .add(bloomParams, 'blur scale')
+      .min(0.0)
+      .max(1.0)
+      .step(0.01)
+      .onChange(() => {
+        this.bloomEffect.blurPass.scale = Number(bloomParams['blur scale'])
       })
-    }
+
+    bloomGUI
+      .add(bloomParams, 'intensity')
+      .min(0.0)
+      .max(3.0)
+      .step(0.01)
+      .onChange(() => {
+        this.bloomEffect.intensity = Number(bloomParams.intensity)
+      })
+
+    const luminanceGUI = bloomGUI.addFolder('Luminance')
+
+    luminanceGUI.add(bloomParams.luminance, 'filter').onChange(() => {
+      this.bloomEffect.luminancePass.enabled = bloomParams.luminance.filter
+    })
+
+    luminanceGUI
+      .add(bloomParams.luminance, 'threshold')
+      .min(0.0)
+      .max(1.0)
+      .step(0.001)
+      .onChange(() => {
+        this.bloomEffect.luminanceMaterial.threshold = Number(
+          bloomParams.luminance.threshold
+        )
+      })
+
+    luminanceGUI
+      .add(bloomParams.luminance, 'smoothing')
+      .min(0.0)
+      .max(1.0)
+      .step(0.001)
+      .onChange(() => {
+        this.bloomEffect.luminanceMaterial.smoothing = Number(
+          bloomParams.luminance.smoothing
+        )
+      })
   }
 }

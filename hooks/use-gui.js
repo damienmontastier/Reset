@@ -7,6 +7,8 @@ const useGUI = () => {
     init(dat)
 
     gui = new dat.GUI()
+    gui.closed = true
+
     // camera
     gui.camera = gui.addFolder('Camera')
 

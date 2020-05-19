@@ -17,8 +17,7 @@ let game
 class Game {
   constructor() {
     this.scene = new THREE.Group()
-    this.scene.scale.setScalar(100)
-    // this.raf = new Raf()
+    // this.scene.scale.setScalar(100)
 
     const { scene } = useWebGL()
     scene.add(this.scene)
@@ -48,7 +47,14 @@ class Game {
     const { scene } = useWebGL()
     const { camera } = useCamera()
 
-    camera.position.set(250, 250, 250)
+    // camera.position.set(1, 2.8, 2.9)
+    // camera.lookAt(scene.position)
+
+    // camera.angle = new THREE.Vector3(1, 2.8, 2.9).normalize()
+    // camera.originPosition = camera.angle.setScalar(8)
+    camera.originPosition = new THREE.Vector3(3, 8.4, 8.7)
+
+    camera.position.copy(camera.originPosition)
     camera.lookAt(scene.position)
   }
 

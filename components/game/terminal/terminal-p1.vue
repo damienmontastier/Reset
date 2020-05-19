@@ -11,10 +11,10 @@
       <terminal-fieldset type="cross" class="terminal__block">
         <div class="input">
           <input
+            id="notAccept"
             v-model="inputChecked"
             @change="checkHandler"
             type="checkbox"
-            id="notAccept"
             name="notAccept"
           />
           <label for="notAccept">
@@ -24,7 +24,7 @@
           >
         </div>
 
-        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+        <div slot="error" v-if="displayError" class="terminalFieldset__error">
           <span
             >N’oubliez PAS d’accepter nos conditions générales
             d’utilisation</span

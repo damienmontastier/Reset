@@ -60,9 +60,6 @@ export default {
       pointsOfInterestSelected: []
     }
   },
-  created() {
-    this.pointsOfInterestSelected = this.pointsOfInterest
-  },
   computed: {
     elements() {
       return this.pointsOfInterestSelected.filter(
@@ -83,6 +80,9 @@ export default {
     //   //   this.$refs['tout-deselectionner'][0].checked = true
     //   // }
     // }
+  },
+  created() {
+    this.pointsOfInterestSelected = this.pointsOfInterest
   },
   methods: {
     closeTerminal() {

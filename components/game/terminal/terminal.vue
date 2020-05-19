@@ -9,10 +9,10 @@
     </div>
     <div class="gameTerminal__paginations">
       <div
-        class="pagination"
         v-for="(item, i) in terminals.length"
         :key="i"
         :class="{ 'is-active': i == index }"
+        class="pagination"
       >
         <span v-html="i + 1"></span>
       </div>
@@ -56,17 +56,17 @@ export default {
       this.setTerminalOpened(false)
     }
   },
+
+  computed: {
+    terminal() {
+      return this.terminals[this.index]
+    }
+  },
   watch: {
     index(value, oldValue) {
       if (value % this.terminals.length === 0) {
         this.terminalCompleted()
       }
-    }
-  },
-
-  computed: {
-    terminal() {
-      return this.terminals[this.index]
     }
   }
 }

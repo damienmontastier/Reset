@@ -7,10 +7,10 @@
     class="terminalFieldset"
   >
     <div
-      class="terminalFieldset__inner"
       :class="{
         clipped: clipped
       }"
+      class="terminalFieldset__inner"
     >
       <slot />
     </div>

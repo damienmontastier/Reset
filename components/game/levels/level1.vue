@@ -1,26 +1,36 @@
 <template>
   <div class="gameLevel1">
-    <!-- <terminal v-if="playerIsOnTerminal" /> -->
-    <terminal v-if="terminalIsOpened" />
+    <terminal v-if="!terminalIsOpened" />
+    <game-notifications ref="notifications" />
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import gsap from 'gsap'
 
+import useGUI from '@/hooks/use-gui'
+import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
-import CameraMouvement from '@/game/components/camera-movement'
+// import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
+import ParticulesPlane from '@/webgl/components/particules-plane'
+
+// import Terminal from '@/components/game/terminal/terminal'
+
+import treadmillConfig from '@/config/treadmills'
+
 export default {
   components: {
-    Terminal: () => import('@/components/game/terminal/terminal')
+    Terminal: () => import('@/components/game/terminal/terminal'),
+    gameNotifications: () => import('@/components/elements/game-notifications')
   },
   data() {
     return {
@@ -35,7 +45,8 @@ export default {
 
   computed: {
     ...mapState({
-      terminalIsOpened: (state) => state.terminalIsOpened
+      terminalIsOpened: (state) => state.terminalIsOpened,
+      posts: (state) => state.posts
     })
   },
   watch: {
@@ -78,7 +89,6 @@ export default {
   },
   mounted() {
     this.init()
-    console.log('mounted')
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
@@ -88,7 +98,33 @@ export default {
   },
   methods: {
     async init() {
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
+
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
+
       const { scene: gameScene } = useGame()
+
+      this.particulesPlane = new ParticulesPlane()
+      gameScene.add(this.particulesPlane)
+
+      this.particulesPlane.scale.setScalar(50)
+      this.particulesPlane.rotation.x = -Math.PI / 2
+      this.particulesPlane.rotation.z = -Math.PI / 4
+
+      this.particulesPlane.position.y = -2
+
+      // const { composer } = useWebGL()
+      // const { bloomEffect } = composer
+
+      // bloomEffect.selection.add(this.particulesPlane)
+
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
       this.map = new MapLevel01()
@@ -103,14 +139,16 @@ export default {
       this.player = new Player()
       await this.player.load()
       this.initIntersections()
+
+      this.map.spawnPoint.z = 10
       this.player.position.copy(this.map.spawnPoint)
 
       this.levelGroup.add(this.player)
 
-      this.cameraMouvement = new CameraMouvement({
-        mesh: this.player,
-        duration: 1
-      })
+      // this.cameraMouvement = new CameraMouvement({
+      //   mesh: this.player,
+      //   duration: 1
+      // })
 
       // const audioManager = useAudioManager()
 
@@ -119,6 +157,8 @@ export default {
 
       const { events: keyboardEvents } = useKeyboard()
       keyboardEvents.on('keydown', this.onKeydown)
+
+      this.initGUI()
 
       const RAF = useRAF()
       RAF.add('level1', this.loop.bind(this))
@@ -198,7 +238,24 @@ export default {
     },
 
     loop(clock) {
-      this.cameraMouvement.loop()
+      // this.cameraMouvement.loop()
+      this.particulesPlane.update(clock)
+
+      const { camera } = useCamera()
+      const nextPosition = this.player.worldPosition
+        .clone()
+        .add(camera.originPosition)
+
+      // const { scene } = useWebGL()
+      // camera.lookAt(scene.position)
+
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: camera.originPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
@@ -251,7 +308,12 @@ export default {
     },
 
     onPlayerIntersectsWithParcelPost() {
-      console.log('PLAYER INTERSECTS WITH BOX')
+      console.log('here')
+
+      this.$refs.notifications.addItem(
+        this.posts[Math.floor(Math.random() * this.posts.length)]
+      )
+
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
       }
@@ -263,6 +325,55 @@ export default {
 
       const clock = useClock()
       clock.add(10)
+    },
+
+    initGUI() {
+      const GUI = useGUI()
+
+      const { camera } = useCamera()
+
+      const params = {
+        lookAtPlayer: () => {
+          camera.lookAt(this.player.position)
+        }
+      }
+
+      GUI.camera.addVector('position', camera.originPosition)
+      GUI.camera.add(params, 'lookAtPlayer')
+
+      // speedScale: 0.05,
+      // speedMinimum: 0.5,
+      // speedRandomness: 0.5,
+      // appearIntervalMinimum: 0.5,
+      // appearIntervalRandomness: 3
+
+      // treadmill config
+      const treadmillGUI = GUI.addFolder('treadmills config')
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedScale')
+        .min(0)
+        .max(0.2)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'speedRandomness')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'appearIntervalMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      treadmillGUI
+        .add(treadmillConfig.part1, 'appearIntervalRandomness')
+        .min(0)
+        .max(10)
+        .step(0.01)
     }
   }
 }

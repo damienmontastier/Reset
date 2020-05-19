@@ -10,6 +10,8 @@ import ParcelPost from '@/game/components/parcel-post'
 import colors from '@/config/colors'
 import ToonMaterial from '@/webgl/materials/toon.js'
 
+import treadmillConfig from '@/config/treadmills'
+
 export default class Treadmill extends THREE.Object3D {
   constructor(model, index) {
     super()
@@ -17,6 +19,8 @@ export default class Treadmill extends THREE.Object3D {
     this.model = model
     this.add(this.model)
     this.model.matrixAutoUpdate = false
+
+    this.config = treadmillConfig.part1
 
     this.init()
   }
@@ -51,15 +55,18 @@ export default class Treadmill extends THREE.Object3D {
 
     this.direction = Math.random() > 0.5 ? 1 : -1
 
-    this.speedScale = 0.05
-    this.speedMinimum = 0.5
-    this.speedRandomness = 0.5
-    this.speed =
-      (this.speedMinimum + this.speedRandomness * Math.random()) *
-      this.speedScale
+    this.random = Math.random()
+    // treadmillConfig
 
-    this.appearIntervalMinimum = 0.5
-    this.appearIntervalRandomness = 3
+    // this.speedScale = 0.05
+    // this.speedMinimum = 0.5
+    // this.speedRandomness = 0.5
+    // this.speed =
+    //   (this.speedMinimum + this.speedRandomness * Math.random()) *
+    //   this.speedScale
+
+    // this.appearIntervalMinimum = 0.5
+    // this.appearIntervalRandomness = 3
 
     this.appearInterval = this.getNewInterval()
 
@@ -69,9 +76,17 @@ export default class Treadmill extends THREE.Object3D {
         : new THREE.Vector3(4, 1, 0)
   }
 
+  get speed() {
+    return (
+      (this.config.speedMinimum + this.config.speedRandomness * this.random) *
+      this.config.speedScale
+    )
+  }
+
   getNewInterval() {
     return (
-      this.appearIntervalMinimum + this.appearIntervalRandomness * Math.random()
+      this.config.appearIntervalMinimum +
+      this.config.appearIntervalRandomness * Math.random()
     )
   }
 

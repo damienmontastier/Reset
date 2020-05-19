@@ -4,18 +4,23 @@
 
 <script>
 import useGame from '@/hooks/use-game'
+import useRAF from '@/hooks/use-raf'
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
-import DistanceMaterial from '@/webgl/materials/distance'
+import ParticulesPlane from '@/webgl/components/particules-plane'
 
 export default {
   mounted() {
-    const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = new DistanceMaterial()
+    const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16)
+    const material = new THREE.MeshMatcapMaterial({
+      matcap: new THREE.TextureLoader().load('/images/matcap/black2.png')
+    })
     this.cube = new THREE.Mesh(geometry, material)
+
+    this.cube.position.y = -2
 
     // const { scene } = useGame()
     // scene.add(this.cube)
@@ -38,12 +43,79 @@ export default {
     this.init()
   },
   methods: {
+    loadTexture(src) {
+      const loader = new THREE.TextureLoader()
+
+      return new Promise((resolve, reject) => {
+        loader.load(
+          src,
+          (texture) => {
+            resolve(texture)
+          },
+          undefined,
+          (err) => {
+            console.error('An error happened.', err)
+          }
+        )
+      })
+    },
     async init() {
       await this.load()
 
       const { scene } = useGame()
-      scene.add(this.solidModel)
-      scene.add(this.wireframeModel)
+      scene.add(this.testModel)
+      // scene.add(this.solidModel)
+      // scene.add(this.wireframeModel)
+
+      const solidMaterial = new THREE.MeshMatcapMaterial({
+        color: 0xffffff,
+        matcap: new THREE.TextureLoader().load('/images/matcap/black.png'),
+        normalMap: new THREE.TextureLoader().load(
+          '/images/normal-map/smith.jpg'
+        )
+      })
+
+      // new THREE.TextureLoader().loa
+
+      // this.testModel.material = solidMaterial
+
+      // const solidMaterial = new THREE.MeshNormalMaterial({})
+
+      const GUI = useGUI()
+      GUI.addMaterial('solidMaterial', solidMaterial)
+
+      this.testModel.children[0].material = solidMaterial
+
+      this.solidModel.traverse((child) => {
+        child.material = solidMaterial
+
+        // child.material = new THREE.MeshMatcapMaterial({
+        //   matcap: new THREE.TextureLoader().load('/images/matcaps/black2.png')
+        // })
+      })
+
+      const wireframeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x00ff00
+      })
+
+      this.wireframeModel.traverse((child) => {
+        child.material = wireframeMaterial
+      })
+
+      this.particulesPlane = new ParticulesPlane()
+      // scene.add(this.particulesPlane)
+
+      this.particulesPlane.scale.setScalar(50)
+      this.particulesPlane.rotation.x = -Math.PI / 2
+      this.particulesPlane.rotation.z = -Math.PI / 4
+
+      this.particulesPlane.position.y = -2
+
+      const RAF = useRAF()
+      RAF.add('test-wireframe', this.loop)
+    },
+    loop(clock) {
+      this.particulesPlane.update(clock)
     },
     async load() {
       const assetsManager = useAssetsManager()
@@ -59,18 +131,24 @@ export default {
           {
             name: 'wireframe',
             path: 'obj/test_wireframe/wireframe.obj'
+          },
+          {
+            name: 'test',
+            path: 'obj/test_wireframe/LeePerrySmith.glb'
           }
         ]
       })
 
       const files = await assetsManager.get('test-wireframe')
+      this.testModel = files.test.scene
       this.solidModel = files.solid
+      this.wireframeModel = files.wireframe
 
       // const params = {
       //   distance: 0,
       // }
 
-      const GUI = useGUI()
+      // const GUI = useGUI()
       // GUI.add(params, 'distance')
       //   .min(0)
       //   .max(20)
@@ -79,32 +157,29 @@ export default {
       //     this.$events.emit('VISIBLE_DISTANCE', params.distance)
       //   })
 
-      const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00,
-        transparent: true
-        // side: THREE.BackSide,
-        // depthWrite: false
-      })
-      GUI.add(wireframeMaterial, 'opacity')
-        .min(0)
-        .max(1)
-        .step(0.01)
+      // const wireframeMaterial = new THREE.MeshBasicMaterial({
+      //   color: 0x00ff00,
+      //   transparent: true
+      //   // side: THREE.BackSide,
+      //   // depthWrite: false
+      // })
+      // GUI.add(wireframeMaterial, 'opacity')
+      //   .min(0)
+      //   .max(1)
+      //   .step(0.01)
 
-      this.solidModel.traverse((child) => {
-        // child.material = new DistanceMaterial({ uDistance: params.distance })
-        child.material = new THREE.MeshPhongMaterial({
-          // depthTest: false,
-          // depthWrite: false,
-          // side: THREE.DoubleSide
-          // depthFunc: THREE.NeverDepth
-        })
-      })
+      // this.solidModel.traverse((child) => {
+      // child.material = new DistanceMaterial({ uDistance: params.distance })
+      // child.material = new THREE.MeshPhongMaterial({})
 
-      this.wireframeModel = files.wireframe
+      // child.material = new THREE.MeshMatcapMaterial({
+      //   matcap: new THREE.TextureLoader().load('/images/matcaps/black2.png')
+      // })
+      // })
 
       this.wireframeModel.traverse((child) => {
-        child.scale.setScalar(1.0025)
-        child.material = wireframeMaterial
+        // child.scale.setScalar(1.002)
+        // child.material = wireframeMaterial
       })
     }
   }

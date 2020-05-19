@@ -57,7 +57,6 @@ export default {
       slidersIsCompleted: false
     }
   },
-  created() {},
   computed: {},
 
   watch: {
@@ -71,6 +70,7 @@ export default {
       }
     }
   },
+  created() {},
 
   methods: {
     sliderIsCompleted(index) {

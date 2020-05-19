@@ -1,10 +1,10 @@
 # DMII1
 
 ## Branches
-* [Master](https://quirky-archimedes-dc1040.netlify.com)
-* [Develop](https://develop--quirky-archimedes-dc1040.netlify.com)
-* [Clement](https://clement--quirky-archimedes-dc1040.netlify.com)
-* [Damien](https://damien--quirky-archimedes-dc1040.netlify.com)
+* [Master](https://re-set.netlify.app/)
+* [Develop](https://develop--re-set.netlify.app/)
+* [Clement](https://clement--re-set.netlify.app/)
+* [Damien](https://damien--re-set.netlify.app/)
 
 ## Helps
 
