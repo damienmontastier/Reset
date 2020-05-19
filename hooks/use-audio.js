@@ -39,8 +39,10 @@ class AudioManager {
     })
   }
 
-  play(sound) {
-    this.sounds[sound].play()
+  play(id) {
+    const sound = this.sounds[id]
+    sound.play()
+    return sound
   }
 
   pause(sound) {

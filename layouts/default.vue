@@ -12,13 +12,15 @@
 </template>
 
 <script>
+// import { Howler } from 'howler'
+
 import useAudio from '@/hooks/use-audio'
 // import useClock from '@/hooks/use-clock'
 // import useKeyboard from '@/hooks/use-keyboard'
 import useGUI from '@/hooks/use-gui'
 
-import introSound from '~/static/sounds/intro_son_01.mp3'
-import level01 from '~/static/sounds/level01_son_01.mp3'
+// import introSound from '~/static/sounds/intro_son_01.mp3'
+// import level01 from '~/static/sounds/level1.mp3'
 
 export default {
   components: {
@@ -38,10 +40,7 @@ export default {
     const audioManager = useAudio()
 
     await audioManager.add(
-      [
-        { path: introSound, id: audioManager.pathToId(introSound) },
-        { path: level01, id: audioManager.pathToId(level01) }
-      ],
+      [{ path: '/sounds/level1.mp3', id: 'level1' }],
       this.soundLoaded.bind(this)
     )
   },
@@ -53,7 +52,10 @@ export default {
     soundLoaded() {
       const audioManager = useAudio()
 
-      audioManager.play('intro_son_01')
+      audioManager
+        .play('level1')
+        .volume(0.2)
+        .loop(true)
     }
   }
 }
