@@ -10,6 +10,8 @@ import useKeyboard from '@/hooks/use-keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
 
+import GreenMaterial from '@/webgl/materials/green'
+
 export default class Level01 extends THREE.Object3D {
   async load() {
     const assetsManager = useAssetsManager()
@@ -21,6 +23,10 @@ export default class Level01 extends THREE.Object3D {
         {
           name: 'model',
           path: 'obj/level_01/level01_06.glb'
+        },
+        {
+          name: 'wireframe',
+          path: 'obj/level_01/level01_06_wireframe.obj'
         }
       ]
     })
@@ -28,11 +34,18 @@ export default class Level01 extends THREE.Object3D {
     this.files = await assetsManager.get('level_01')
 
     this.model = this.files.model.scene
+    this.wireframe = this.files.wireframe
+
+    this.wireframe.traverse((child) => {
+      child.material = GreenMaterial
+    })
+
     this.add(this.model)
+    this.add(this.wireframe)
 
     this.model.traverse((child) => {
       if (child.name.includes('model_border')) {
-        child.material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        child.material = GreenMaterial
       }
     })
 
@@ -169,16 +182,23 @@ export default class Level01 extends THREE.Object3D {
         {
           name: 'treadmill',
           path: 'obj/treadmill/treadmill_06.glb'
+        },
+        {
+          name: 'wireframe',
+          path: 'obj/treadmill/treadmill_06_wireframe.obj'
         }
       ]
     })
 
     const files = await assetsManager.get('instances')
     const treadmillModel = files.treadmill.scene
+    const treadmillWireframe = files.wireframe
 
-    treadmillModel.getObjectByName(
-      'machine_green'
-    ).material = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    treadmillWireframe.traverse((child) => {
+      child.material = GreenMaterial
+    })
+
+    treadmillModel.getObjectByName('machine_green').material = GreenMaterial
 
     treadmillModel.getObjectByName('spawn_downstream').visible = false
     treadmillModel.getObjectByName('spawn_upstream').visible = false
@@ -189,7 +209,11 @@ export default class Level01 extends THREE.Object3D {
     this.instances.children.forEach((child) => {
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
-        const treadmill = new Treadmill(treadmillModel.clone(), i)
+        const treadmill = new Treadmill(
+          treadmillModel.clone(),
+          treadmillWireframe.clone(),
+          i
+        )
         child.add(treadmill)
         this.treadmills.push(treadmill)
       }

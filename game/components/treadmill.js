@@ -15,12 +15,15 @@ import treadmillConfig from '@/config/treadmills'
 import windowFocus from '@/plugins/window-focus'
 
 export default class Treadmill extends THREE.Object3D {
-  constructor(model, index) {
+  constructor(model, wireframe, index) {
     super()
     this.index = index
     this.model = model
+    this.wireframe = wireframe
     this.add(this.model)
+    this.add(this.wireframe)
     this.model.matrixAutoUpdate = false
+    this.wireframe.matrixAutoUpdate = false
 
     this.config = treadmillConfig.part1
 
