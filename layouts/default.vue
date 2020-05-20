@@ -4,10 +4,11 @@
     <div class="gameplay" v-if="clicked && !keyDowned" />
     <div class="tuto" v-if="tuto" />
     <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
-    <appHeader id="appHeader" />
+    <app-noise id="appNoise" />
+    <app-header id="appHeader" />
     <nuxt id="appView" />
-    <appScene id="appScene" />
-    <appGame id="appGame" />
+    <app-scene id="appScene" />
+    <app-game id="appGame" />
   </div>
 </template>
 
@@ -26,7 +27,8 @@ export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
-    appHeader: () => import('@/components/elements/header')
+    appHeader: () => import('@/components/elements/header'),
+    appNoise: () => import('@/components/shell/app-noise')
   },
   data() {
     return {
@@ -65,6 +67,17 @@ export default {
 #__nuxt {
   min-height: 100%;
   overflow-y: auto;
+}
+
+#appNoise {
+  height: 100%;
+  height: calc(var(--vh, 1vh) * 100);
+  left: 0;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 10;
 }
 
 #app {
