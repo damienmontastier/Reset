@@ -38,7 +38,6 @@ export default class Level01 extends THREE.Object3D {
     this.wireframe = this.files.wireframe
 
     this.wireframe.traverse((child) => {
-      console.log(child)
       if (child.name.includes('green')) {
         child.material = GreenMaterial
       }
@@ -202,8 +201,24 @@ export default class Level01 extends THREE.Object3D {
     const treadmillModel = files.treadmill.scene
     const treadmillWireframe = files.wireframe
 
+    treadmillModel.traverse((child) => {
+      child.material = new ToonMaterial({
+        color: 0x0d0d0d,
+        emissive: 0x080808
+      })
+    })
+
+    treadmillModel.getObjectByName('soustapis_green').material = GreenMaterial
+    // treadmillModel.getObjectByName('bordure_black').material =
+
     treadmillWireframe.traverse((child) => {
-      child.material = GreenMaterial
+      if (child.name.includes('green')) {
+        child.material = GreenMaterial
+      }
+
+      if (child.name.includes('black')) {
+        child.material = BlackMaterial
+      }
     })
 
     treadmillModel.getObjectByName('machine_green').material = GreenMaterial
