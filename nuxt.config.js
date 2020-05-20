@@ -73,7 +73,8 @@ export default {
     { src: '~/plugins/events.js', mode: 'client' },
     { src: '~/plugins/viewport.js', mode: 'client' },
     { src: '~/plugins/mouse.js', mode: 'client' },
-    { src: '~/plugins/directives.js', mode: 'client' }
+    { src: '~/plugins/directives.js', mode: 'client' },
+    { src: '~/plugins/window-focus.js', mode: 'client' }
   ],
   /*
    ** Nuxt.js dev-modules

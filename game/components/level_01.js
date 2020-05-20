@@ -10,6 +10,9 @@ import useKeyboard from '@/hooks/use-keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
 
+import GreenMaterial from '@/webgl/materials/green'
+import BlackMaterial from '@/webgl/materials/black'
+
 export default class Level01 extends THREE.Object3D {
   async load() {
     const assetsManager = useAssetsManager()
@@ -20,7 +23,11 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level_01.glb'
+          path: 'obj/level_01/level01_07.glb'
+        },
+        {
+          name: 'wireframe',
+          path: 'obj/level_01/level01_07_wireframe.obj'
         }
       ]
     })
@@ -28,20 +35,42 @@ export default class Level01 extends THREE.Object3D {
     this.files = await assetsManager.get('level_01')
 
     this.model = this.files.model.scene
-    this.add(this.model)
+    this.wireframe = this.files.wireframe
 
-    const background = this.model.getObjectByName('model_background')
-    // const gui = useGUI()
-    // gui.addObject3D('background', background)
-    // background.material.side = THREE.DoubleSide
-    // background.rotation.x = Math.PI * 1.5
-    background.visible = false
+    this.wireframe.traverse((child) => {
+      if (child.name.includes('green')) {
+        child.material = GreenMaterial
+      }
+
+      if (child.name.includes('black')) {
+        child.material = BlackMaterial
+      }
+    })
+
+    this.add(this.model)
+    this.add(this.wireframe)
+
+    this.model.traverse((child) => {
+      if (child.name.includes('model_border')) {
+        child.material = GreenMaterial
+      }
+    })
+
+    // const background = this.model.getObjectByName('model_background')
+    // // const gui = useGUI()
+    // // gui.addObject3D('background', background)
+    // // background.material.side = THREE.DoubleSide
+    // // background.rotation.x = Math.PI * 1.5
+    // background.visible = false
 
     // zones
     this.zones = this.model.getObjectByName('zones')
 
     // spawn point
-    this.spawnPoint = new THREE.Vector3(0.5, 1, 18.5)
+    // this.spawnPoint = new THREE.Vector3(0.5, 1, 18.5)
+    this.spawnPoint = this.model
+      .getObjectByName('zone_spawn')
+      .position.add(new THREE.Vector3(-0.5, 0, 0))
 
     this.init()
   }
@@ -74,8 +103,8 @@ export default class Level01 extends THREE.Object3D {
         // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
 
         const material = new ToonMaterial({
-          color: 0x757575,
-          emissive: 0x757575
+          color: 0x0d0d0d,
+          emissive: 0x080808
         })
 
         zone.material = material
@@ -96,6 +125,7 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('zone_spawn')) {
+        console.log(zone)
         zone.visible = false
       }
 
@@ -115,11 +145,11 @@ export default class Level01 extends THREE.Object3D {
     const { intersections } = useGame()
 
     const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
-    box.scale.set(10, 1, 30)
+    box.scale.set(10, 1, 1000)
 
     // up stream
     this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-10, 1, -4))
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-12.8, 1, 0))
 
     this.add(this.outHitboxUpstreamMesh)
     this.outHitboxUpstreamMesh.visible = false
@@ -135,7 +165,7 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(10, 1, -4))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(11.7, 1, 0))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false
@@ -158,13 +188,43 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'treadmill',
-          path: 'obj/treadmill/treadmill.glb'
+          path: 'obj/treadmill/treadmill_06.glb'
+        },
+        {
+          name: 'wireframe',
+          path: 'obj/treadmill/treadmill_06_wireframe.obj'
         }
       ]
     })
 
     const files = await assetsManager.get('instances')
     const treadmillModel = files.treadmill.scene
+    const treadmillWireframe = files.wireframe
+
+    treadmillModel.traverse((child) => {
+      child.material = new ToonMaterial({
+        color: 0x0d0d0d,
+        emissive: 0x080808
+      })
+    })
+
+    treadmillModel.getObjectByName('soustapis_green').material = GreenMaterial
+    // treadmillModel.getObjectByName('bordure_black').material =
+
+    treadmillWireframe.traverse((child) => {
+      if (child.name.includes('green')) {
+        child.material = GreenMaterial
+      }
+
+      if (child.name.includes('black')) {
+        child.material = BlackMaterial
+      }
+    })
+
+    treadmillModel.getObjectByName('machine_green').material = GreenMaterial
+
+    treadmillModel.getObjectByName('spawn_downstream').visible = false
+    treadmillModel.getObjectByName('spawn_upstream').visible = false
 
     this.instances = this.model.getObjectByName('instances')
 
@@ -172,7 +232,11 @@ export default class Level01 extends THREE.Object3D {
     this.instances.children.forEach((child) => {
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
-        const treadmill = new Treadmill(treadmillModel.clone(), i)
+        const treadmill = new Treadmill(
+          treadmillModel.clone(),
+          treadmillWireframe.clone(),
+          i
+        )
         child.add(treadmill)
         this.treadmills.push(treadmill)
       }

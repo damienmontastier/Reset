@@ -1,7 +1,7 @@
 <template>
   <div class="gameLevel1">
-    <terminal v-if="!terminalIsOpened" />
     <game-notifications ref="notifications" />
+    <terminal v-if="playerIsOnTerminal" />
   </div>
 </template>
 
@@ -114,6 +114,8 @@ export default {
       this.particulesPlane = new ParticulesPlane()
       gameScene.add(this.particulesPlane)
 
+      this.particulesPlane.position.z = -10
+
       this.particulesPlane.scale.setScalar(50)
       this.particulesPlane.rotation.x = -Math.PI / 2
       this.particulesPlane.rotation.z = -Math.PI / 4
@@ -140,8 +142,8 @@ export default {
       await this.player.load()
       this.initIntersections()
 
-      this.map.spawnPoint.z = 10
-      this.player.position.copy(this.map.spawnPoint)
+      this.spawnPoint = this.map.spawnPoint.clone()
+      this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
 
@@ -195,6 +197,17 @@ export default {
 
       if (intersects.length > 0) {
         // if intersects = can walk on next zone
+
+        const checkpointIndex = intersects.findIndex((intersect) =>
+          intersect.object.name.includes('zone_chekpoint')
+        )
+        const checkpoint = intersects[checkpointIndex]
+        if (checkpoint) {
+          console.log(checkpoint)
+          this.spawnPoint = checkpoint.object.position
+            .clone()
+            .add(new THREE.Vector3(-0.5, 0, 0))
+        }
         const intersect = intersects[0]
         const zoneName = intersect.object.name
 
@@ -321,7 +334,10 @@ export default {
         this.player.positionTween.kill()
         this.player.positionTween = null
       }
-      this.player.position.copy(this.map.spawnPoint)
+
+      // TODO checkpoint
+
+      this.player.position.copy(this.spawnPoint)
 
       const clock = useClock()
       clock.add(10)
@@ -341,13 +357,6 @@ export default {
       GUI.camera.addVector('position', camera.originPosition)
       GUI.camera.add(params, 'lookAtPlayer')
 
-      // speedScale: 0.05,
-      // speedMinimum: 0.5,
-      // speedRandomness: 0.5,
-      // appearIntervalMinimum: 0.5,
-      // appearIntervalRandomness: 3
-
-      // treadmill config
       const treadmillGUI = GUI.addFolder('treadmills config')
       treadmillGUI
         .add(treadmillConfig.part1, 'speedScale')

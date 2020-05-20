@@ -12,13 +12,18 @@ import ToonMaterial from '@/webgl/materials/toon.js'
 
 import treadmillConfig from '@/config/treadmills'
 
+import windowFocus from '@/plugins/window-focus'
+
 export default class Treadmill extends THREE.Object3D {
-  constructor(model, index) {
+  constructor(model, wireframe, index) {
     super()
     this.index = index
     this.model = model
+    this.wireframe = wireframe
     this.add(this.model)
+    this.add(this.wireframe)
     this.model.matrixAutoUpdate = false
+    this.wireframe.matrixAutoUpdate = false
 
     this.config = treadmillConfig.part1
 
@@ -72,8 +77,8 @@ export default class Treadmill extends THREE.Object3D {
 
     this.spawnPoint =
       this.direction > 0
-        ? new THREE.Vector3(-4, 1, 0)
-        : new THREE.Vector3(4, 1, 0)
+        ? new THREE.Vector3(-7, 1, 0)
+        : new THREE.Vector3(7, 1, 0)
   }
 
   get speed() {
@@ -97,6 +102,8 @@ export default class Treadmill extends THREE.Object3D {
   update(clock) {
     // if (this.index > 1) return
 
+    if (!windowFocus.visible) return
+
     const deltaPosition = this.deltaPosition.multiply(
       new THREE.Vector3(clock.lagSmoothing, 0, 0)
     )
@@ -104,6 +111,10 @@ export default class Treadmill extends THREE.Object3D {
     this.parcelPosts.children.forEach((post) => {
       post.position.add(deltaPosition)
       post.updateMatrixWorld()
+
+      if (post.position.x > 50 || post.position.x < -50) {
+        post.destroy()
+      }
     })
 
     this.hookedGroup.forEach((child) => {
