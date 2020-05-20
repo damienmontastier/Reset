@@ -25,6 +25,9 @@ export default class Treadmill extends THREE.Object3D {
     this.model.matrixAutoUpdate = false
     this.wireframe.matrixAutoUpdate = false
 
+    this.tapis = model.getObjectByName('tapis')
+    console.log(this.tapis)
+
     this.config = treadmillConfig.part1
 
     this.init()
@@ -107,6 +110,9 @@ export default class Treadmill extends THREE.Object3D {
     const deltaPosition = this.deltaPosition.multiply(
       new THREE.Vector3(clock.lagSmoothing, 0, 0)
     )
+
+    this.tapis.position.x += deltaPosition.x
+    this.tapis.position.x %= 0.5
 
     this.parcelPosts.children.forEach((post) => {
       post.position.add(deltaPosition)
