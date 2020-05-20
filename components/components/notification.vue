@@ -2,11 +2,12 @@
   <div class="notification" :style="cssVars">
     <div class="notification__inner">
       <div class="notification__top">
-        <span>{{ post.social_network }}</span> <span>HEURE</span>
+        <span>{{ post.content.social_network }}</span>
+        <span>HEURE</span>
       </div>
-      <p>{{ post.title }}</p>
-      <picture v-if="post.picture">
-        <img :src="post.picture" alt="" />
+      <p>{{ post.content.title }}</p>
+      <picture v-if="post.content.picture">
+        <img :src="post.content.picture" alt="" />
       </picture>
     </div>
   </div>
@@ -26,7 +27,7 @@ export default {
   computed: {
     cssVars() {
       return {
-        '--color': `var(--color-${this.post.social_network.toLowerCase()})`
+        '--color': `var(--color-${this.post.content.social_network.toLowerCase()})`
       }
     }
   },

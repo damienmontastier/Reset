@@ -321,9 +321,7 @@ export default {
     },
 
     onPlayerIntersectsWithParcelPost() {
-      console.log('here')
-
-      this.$refs.notifications.addItem(
+      this.$refs.notifications.addNotification(
         this.posts[Math.floor(Math.random() * this.posts.length)]
       )
 

@@ -2,7 +2,11 @@
   <div class="notifications">
     <div class="notifications__inner">
       <transition-group name="notification" tag="p">
-        <notification :post="post" v-for="post in posts" :key="post.slug" />
+        <notification
+          v-for="post in posts"
+          :post="{ id: post.id, content: post.content }"
+          :key="post.id"
+        />
       </transition-group>
     </div>
   </div>
@@ -22,11 +26,18 @@ export default {
   mounted() {},
   computed: {},
   methods: {
-    addItem(post) {
-      this.posts.push(post)
+    addNotification(post) {
+      const id = Math.random()
+        .toString(36)
+        .substr(2, 9)
+
+      this.posts.push({ id, content: post })
 
       setTimeout(() => {
-        const index = this.posts.indexOf(post)
+        const index = this.posts.findIndex((x) => {
+          return x.id === id
+        })
+
         this.posts.splice(index, 1)
       }, 2500)
     }
@@ -54,7 +65,7 @@ export default {
 }
 
 .notifications {
-  height: 250px;
+  min-height: 250px;
   position: absolute;
   right: 10px;
   top: 70px;

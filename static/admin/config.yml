@@ -55,7 +55,7 @@ collections:
     extension: 'json'
     folder: 'assets/content/posts'
     create: true
-    slug: '{{slug}}'
+    slug: '{{day}}-{{hour}}-{{minute}}-{{slug}}'
     editor:
       preview: false
     fields:
