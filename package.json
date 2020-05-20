@@ -24,7 +24,6 @@
     "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/style-resources": "^1.0.0",
-    "@tweenjs/tween.js": "^18.5.0",
     "dat.gui": "^0.7.6",
     "events": "^3.1.0",
     "gsap": "^3.2.5",
