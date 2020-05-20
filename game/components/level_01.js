@@ -23,11 +23,11 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_06.glb'
+          path: 'obj/level_01/level01_07.glb'
         },
         {
           name: 'wireframe',
-          path: 'obj/level_01/level01_06_wireframe.obj'
+          path: 'obj/level_01/level01_07_wireframe.obj'
         }
       ]
     })
@@ -56,12 +56,12 @@ export default class Level01 extends THREE.Object3D {
       }
     })
 
-    const background = this.model.getObjectByName('model_background')
-    // const gui = useGUI()
-    // gui.addObject3D('background', background)
-    // background.material.side = THREE.DoubleSide
-    // background.rotation.x = Math.PI * 1.5
-    background.visible = false
+    // const background = this.model.getObjectByName('model_background')
+    // // const gui = useGUI()
+    // // gui.addObject3D('background', background)
+    // // background.material.side = THREE.DoubleSide
+    // // background.rotation.x = Math.PI * 1.5
+    // background.visible = false
 
     // zones
     this.zones = this.model.getObjectByName('zones')
