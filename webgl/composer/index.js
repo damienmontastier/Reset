@@ -11,7 +11,7 @@ import {
 } from 'postprocessing'
 
 // import OutlineEffect from './effects/outline'
-// import AntialiasingEffect from './effects/antialiasing'
+import AntialiasingEffect from './effects/antialiasing'
 // import DitheringEffect from './effects/dithering'
 
 // import HightlightCircleEffect from './effects/hightlight-circle'
@@ -29,12 +29,12 @@ export default class Composer {
     this.init()
   }
 
-  init() {
-    this.initComposer()
+  async init() {
+    await this.initComposer()
     this.initGUI()
   }
 
-  initComposer() {
+  async initComposer() {
     // composer
     this.composer = new EffectComposer(this.renderer)
 
@@ -49,18 +49,23 @@ export default class Composer {
 
     this.bloomEffect = new BloomEffect({
       blendFunction: BlendFunction.SCREEN,
-      kernelSize: KernelSize.MEDIUM,
-      luminanceThreshold: 0.8,
-      luminanceSmoothing: 0.075,
-      height: 480
+      kernelSize: KernelSize.SMALL,
+      intensity: 0.85,
+      luminanceThreshold: 0.212,
+      luminanceSmoothing: 0.0,
+      height: 1080
     })
+
+    this.AAEffect = await new AntialiasingEffect()
 
     // passes
     this.bloomPass = new EffectPass(this.camera, this.bloomEffect)
+    this.AAPass = new EffectPass(this.camera, this.AAEffect.smaaEffect)
 
     // addPasses
     this.composer.addPass(new RenderPass(this.scene, this.camera))
-    // this.composer.addPass(this.bloomPass)
+    this.composer.addPass(this.AAPass)
+    this.composer.addPass(this.bloomPass)
   }
 
   render(clock) {
@@ -69,12 +74,12 @@ export default class Composer {
     this.renderer.setSize(viewport.width, viewport.height)
     this.renderer.setPixelRatio = window.devicePixelRatio || 1
 
-    // if (this.composer && !this.disabled) {
-    //   this.composer.setSize(viewport.width, viewport.height)
-    //   this.composer.render(clock.deltaTime)
-    // } else {
-    this.renderer.render(this.scene, this.camera)
-    // }
+    if (this.composer && !this.disabled) {
+      this.composer.setSize(viewport.width, viewport.height)
+      this.composer.render(clock.deltaTime)
+    } else {
+      this.renderer.render(this.scene, this.camera)
+    }
   }
 
   initGUI() {
