@@ -1,12 +1,12 @@
 <template>
   <div class="gameLevel1">
     <game-notifications ref="notifications" />
-    <terminal v-if="playerIsOnTerminal" />
+    <terminal v-if="terminalOpened" />
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
@@ -17,14 +17,9 @@ import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
-// import CameraMouvement from '@/game/components/camera-movement'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
-
 import ParticulesPlane from '@/webgl/components/particules-plane'
-
-// import Terminal from '@/components/game/terminal/terminal'
-
 import treadmillConfig from '@/config/treadmills'
 
 export default {
@@ -45,7 +40,7 @@ export default {
 
   computed: {
     ...mapState({
-      terminalIsOpened: (state) => state.terminalIsOpened,
+      terminalOpened: (state) => state.terminalOpened,
       posts: (state) => state.posts
     })
   },
@@ -81,14 +76,16 @@ export default {
     },
     playerIsOnTerminal(newVal, oldVal) {
       if (this.playerIsOnTerminal === true) {
-        console.log('TERMINAL ENTER')
+        this.setTerminalOpened(true)
       } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
-        console.log('TERMINAL LEAVE')
+        this.setTerminalOpened(false)
       }
     }
   },
   mounted() {
     this.init()
+
+    this.$events.on('level:restart', this.doRespawn.bind(this))
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
@@ -97,6 +94,9 @@ export default {
     keyboardEvents.off('keydown', this.onKeydown)
   },
   methods: {
+    ...mapMutations({
+      setTerminalOpened: 'setTerminalOpened'
+    }),
     async init() {
       // const {
       //   OrbitControls
@@ -164,6 +164,17 @@ export default {
 
       const RAF = useRAF()
       RAF.add('level1', this.loop.bind(this))
+    },
+
+    doRespawn(e) {
+      if (e === 'start') {
+        this.player.position.copy(this.map.spawnPoint)
+      } else {
+        this.player.position.copy(this.spawnPoint)
+      }
+
+      // Restart chronometre du niveau
+      // Respaw personnage au spaw point
     },
 
     onKeydown(e) {
@@ -335,7 +346,7 @@ export default {
 
       // TODO checkpoint
 
-      this.player.position.copy(this.spawnPoint)
+      this.doRespawn()
 
       const clock = useClock()
       clock.add(10)

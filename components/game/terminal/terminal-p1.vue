@@ -65,7 +65,8 @@ export default {
     },
 
     restartLevel() {
-      console.log('restart level')
+      this.$events.emit('level:restart', 'start')
+      this.closeTerminal()
     },
 
     checkHandler(e) {

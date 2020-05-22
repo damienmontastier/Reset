@@ -18,7 +18,7 @@ export default {
   props: {
     post: {
       type: Object,
-      require: true
+      required: true
     }
   },
   data() {

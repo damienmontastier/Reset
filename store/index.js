@@ -3,7 +3,7 @@ export const strict = false
 export const state = () => ({
   levels: [],
   posts: [],
-  terminalIsOpened: true,
+  terminalOpened: false,
   overlayIsOpened: false
 })
 
@@ -17,7 +17,7 @@ export const mutations = {
   },
 
   setTerminalOpened(state, value) {
-    state.terminalIsOpened = value
+    state.terminalOpened = value
   },
 
   setOverlayOpened(state, value) {
