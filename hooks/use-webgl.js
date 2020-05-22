@@ -57,7 +57,7 @@ class WebGL {
       renderer: this.renderer,
       scene: this.scene
     })
-    this.composer.disabled = true
+    // this.composer.disabled = true
 
     // stats
     this.stats = new Stats()
