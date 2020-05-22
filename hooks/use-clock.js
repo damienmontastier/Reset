@@ -9,10 +9,29 @@ class Clock {
 
     this.elapsedTime = 0
     this.addionalTime = 0
+
+    this.refreshDate()
+
+    setInterval(this.refreshDate, 1000)
   }
 
   get time() {
     return 120 - this.elapsedTime - this.addionalTime
+  }
+
+  virtualHour() {
+    const h = this.date.getHours()
+    const m = this.date.getMinutes()
+    const s = this.date.getSeconds()
+    console.log('coucou')
+
+    return `${h} : ${m} : ${s}`
+  }
+
+  refreshDate() {
+    this.date = new Date()
+
+    // console.log(test)
   }
 
   loop(clock) {

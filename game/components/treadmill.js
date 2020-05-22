@@ -26,7 +26,7 @@ export default class Treadmill extends THREE.Object3D {
     this.wireframe.matrixAutoUpdate = false
 
     this.tapis = model.getObjectByName('tapis')
-    console.log(this.tapis)
+    // console.log(this.tapis)
 
     this.config = treadmillConfig.part1
 

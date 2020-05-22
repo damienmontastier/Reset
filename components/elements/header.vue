@@ -7,12 +7,14 @@
       <svgWifi />
     </div>
     <div class="header__middle">
-      <span>01 : 48 : 21</span>
+      <span>{{ sec2time(time) }}</span>
     </div>
     <div class="header__right">
-      <div class="right__penalty active">
-        +
-        <span class="minutes">25</span> min
+      <div class="right__penalty" :class="{ active: appearReduceTime }">
+        <div class="penalty__inner">
+          +
+          <span class="minutes">{{ reduceTime }}</span> min
+        </div>
       </div>
       <div class="right__time">
         <span>12 : 04</span>
@@ -22,6 +24,8 @@
 </template>
 
 <script>
+import useClock from '@/hooks/use-clock'
+
 export default {
   components: {
     svgNetwork: () => import('@/components/svg/network'),
@@ -31,10 +35,52 @@ export default {
   },
 
   data() {
-    return {}
+    return {
+      clock: undefined,
+      time: 0,
+      reduceTime: 0,
+      appearReduceTime: false,
+      virtualHour: undefined
+    }
   },
-  mounted() {},
-  methods: {}
+  watch: {
+    'clock.time'(value, oldValue) {
+      this.time = this.clock.time
+
+      if (!oldValue) return
+
+      this.appearReduceTime = true
+
+      this.reduceTime = oldValue - value
+
+      setTimeout(() => {
+        this.appearReduceTime = false
+      }, 2000)
+    },
+    'clock.virtualHour'(value, oldValue) {
+      // console.log(value)
+    }
+  },
+  mounted() {
+    this.clock = useClock()
+
+    this.appearReduceTime = false
+  },
+  methods: {
+    sec2time(timeInSeconds) {
+      const pad = function(num, size) {
+        return ('000' + num).slice(size * -1)
+      }
+      const time = parseFloat(timeInSeconds).toFixed(3)
+      const minutes = Math.floor(time / 60) % 60
+      const seconds = Math.floor(time - minutes * 60)
+      const milliseconds = time.slice(-3)
+
+      return (
+        pad(minutes, 2) + ':' + pad(seconds, 2) + ':' + pad(milliseconds, 3)
+      )
+    }
+  }
 }
 </script>
 
@@ -96,17 +142,23 @@ export default {
       border-right: 1px solid var(--color-grey-light);
 
       color: transparent;
+      color: var(--color-black);
       font-family: var(--font-cindie-b);
       font-size: 8px;
-
-      span {
-        font-family: var(--font-cindie-e);
-        font-size: 11px;
-      }
+      min-width: 150px;
 
       &.active {
         background-color: var(--color-green);
-        color: var(--color-black);
+      }
+
+      .penalty__inner {
+        text-align: center;
+        width: 100%;
+
+        span {
+          font-family: var(--font-cindie-e);
+          font-size: 11px;
+        }
       }
     }
 
