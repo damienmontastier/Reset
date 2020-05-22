@@ -1,5 +1,5 @@
 <template>
-  <div class="notification" :style="cssVars">
+  <div :style="cssVars" class="notification">
     <div class="notification__inner">
       <div class="notification__top">
         <span>{{ post.content.social_network }}</span>
@@ -15,14 +15,14 @@
 
 <script>
 export default {
-  data() {
-    return {}
-  },
   props: {
     post: {
       type: Object,
       require: true
     }
+  },
+  data() {
+    return {}
   },
   computed: {
     cssVars() {

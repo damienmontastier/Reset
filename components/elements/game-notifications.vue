@@ -23,8 +23,8 @@ export default {
       posts: []
     }
   },
-  mounted() {},
   computed: {},
+  mounted() {},
   methods: {
     addNotification(post) {
       const id = Math.random()

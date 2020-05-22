@@ -37,6 +37,8 @@ export default class Level01 extends THREE.Object3D {
     this.model = this.files.model.scene
     this.wireframe = this.files.wireframe
 
+    this.wireframe.scale.setScalar(1.008)
+
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
         child.material = GreenMaterial
@@ -85,7 +87,7 @@ export default class Level01 extends THREE.Object3D {
       }
     })
     this.paused = false
-    this.initTreadmills()
+    this.initTreadmillsHitboxes()
     this.initZones()
 
     // instances
@@ -114,10 +116,7 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('treadmill')) {
-        zone.material = new THREE.MeshBasicMaterial({
-          color: 0x00ff00,
-          visible: false
-        })
+        zone.visible = false
       }
 
       if (name.includes('terminal')) {
@@ -125,7 +124,6 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (name.includes('zone_spawn')) {
-        console.log(zone)
         zone.visible = false
       }
 
@@ -139,7 +137,7 @@ export default class Level01 extends THREE.Object3D {
     })
   }
 
-  initTreadmills() {
+  initTreadmillsHitboxes() {
     this.treadmills = []
 
     const { intersections } = useGame()
@@ -228,19 +226,17 @@ export default class Level01 extends THREE.Object3D {
 
     this.instances = this.model.getObjectByName('instances')
 
-    let i = 0
     this.instances.children.forEach((child) => {
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
         const treadmill = new Treadmill(
           treadmillModel.clone(),
           treadmillWireframe.clone(),
-          i
+          child.userData.zone
         )
         child.add(treadmill)
         this.treadmills.push(treadmill)
       }
-      i++
     })
   }
 
