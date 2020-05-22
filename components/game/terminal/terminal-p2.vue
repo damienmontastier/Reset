@@ -8,20 +8,20 @@
       </terminal-fieldset>
 
       <terminal-fieldset type="cross" class="terminal__block">
-        <div class="input" v-for="(p, index) in pointsOfInterest" :key="index">
+        <div v-for="(p, index) in pointsOfInterest" :key="index" class="input">
           <input
             v-model="pointsOfInterestSelected"
-            type="checkbox"
             :id="stringToSlug(p)"
             :name="stringToSlug(p)"
             :ref="stringToSlug(p)"
             :value="p"
             @change="checkboxHandler"
+            type="checkbox"
           />
           <label :for="stringToSlug(p)">{{ p }}</label>
         </div>
 
-        <div class="terminalFieldset__error" v-if="displayError" slot="error">
+        <div slot="error" v-if="displayError" class="terminalFieldset__error">
           <span>Vous devez sélectionner 3 centres d’intérêts différents </span>
         </div>
       </terminal-fieldset>

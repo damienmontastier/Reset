@@ -15,9 +15,8 @@ import treadmillConfig from '@/config/treadmills'
 import windowFocus from '@/plugins/window-focus'
 
 export default class Treadmill extends THREE.Object3D {
-  constructor(model, wireframe, index) {
+  constructor(model, wireframe, zone) {
     super()
-    this.index = index
     this.model = model
     this.wireframe = wireframe
     this.add(this.model)
@@ -28,7 +27,7 @@ export default class Treadmill extends THREE.Object3D {
     this.tapis = model.getObjectByName('tapis')
     this.tapisWireframe = wireframe.getObjectByName('tapis_wireframe_green')
 
-    this.config = treadmillConfig.part1
+    this.config = treadmillConfig[zone]
 
     this.init()
   }

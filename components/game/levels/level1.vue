@@ -358,28 +358,83 @@ export default {
       GUI.camera.add(params, 'lookAtPlayer')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
-      treadmillGUI
-        .add(treadmillConfig.part1, 'speedScale')
+      const zoneAGUI = treadmillGUI.addFolder('a')
+      zoneAGUI
+        .add(treadmillConfig.zone_A, 'speedScale')
         .min(0)
         .max(0.2)
         .step(0.01)
-      treadmillGUI
-        .add(treadmillConfig.part1, 'speedMinimum')
+      zoneAGUI
+        .add(treadmillConfig.zone_A, 'speedMinimum')
         .min(0)
         .max(3)
         .step(0.01)
-      treadmillGUI
-        .add(treadmillConfig.part1, 'speedRandomness')
+      zoneAGUI
+        .add(treadmillConfig.zone_A, 'speedRandomness')
         .min(0)
         .max(3)
         .step(0.01)
-      treadmillGUI
-        .add(treadmillConfig.part1, 'appearIntervalMinimum')
+      zoneAGUI
+        .add(treadmillConfig.zone_A, 'appearIntervalMinimum')
         .min(0)
         .max(3)
         .step(0.01)
-      treadmillGUI
-        .add(treadmillConfig.part1, 'appearIntervalRandomness')
+      zoneAGUI
+        .add(treadmillConfig.zone_A, 'appearIntervalRandomness')
+        .min(0)
+        .max(10)
+        .step(0.01)
+
+      const zoneBGUI = treadmillGUI.addFolder('b')
+      zoneBGUI
+        .add(treadmillConfig.zone_B, 'speedScale')
+        .min(0)
+        .max(0.2)
+        .step(0.01)
+      zoneBGUI
+        .add(treadmillConfig.zone_B, 'speedMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneBGUI
+        .add(treadmillConfig.zone_B, 'speedRandomness')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneBGUI
+        .add(treadmillConfig.zone_B, 'appearIntervalMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneBGUI
+        .add(treadmillConfig.zone_B, 'appearIntervalRandomness')
+        .min(0)
+        .max(10)
+        .step(0.01)
+
+      const zoneCGUI = treadmillGUI.addFolder('c')
+      zoneCGUI
+        .add(treadmillConfig.zone_C, 'speedScale')
+        .min(0)
+        .max(0.2)
+        .step(0.01)
+      zoneCGUI
+        .add(treadmillConfig.zone_C, 'speedMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneCGUI
+        .add(treadmillConfig.zone_C, 'speedRandomness')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneCGUI
+        .add(treadmillConfig.zone_C, 'appearIntervalMinimum')
+        .min(0)
+        .max(3)
+        .step(0.01)
+      zoneCGUI
+        .add(treadmillConfig.zone_C, 'appearIntervalRandomness')
         .min(0)
         .max(10)
         .step(0.01)

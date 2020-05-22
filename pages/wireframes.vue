@@ -50,7 +50,7 @@ export default {
     scene.add(this.solid)
     scene.add(this.wireframe)
 
-    this.wireframe.scale.setScalar(1.009)
+    this.wireframe.scale.setScalar(1.01)
 
     const m = new BasicMaterial({ color: 0x1a1a1a })
 

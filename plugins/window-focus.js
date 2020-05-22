@@ -11,6 +11,14 @@ const focus = new Vue({
       visible: true
     }
   },
+  watch: {
+    visible() {
+      this.events.emit('visible', this.visible)
+    },
+    focused() {
+      this.events.emit('focus', this.focused)
+    }
+  },
   created() {
     if (!process.client) return
 
@@ -25,14 +33,6 @@ const focus = new Vue({
       },
       false
     )
-  },
-  watch: {
-    visible() {
-      this.events.emit('visible', this.visible)
-    },
-    focused() {
-      this.events.emit('focus', this.focused)
-    }
   }
 })
 

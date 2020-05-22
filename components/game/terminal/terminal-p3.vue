@@ -21,11 +21,11 @@
           :index="index"
         ></slider-range>
         <div
-          class="terminalFieldset__error"
+          slot="error"
           v-if="
             !slidersIsCompleted && displayError && index === sliders.length - 1
           "
-          slot="error"
+          class="terminalFieldset__error"
         >
           <span>Faites glisser les lettres pour valider votre réponse </span>
         </div>

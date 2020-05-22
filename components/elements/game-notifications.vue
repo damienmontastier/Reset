@@ -19,8 +19,8 @@ export default {
       posts: []
     }
   },
-  mounted() {},
   computed: {},
+  mounted() {},
   methods: {
     addItem(post) {
       this.posts.push(post)
