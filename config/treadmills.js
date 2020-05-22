@@ -9,7 +9,7 @@ export default {
   zone_B: {
     speedScale: 0.05,
     speedMinimum: 2,
-    speedRandomness: 0.5,
+    speedRandomness: 0.45,
     appearIntervalMinimum: 0.5,
     appearIntervalRandomness: 3
   },
