@@ -37,7 +37,7 @@ export default class Level01 extends THREE.Object3D {
     this.model = this.files.model.scene
     this.wireframe = this.files.wireframe
 
-    this.wireframe.scale.setScalar(1.008)
+    // this.wireframe.scale.setScalar(1.008)
 
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
@@ -163,7 +163,7 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(11.7, 1, 0))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(11.8, 1, 0))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false
