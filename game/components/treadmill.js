@@ -79,8 +79,8 @@ export default class Treadmill extends THREE.Object3D {
 
     this.spawnPoint =
       this.direction > 0
-        ? new THREE.Vector3(-7, 1, 0)
-        : new THREE.Vector3(7, 1, 0)
+        ? new THREE.Vector3(-6.8, 1, 0)
+        : new THREE.Vector3(6.8, 1, 0)
   }
 
   get speed() {
