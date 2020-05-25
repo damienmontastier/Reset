@@ -98,17 +98,17 @@ export default {
   },
   methods: {
     async init() {
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
-      cameraControls.enabled = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
+      // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
 

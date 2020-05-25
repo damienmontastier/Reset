@@ -58,21 +58,63 @@ export default class Level01 extends THREE.Object3D {
       }
     })
 
-    // const background = this.model.getObjectByName('model_background')
-    // // const gui = useGUI()
-    // // gui.addObject3D('background', background)
-    // // background.material.side = THREE.DoubleSide
-    // // background.rotation.x = Math.PI * 1.5
-    // background.visible = false
-
     // zones
     this.zones = this.model.getObjectByName('zones')
 
     // spawn point
-    // this.spawnPoint = new THREE.Vector3(0.5, 1, 18.5)
     this.spawnPoint = this.model
       .getObjectByName('zone_spawn')
       .position.add(new THREE.Vector3(-0.5, 0, 0))
+
+    // load colis
+    assetsManager.loader.addGroup({
+      name: 'colis',
+      base: '/',
+      files: [
+        {
+          name: 'youtube_obj',
+          path: 'obj/colis/youtube.obj'
+        },
+        {
+          name: 'youtube_map',
+          path: 'img/materials/youtube.png'
+        },
+        {
+          name: 'instagram_obj',
+          path: 'obj/colis/instagram.obj'
+        },
+        {
+          name: 'instagram_map',
+          path: 'img/materials/instagram.png'
+        },
+        {
+          name: 'twitter_obj',
+          path: 'obj/colis/twitter.obj'
+        },
+        {
+          name: 'twitter_map',
+          path: 'img/materials/twitter.png'
+        },
+        {
+          name: 'whatsapp_obj',
+          path: 'obj/colis/whatsapp.obj'
+        },
+        {
+          name: 'whatsapp_map',
+          path: 'img/materials/whatsapp.png'
+        },
+        {
+          name: 'facebook_obj',
+          path: 'obj/colis/facebook.obj'
+        },
+        {
+          name: 'facebook_map',
+          path: 'img/materials/facebook.png'
+        }
+      ]
+    })
+
+    await assetsManager.get('colis')
 
     this.init()
   }
@@ -147,7 +189,7 @@ export default class Level01 extends THREE.Object3D {
 
     // up stream
     this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-12.8, 1, 0))
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-14.8, 1, 0))
 
     this.add(this.outHitboxUpstreamMesh)
     this.outHitboxUpstreamMesh.visible = false
@@ -163,7 +205,7 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(11.8, 1, 0))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(13.8, 1, 0))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false

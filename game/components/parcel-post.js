@@ -6,10 +6,42 @@ import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 // import BoxGeometry from '@/webgl/geometries/box'
 
+import useAssetsManager from '@/hooks/use-assets-manager'
+
 export default class ParcelPost extends THREE.Object3D {
-  constructor(model) {
+  constructor(type) {
     super()
+
+    const assetsManager = useAssetsManager()
+
+    const colis = assetsManager.get('colis', true)
+
+    let model
+    let map
+
+    if (type === 'youtube') {
+      model = colis.youtube_obj.clone()
+      map = colis.youtube_map
+    } else if (type === 'instagram') {
+      model = colis.instagram_obj.clone()
+      map = colis.instagram_map
+    } else if (type === 'twitter') {
+      model = colis.twitter_obj.clone()
+      map = colis.twitter_map
+    } else if (type === 'whatsapp') {
+      model = colis.whatsapp_obj.clone()
+      map = colis.whatsapp_map
+    } else if (type === 'facebook') {
+      model = colis.facebook_obj.clone()
+      map = colis.facebook_map
+    }
+
     this.model = model
+    this.model.getObjectByName(
+      'model_solid'
+    ).material = new THREE.MeshBasicMaterial({
+      map
+    })
     this.add(this.model)
 
     // this.initMaterial()
@@ -27,13 +59,17 @@ export default class ParcelPost extends THREE.Object3D {
   }
 
   initHitbox() {
-    this.hitboxMesh = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(1, 1, 1),
-      new THREE.MeshBasicMaterial()
-    )
+    // this.hitboxMesh = new THREE.Mesh(
+    //   new THREE.BoxBufferGeometry(1, 1, 1),
+    //   new THREE.MeshBasicMaterial()
+    // )
+
+    this.hitboxMesh = this.model.getObjectByName('model_hitbox')
+    // console.
+    // this.hitboxMesh.scale.setScalar(1.1)
 
     // this.hitboxMesh.position.copy(new THREE.Vector3(-0.5, 0.5, -0.5))
-    this.hitboxMesh.scale.setScalar(0.6)
+    // this.hitboxMesh.scale.setScalar(0.6)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
@@ -65,8 +101,8 @@ export default class ParcelPost extends THREE.Object3D {
     const { intersections: intersectionsWorld } = useGame()
     // intersectionsWorld.addHitbox(this.hitbox)
 
-    this.model.geometry.dispose()
-    this.model.material.dispose()
+    // this.model.geometry.dispose()
+    // this.model.material.dispose()
     this.parent.remove(this)
 
     this.hitboxMesh.geometry.dispose()

@@ -1,14 +1,15 @@
 // import SimplexNoise from 'simplex-noise'
 
 import useGame from '@/hooks/use-game'
+// import useAssetsManager from '@/hooks/use-assets-manager'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import ParcelPost from '@/game/components/parcel-post'
 
 // import BoxGeometry from '@/webgl/geometries/box'
 
-import colors from '@/config/colors'
-import ToonMaterial from '@/webgl/materials/toon.js'
+// import colors from '@/config/colors'
+// import ToonMaterial from '@/webgl/materials/toon.js'
 
 import treadmillConfig from '@/config/treadmills'
 
@@ -142,21 +143,35 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   addParcelPost() {
-    const randomIndex = Math.floor(Math.random() * colors.posts.length)
-    const [color, emissive] = colors.posts[randomIndex]
+    // const assetsManager = useAssetsManager()
+    // const colis = assetsManager.get('colis', true)
+    // console.log(colis)
+    // const randomIndex = Math.floor(Math.random() * colors.posts.length)
+    // const [color, emissive] = colors.posts[randomIndex]
 
-    const material = new ToonMaterial({
-      color,
-      emissive
-    })
+    // const material = new ToonMaterial({
+    //   color,
+    //   emissive
+    // })
 
-    const postMesh = new THREE.Mesh(
-      new THREE.BoxBufferGeometry(1, 1, 1),
-      material
-    )
-    postMesh.scale.set(0.7, 0.4, 0.5)
+    // const postMesh = new THREE.Mesh(
+    //   colis.youtube_obj,
+    //   new THREE.MeshBasicMaterial()
+    // )
 
-    const post = new ParcelPost(postMesh)
+    // console.log(colis.youtube_obj)
+    // postMesh.scale.set(0.7, 0.4, 0.5)
+
+    // const mesh = colis.youtube_obj.clone()
+    // mesh.getObjectByName('model_solid').material = new THREE.MeshBasicMaterial({
+    //   map: colis.youtube_map
+    // })
+
+    const types = ['instagram', 'youtube', 'twitter', 'whatsapp', 'facebook']
+
+    const type = types[Math.floor(Math.random() * types.length)]
+
+    const post = new ParcelPost(type)
     post.position.copy(this.spawnPoint)
     this.parcelPosts.add(post)
   }

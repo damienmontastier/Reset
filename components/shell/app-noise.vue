@@ -12,7 +12,7 @@
     animation: grain 8s steps(10) infinite;
     background-image: url('/images/noise.jpg');
     content: '';
-    filter: grayscale(1);
+    // filter: grayscale(1);
     height: 300%;
     left: -50%;
     opacity: 0.12;
