@@ -8,17 +8,18 @@
       </terminal-fieldset>
 
       <terminal-fieldset type="cross" class="terminal__block">
-        <div v-for="(p, index) in pointsOfInterest" :key="index" class="input">
+        <div v-for="(p, index) in items" :key="index" class="input">
           <input
-            v-model="pointsOfInterestSelected"
-            :id="stringToSlug(p)"
-            :name="stringToSlug(p)"
-            :ref="stringToSlug(p)"
-            :value="p"
-            @change="checkboxHandler"
+            v-model="p.active"
+            :id="stringToSlug(p.name)"
+            :name="stringToSlug(p.name)"
+            :ref="stringToSlug(p.name)"
+            :checked="p.active"
+            @change="checkboxBehavior"
             type="checkbox"
           />
-          <label :for="stringToSlug(p)">{{ p }}</label>
+
+          <label :for="stringToSlug(p.name)">{{ p.name }}</label>
         </div>
 
         <div slot="error" v-if="displayError" class="terminalFieldset__error">
@@ -43,54 +44,35 @@ export default {
   },
   data() {
     return {
-      checkbox: true,
       displayError: false,
-      pointsOfInterest: [
-        'Poneys',
-        'Chats',
-        'Dogs',
-        'BFM TV',
-        'Manu',
-        'Reine Fatima',
-        'Jul',
-        'Cordula',
-        'Tout selectionner',
-        'Tout déselectionner'
-      ],
-      pointsOfInterestSelected: []
+      items: [
+        { name: 'Poneys', active: true, selectable: true },
+        { name: 'Chats', active: true, selectable: true },
+        { name: 'Dogs', active: true, selectable: true },
+        { name: 'BFM TV', active: true, selectable: true },
+        { name: 'Manu', active: true, selectable: true },
+        { name: 'Reine Fatima', active: true, selectable: true },
+        { name: 'Jul', active: true, selectable: true },
+        { name: 'Cordula', active: true, selectable: true },
+        { name: 'Tout selectionner', active: true, selectable: false },
+        { name: 'Tout déselectionner', active: true, selectable: false }
+      ]
     }
   },
   computed: {
-    elements() {
-      return this.pointsOfInterestSelected.filter(
-        (point) =>
-          point !== 'Tout selectionner' && point !== 'Tout déselectionner'
-      )
+    selectedItems() {
+      return this.items.filter((item) => item.active && item.selectable)
     }
   },
-  watch: {
-    // pointsOfInterestSelected(value) {
-    //   // if (!Object.keys(this.$refs).length) return
-    //   // if (
-    //   //   this.pointsOfInterestSelected !== this.pointsOfInterest &&
-    //   //   this.$refs['tout-selectionner'][0].checked
-    //   // ) {
-    //   //   this.$refs['tout-selectionner'][0].checked = false
-    //   // } else if (this.pointsOfInterestSelected.length === 1) {
-    //   //   this.$refs['tout-deselectionner'][0].checked = true
-    //   // }
-    // }
-  },
-  created() {
-    this.pointsOfInterestSelected = this.pointsOfInterest
-  },
+  watch: {},
+  created() {},
   methods: {
     closeTerminal() {
       this.$parent.closeTerminal()
     },
 
     nextPage() {
-      if (this.elements.length === 3) {
+      if (this.selectedItems.length === 3) {
         this.displayError = false
         this.$emit('increment')
       } else {
@@ -98,15 +80,13 @@ export default {
       }
     },
 
-    checkboxHandler(e) {
-      if (e.target.name === 'tout-selectionner' && e.target.checked) {
-        e.target.checked = true
-        this.pointsOfInterestSelected = this.pointsOfInterest
-      } else if (e.target.name === 'tout-deselectionner') {
-        this.pointsOfInterestSelected = []
+    checkboxBehavior(e) {
+      if (e.target.name === 'tout-deselectionner') {
         e.target.checked = false
-      } else if (this.elements.length === 3) {
-        this.displayError = false
+        this.items.forEach((item) => (item.active = false))
+      } else if (e.target.name === 'tout-selectionner') {
+        e.target.checked = true
+        this.items.forEach((item) => (item.active = true))
       }
     },
 

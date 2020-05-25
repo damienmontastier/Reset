@@ -57,15 +57,15 @@ export default {
   props: {
     quotient: {
       type: Number,
-      require: true
+      required: true
     },
     index: {
       type: Number,
-      require: true
+      required: true
     },
     letter: {
       type: String,
-      require: true
+      required: true
     }
   },
   data() {

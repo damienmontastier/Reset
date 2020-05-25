@@ -44,29 +44,31 @@ export default {
       index: 0
     }
   },
-  methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
-    terminalCompleted() {
-      console.log('finish, close terminal, apply modification')
-      this.closeTerminal()
-    },
-    closeTerminal() {
-      this.setTerminalOpened(false)
-    }
-  },
 
   computed: {
     terminal() {
       return this.terminals[this.index]
     }
   },
+
   watch: {
     index(value, oldValue) {
       if (value % this.terminals.length === 0) {
         this.terminalCompleted()
       }
+    }
+  },
+
+  methods: {
+    ...mapMutations({
+      setTerminalOpened: 'setTerminalOpened'
+    }),
+    terminalCompleted() {
+      this.closeTerminal()
+      console.log('finish, close terminal, apply modification')
+    },
+    closeTerminal() {
+      this.setTerminalOpened(false)
     }
   }
 }

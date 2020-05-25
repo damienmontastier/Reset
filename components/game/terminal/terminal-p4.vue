@@ -19,7 +19,7 @@
       </terminal-fieldset>
 
       <div class="terminalP4__submit">
-        <btn @click.native="start" :inverted="true">Commencer</btn>
+        <btn @click.native="triggerCompleted" :inverted="true">Terminer</btn>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ export default {
   },
 
   methods: {
-    start() {
+    triggerCompleted() {
       this.$emit('increment')
     }
   }

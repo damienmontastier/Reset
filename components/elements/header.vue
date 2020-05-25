@@ -10,7 +10,7 @@
       <span>{{ sec2time(time) }}</span>
     </div>
     <div class="header__right">
-      <div class="right__penalty" :class="{ active: appearReduceTime }">
+      <div :class="{ active: appearReduceTime }" class="right__penalty">
         <div class="penalty__inner">
           +
           <span class="minutes">{{ reduceTime }}</span> min
