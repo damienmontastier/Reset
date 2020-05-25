@@ -4,7 +4,7 @@
     <div class="gameplay" v-if="clicked && !keyDowned" />
     <div class="tuto" v-if="tuto" />
     <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
-    <app-noise id="appNoise" />
+    <!-- <app-noise id="appNoise" /> -->
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
@@ -27,8 +27,8 @@ export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
-    appHeader: () => import('@/components/elements/header'),
-    appNoise: () => import('@/components/shell/app-noise')
+    appHeader: () => import('@/components/elements/header')
+    // appNoise: () => import('@/components/shell/app-noise')
   },
   data() {
     return {

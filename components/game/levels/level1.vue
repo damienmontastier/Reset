@@ -108,6 +108,7 @@ export default {
       //   document.querySelector('#__nuxt')
       // )
       // cameraControls.enableKeys = false
+      // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
 

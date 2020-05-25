@@ -12,6 +12,7 @@ import {
 
 // import OutlineEffect from './effects/outline'
 import AntialiasingEffect from './effects/antialiasing'
+import NoiseEffect from './effects/noise'
 // import DitheringEffect from './effects/dithering'
 
 // import HightlightCircleEffect from './effects/hightlight-circle'
@@ -58,9 +59,15 @@ export default class Composer {
 
     this.AAEffect = await new AntialiasingEffect()
 
+    this.noiseEffect = new NoiseEffect({ intensity: 0.1 })
+
     // passes
     this.bloomPass = new EffectPass(this.camera, this.bloomEffect)
-    this.AAPass = new EffectPass(this.camera, this.AAEffect.smaaEffect)
+    this.AAPass = new EffectPass(
+      this.camera,
+      this.AAEffect.smaaEffect,
+      this.noiseEffect
+    )
 
     // addPasses
     this.composer.addPass(new RenderPass(this.scene, this.camera))
@@ -69,6 +76,14 @@ export default class Composer {
   }
 
   render(clock) {
+    if (this.noiseEffect) {
+      this.swap = (this.swap || 0) + 1
+      if (this.swap % 5 === 0) {
+        this.swap = 0
+        this.noiseEffect.uniforms.get('offset').value = Math.random()
+      }
+    }
+
     this.renderer.clear()
 
     this.renderer.setSize(viewport.width, viewport.height)

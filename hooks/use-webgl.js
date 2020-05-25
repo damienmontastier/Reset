@@ -44,7 +44,8 @@ class WebGL {
       powerPreference: 'high-performance'
     })
     this.renderer.setSize(viewport.width, viewport.height)
-    this.renderer.setPixelRatio = window.devicePixelRatio || 1
+    // this.renderer.setPixelRatio(window.devicePixelRatio || 1)
+    this.renderer.setPixelRatio(1)
 
     // this.renderer.shadowMap.enabled = true
     // this.renderer.shadowMap.type = THREE.BasicShadowMap
@@ -56,6 +57,7 @@ class WebGL {
       renderer: this.renderer,
       scene: this.scene
     })
+    // this.composer.disabled = true
 
     // stats
     this.stats = new Stats()
