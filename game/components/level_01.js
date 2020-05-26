@@ -1,5 +1,5 @@
 import Treadmill from './treadmill'
-import ToonMaterial from '@/webgl/materials/toon.js'
+// import ToonMaterial from '@/webgl/materials/toon.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
@@ -12,6 +12,10 @@ import BoxGeometry from '@/webgl/geometries/box'
 
 import GreenMaterial from '@/webgl/materials/green'
 import BlackMaterial from '@/webgl/materials/black'
+import signScreenMaterial from '@/webgl/materials/sign-screen'
+import standardMaterial from '@/webgl/materials/standard'
+
+import LIGHT_CONFIG from '@/config/light'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
@@ -65,6 +69,15 @@ export default class Level01 extends THREE.Object3D {
     this.spawnPoint = this.model
       .getObjectByName('zone_spawn')
       .position.add(new THREE.Vector3(-0.5, 0, 0))
+
+    // sign
+    this.sign = this.model.getObjectByName('model_sign')
+
+    this.sign.material = standardMaterial.clone()
+
+    this.signScreen = this.model.getObjectByName('model_sign_screen')
+    this.signScreen.material = signScreenMaterial
+    console.log(this.signScreen)
 
     // load colis
     assetsManager.loader.addGroup({
@@ -128,6 +141,7 @@ export default class Level01 extends THREE.Object3D {
   }
 
   async init() {
+    this.initLights()
     const keyboard = useKeyboard()
     keyboard.events.on('keydown', (e) => {
       // SHIFT+P to stop
@@ -147,22 +161,35 @@ export default class Level01 extends THREE.Object3D {
     RAF.add('level_01', this.update.bind(this), 0)
   }
 
+  initLights() {
+    const { scene } = useGame()
+
+    this.ambientLight = new THREE.AmbientLight(0x383838, 0)
+    scene.add(this.ambientLight)
+
+    this.directionalLight = new THREE.DirectionalLight(
+      LIGHT_CONFIG.color,
+      LIGHT_CONFIG.intensity
+    )
+    // this.directionalLight.position.set(0, 512, 0)
+    this.directionalLight.position.copy(LIGHT_CONFIG.position)
+    this.directionalLight.lookAt(scene.position)
+    scene.add(this.directionalLight)
+
+    const GUI = useGUI()
+
+    GUI.addLight('light', this.directionalLight)
+  }
+
   initZones() {
     // debug materials
     this.zones.traverse((zone) => {
       const name = zone.name
       if (name.includes('floor')) {
-        // zone.material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-
-        const material = new ToonMaterial({
-          color: 0x0d0d0d,
-          emissive: 0x080808
-        })
-
-        zone.material = material
+        zone.material = standardMaterial.clone()
 
         const gui = useGUI()
-        gui.addMaterial(zone.uuid.substring(0, 10), material)
+        gui.addMaterial(zone.uuid.substring(0, 10), zone.material)
       }
 
       if (name.includes('treadmill')) {
@@ -250,10 +277,12 @@ export default class Level01 extends THREE.Object3D {
     const treadmillWireframe = files.wireframe
 
     treadmillModel.traverse((child) => {
-      child.material = new ToonMaterial({
-        color: 0x0d0d0d,
-        emissive: 0x080808
-      })
+      // child.material = new ToonMaterial({
+      //   color: 0x0d0d0d,
+      //   emissive: 0x080808
+      // })
+
+      child.material = standardMaterial.clone()
     })
 
     treadmillModel.getObjectByName('soustapis_green').material = GreenMaterial

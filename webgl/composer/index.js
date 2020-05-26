@@ -50,10 +50,10 @@ export default class Composer {
 
     this.bloomEffect = new BloomEffect({
       blendFunction: BlendFunction.SCREEN,
-      kernelSize: KernelSize.SMALL,
-      intensity: 0.85,
-      luminanceThreshold: 0.212,
-      luminanceSmoothing: 0.0,
+      kernelSize: KernelSize.HUGE,
+      intensity: 0.6,
+      luminanceThreshold: 0,
+      luminanceSmoothing: 1,
       height: 1080
     })
 
