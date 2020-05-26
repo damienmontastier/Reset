@@ -22,6 +22,9 @@ class Camera {
       1000
     )
 
+    // this.originPosition = new THREE.Vector3(1.1, 6.6, 6).normalize()
+    // this.distance = 10
+
     // events
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
     viewport.events.on('resize', this.onWindowResizeHandler)

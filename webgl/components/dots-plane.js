@@ -23,7 +23,7 @@ export default class DotsPlane extends THREE.Object3D {
           value: 100
         },
         uDotsRadius: {
-          value: 0.05
+          value: 0.07
         },
         uOffset: {
           value: new THREE.Vector2(0, 0)
@@ -44,7 +44,7 @@ export default class DotsPlane extends THREE.Object3D {
   }
 
   update(clock) {
-    this.material.uniforms.uTime.value = clock.time * 0.25
+    this.material.uniforms.uTime.value = clock.time * 0.2
   }
 
   initGUI() {

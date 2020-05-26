@@ -258,32 +258,34 @@ export default {
       const { camera } = useCamera()
       const nextPosition = this.player.worldPosition
         .clone()
-        .add(camera.originPosition)
+        .add(camera.originPosition.clone().multiplyScalar(camera.distance))
+
+      // console.log(camera.originPosition.clone().multiplyScalar(camera.distance))
 
       // const { scene } = useWebGL()
       // camera.lookAt(scene.position)
 
       gsap.to(camera.position, {
         x: nextPosition.x,
-        y: camera.originPosition.y,
+        y: nextPosition.y,
         z: nextPosition.z,
         duration: 1,
         ease: 'power2.out'
       })
 
-      gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(this.dotsPlane.position, {
+      //   x: nextPosition.x,
+      //   z: nextPosition.z,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
 
-      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-        x: nextPosition.x * 0.01,
-        y: -nextPosition.z * 0.01,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+      //   x: nextPosition.x * 0.01,
+      //   y: -nextPosition.z * 0.01,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
     },
 
     initIntersections() {
@@ -367,8 +369,9 @@ export default {
         }
       }
 
-      GUI.camera.addVector('position', camera.originPosition)
+      GUI.camera.addVector('origin position', camera.originPosition)
       GUI.camera.add(params, 'lookAtPlayer')
+      GUI.camera.add(camera, 'distance')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

@@ -105,6 +105,10 @@ export default class Composer {
     if (this.bloomEffect) {
       this.initBloomGUI()
     }
+
+    if (this.noiseEffect) {
+      this.initNoiseGUI()
+    }
   }
 
   initSobelGUI() {
@@ -206,5 +210,15 @@ export default class Composer {
           bloomParams.luminance.smoothing
         )
       })
+  }
+
+  initNoiseGUI() {
+    const GUI = useGUI()
+    const noiseGUI = GUI.postprocessing.addFolder('Noise')
+
+    noiseGUI
+      .add(this.noiseEffect.uniforms.get('intensity'), 'value')
+      .step(0.01)
+      .name('intensity')
   }
 }
