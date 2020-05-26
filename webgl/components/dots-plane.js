@@ -1,9 +1,9 @@
-import vertexShader from '@/webgl/materials/particules/vertex.glsl'
-import fragmentShader from '@/webgl/materials/particules/fragment.glsl'
+import vertexShader from '@/webgl/materials/dots-pattern/vertex.glsl'
+import fragmentShader from '@/webgl/materials/dots-pattern/fragment.glsl'
 
 import useGUI from '@/hooks/use-gui'
 
-export default class PatriculesPlane extends THREE.Object3D {
+export default class DotsPlane extends THREE.Object3D {
   constructor() {
     super()
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100)
@@ -24,6 +24,9 @@ export default class PatriculesPlane extends THREE.Object3D {
         },
         uDotsRadius: {
           value: 0.05
+        },
+        uOffset: {
+          value: new THREE.Vector2(0, 0)
         }
       },
       vertexShader,

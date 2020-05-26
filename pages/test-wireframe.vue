@@ -10,7 +10,7 @@ import useCamera from '@/hooks/use-camera'
 // import useWebgl from '@/hooks/use-webgl'
 import useAssetsManager from '@/hooks/use-assets-manager'
 
-import ParticulesPlane from '@/webgl/components/particules-plane'
+import DotsPlane from '@/webgl/components/dots-plane'
 
 export default {
   mounted() {
@@ -102,20 +102,20 @@ export default {
         child.material = wireframeMaterial
       })
 
-      this.particulesPlane = new ParticulesPlane()
-      // scene.add(this.particulesPlane)
+      this.dotsPlane = new DotsPlane()
+      // scene.add(this.dotsPlane)
 
-      this.particulesPlane.scale.setScalar(50)
-      this.particulesPlane.rotation.x = -Math.PI / 2
-      this.particulesPlane.rotation.z = -Math.PI / 4
+      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.rotation.x = -Math.PI / 2
+      this.dotsPlane.rotation.z = -Math.PI / 4
 
-      this.particulesPlane.position.y = -2
+      this.dotsPlane.position.y = -2
 
       const RAF = useRAF()
       RAF.add('test-wireframe', this.loop)
     },
     loop(clock) {
-      this.particulesPlane.update(clock)
+      this.dotsPlane.update(clock)
     },
     async load() {
       const assetsManager = useAssetsManager()

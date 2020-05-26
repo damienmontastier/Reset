@@ -21,7 +21,7 @@ import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
-import ParticulesPlane from '@/webgl/components/particules-plane'
+import DotsPlane from '@/webgl/components/dots-plane'
 
 // import Terminal from '@/components/game/terminal/terminal'
 
@@ -112,21 +112,21 @@ export default {
 
       const { scene: gameScene } = useGame()
 
-      this.particulesPlane = new ParticulesPlane()
-      gameScene.add(this.particulesPlane)
+      this.dotsPlane = new DotsPlane()
+      gameScene.add(this.dotsPlane)
 
-      this.particulesPlane.position.z = -10
+      // this.dotsPlane.position.z = -10
 
-      this.particulesPlane.scale.setScalar(50)
-      this.particulesPlane.rotation.x = -Math.PI / 2
-      this.particulesPlane.rotation.z = -Math.PI / 4
+      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.rotation.x = -Math.PI / 2
+      // this.dotsPlane.rotation.z = -Math.PI / 4
 
-      this.particulesPlane.position.y = -2
+      this.dotsPlane.position.y = -2
 
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
 
-      // bloomEffect.selection.add(this.particulesPlane)
+      // bloomEffect.selection.add(this.dotsPlane)
 
       this.levelGroup = new THREE.Group()
       gameScene.add(this.levelGroup)
@@ -253,7 +253,7 @@ export default {
 
     loop(clock) {
       // this.cameraMouvement.loop()
-      this.particulesPlane.update(clock)
+      this.dotsPlane.update(clock)
 
       const { camera } = useCamera()
       const nextPosition = this.player.worldPosition
@@ -267,6 +267,20 @@ export default {
         x: nextPosition.x,
         y: camera.originPosition.y,
         z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
+
+      gsap.to(this.dotsPlane.position, {
+        x: nextPosition.x,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
+
+      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+        x: nextPosition.x * 0.01,
+        y: -nextPosition.z * 0.01,
         duration: 1,
         ease: 'power2.out'
       })
