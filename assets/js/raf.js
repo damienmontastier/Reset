@@ -1,3 +1,5 @@
+import windowFocus from '@/plugins/window-focus'
+
 export default class Raf {
   constructor(clock = new THREE.Clock()) {
     this.subscribers = {}
@@ -21,7 +23,13 @@ export default class Raf {
     // clock
     const deltaTime = this.clock.getDelta()
     const time = this.clock.getElapsedTime()
-    const lagSmoothing = deltaTime / (1000 / 60 / 1000)
+    const lagSmoothing = windowFocus.visible
+      ? deltaTime / (1000 / 60 / 1000)
+      : 1
+
+    // if (lagSmoothing > 2) {
+    //   console.log(windowFocus.visible, lagSmoothing)
+    // }
 
     // callbacks
     Object.values(this.subscribers)

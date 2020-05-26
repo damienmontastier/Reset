@@ -167,7 +167,14 @@ export default class Treadmill extends THREE.Object3D {
     //   map: colis.youtube_map
     // })
 
-    const types = ['instagram', 'youtube', 'twitter', 'whatsapp', 'facebook']
+    const types = [
+      'instagram',
+      'youtube',
+      'twitter',
+      'whatsapp',
+      'facebook',
+      'snapchat'
+    ]
 
     const type = types[Math.floor(Math.random() * types.length)]
 

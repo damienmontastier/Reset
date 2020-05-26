@@ -110,6 +110,14 @@ export default class Level01 extends THREE.Object3D {
         {
           name: 'facebook_map',
           path: 'img/materials/facebook.png'
+        },
+        {
+          name: 'snapchat_obj',
+          path: 'obj/colis/snapchat.obj'
+        },
+        {
+          name: 'snapchat_map',
+          path: 'img/materials/snapchat.png'
         }
       ]
     })
