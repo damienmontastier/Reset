@@ -27,7 +27,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character.glb'
+          path: 'obj/character/Character01_Idle.glb'
         }
       ]
     })
