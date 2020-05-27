@@ -140,7 +140,7 @@ export default {
       // webglScene.add(this.terrain.debug)
 
       this.player = new Player()
-      await this.player.load()
+      await this.player.init()
       this.initIntersections()
 
       this.spawnPoint = this.map.spawnPoint.clone()
