@@ -182,7 +182,6 @@ export default {
     },
 
     teleportToTerminal() {
-      console.log('teleporte', this.player.position)
       this.player.position.copy(
         new THREE.Vector3(-0.5, 1.1000051240667137, -31.5)
       )
@@ -200,6 +199,12 @@ export default {
     },
 
     onKeydown(e) {
+      const clock = useClock()
+
+      if (clock.countdownDisabled) {
+        clock.events.emit('clock:toggleCountdown', false)
+      }
+
       const delta = new THREE.Vector3()
       switch (e.code) {
         case 'ArrowLeft':

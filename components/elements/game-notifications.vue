@@ -44,7 +44,7 @@ export default {
 <style lang="scss" scoped>
 .notification-enter,
 .notification-leave-to {
-  transform: translateX(calc(100% + 250px));
+  transform: translateX(150vw);
 }
 
 .notification-leave-active {
@@ -60,7 +60,7 @@ export default {
   position: absolute;
   right: 10px;
   top: 70px;
-  width: 250px;
+  width: 15vw;
 
   &__inner {
     display: block;

@@ -44,7 +44,7 @@ export default {
   margin-top: 5px;
   position: relative;
   transition: all 0.8s;
-  width: 20vw;
+  width: 100%;
 
   &::before {
     background: var(--color);
@@ -64,7 +64,7 @@ export default {
   &__top {
     display: flex;
     font-family: var(--font-orbitron-bold);
-    font-size: 8px;
+    font-size: 11px;
     justify-content: space-between;
     margin-bottom: 8px;
     text-transform: uppercase;
@@ -73,7 +73,7 @@ export default {
   p {
     color: #fff;
     font-family: var(--font-violet);
-    font-size: 9px;
+    font-size: 10px;
     line-height: 11px;
   }
 
