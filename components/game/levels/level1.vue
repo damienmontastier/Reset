@@ -200,6 +200,9 @@ export default {
     },
 
     onKeydown(e) {
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
+        return
+
       const delta = new THREE.Vector3()
       switch (e.code) {
         case 'ArrowLeft':
@@ -291,11 +294,6 @@ export default {
       const nextPosition = this.player.worldPosition
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
-
-      // console.log(camera.originPosition.clone().multiplyScalar(camera.distance))
-
-      // const { scene } = useWebGL()
-      // camera.lookAt(scene.position)
 
       gsap.to(camera.position, {
         x: nextPosition.x,

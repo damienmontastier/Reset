@@ -88,5 +88,4 @@ void main() {
   vPosition.z *= uNoiseAmplitude;
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( vPosition, 1.0 );
-  // gl_PointSize = 1.0;
 }

@@ -1,6 +1,8 @@
 import Events from 'events'
 import gsap from 'gsap'
 
+// import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
+
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useRAF from '@/hooks/use-raf'
@@ -8,9 +10,24 @@ import useGUI from '@/hooks/use-gui'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
+let SkeletonUtils
+
+const trailMaterial = new THREE.MeshBasicMaterial({
+  skinning: true,
+  transparent: true,
+  color: 0x00ff00,
+  wireframe: true,
+  opacity: 0.25
+})
+
 // const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
+  constructor() {
+    super()
+    SkeletonUtils = require('three/examples/jsm/utils/SkeletonUtils.js')
+      .SkeletonUtils
+  }
   loop({ deltaTime }) {
     this.animationMixer.update(deltaTime)
   }
@@ -105,6 +122,8 @@ export default class Player extends THREE.Object3D {
     this.events = new Events()
     await this.load()
 
+    this.trails = []
+
     this.initAnimations()
     this.initModel()
     this.initHitbox()
@@ -122,8 +141,6 @@ export default class Player extends THREE.Object3D {
 
   moveTo(position) {
     const tl = new gsap.timeline()
-
-    // console.log(this.position, position)
 
     const d = this.position
       .clone()
@@ -146,34 +163,34 @@ export default class Player extends THREE.Object3D {
       rotation = 360
     }
 
-    tl.to(
-      this.modelSkinMaterial.emissive,
-      {
-        duration: 0.1,
-        ease: 'expo.out',
-        r: 1,
-        g: 1,
-        b: 1
-      },
-      0
-    )
+    const trail = SkeletonUtils.clone(this.model)
 
-    tl.to(
-      this.modelSkinMaterial.emissive,
-      {
-        duration: 0.1,
-        ease: 'expo.in',
-        r: 0,
-        g: 0,
-        b: 0
-      },
-      0.1
-    )
+    trail.applyMatrix4(this.model.matrixWorld)
+    trail.rotation.copy(new THREE.Euler())
+    trail.rotation.y = THREE.MathUtils.degToRad(rotation)
+
+    const material = trailMaterial.clone()
+    trail.getObjectByName('Body_black').material = material
+    trail.getObjectByName('Pattern_green').material = material
+    trail.getObjectByName('Lunettes').material = material
+
+    const { scene } = useGame()
+    scene.add(trail)
+
+    gsap.to(material, {
+      opacity: 0,
+      duration: 0.7,
+      ease: 'expo.out',
+      onComplete: () => {
+        scene.remove(trail)
+        material.dispose()
+      }
+    })
 
     tl.to(
       this.model.rotation,
       {
-        duration: 0.05,
+        duration: 0.1,
         y: THREE.MathUtils.degToRad(rotation)
       },
       0

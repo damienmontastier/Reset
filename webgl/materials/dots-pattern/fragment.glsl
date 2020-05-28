@@ -4,6 +4,7 @@ varying vec2 vUv;
 uniform float uDotsFrenquency;
 uniform float uDotsRadius;
 uniform vec2 uOffset;
+uniform vec3 uColor;
 
 vec2 rotateUV(vec2 uv, float rotation)
 {
@@ -25,6 +26,5 @@ void main() {
     vec3 black = vec3(0.0, 0.0, 0.0);
     float alpha = mix(1.0, 0.0, step(uDotsRadius, dist));
 
-    vec3 color = vec3(1.0);
-    gl_FragColor = vec4(color, alpha);
+    gl_FragColor = vec4(uColor, alpha);
 }
