@@ -7,7 +7,7 @@
 
 <script>
 import { mapState } from 'vuex'
-// import gsap from 'gsap'
+import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
@@ -98,16 +98,16 @@ export default {
   },
   methods: {
     async init() {
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
@@ -255,18 +255,18 @@ export default {
       // this.cameraMouvement.loop()
       this.dotsPlane.update(clock)
 
-      // const { camera } = useCamera()
-      // const nextPosition = this.player.worldPosition
-      //   .clone()
-      //   .add(camera.originPosition.clone().multiplyScalar(camera.distance))
+      const { camera } = useCamera()
+      const nextPosition = this.player.worldPosition
+        .clone()
+        .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      // gsap.to(camera.position, {
-      //   x: nextPosition.x,
-      //   y: nextPosition.y,
-      //   z: nextPosition.z,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: nextPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
 
       // gsap.to(this.dotsPlane.position, {
       //   x: nextPosition.x,
