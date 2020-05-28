@@ -41,7 +41,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character 01_Idle.glb'
+          path: 'obj/character/character.glb'
         }
       ]
     })
@@ -71,9 +71,8 @@ export default class Player extends THREE.Object3D {
     GUI.addMaterial('m', this.modelSkinMaterial)
     GUI.addMaterial('m2', m2)
 
-    this.model.getObjectByName('Body_black').material = this.modelSkinMaterial
-    this.model.getObjectByName('Pattern_green').material = m2
-    this.model.getObjectByName('Lunettes').material = m2
+    this.model.getObjectByName('black').material = this.modelSkinMaterial
+    this.model.getObjectByName('green').material = m2
   }
 
   initAnimations() {
@@ -81,7 +80,10 @@ export default class Player extends THREE.Object3D {
 
     this.animations = {
       idle: this.animationMixer.clipAction(
-        THREE.AnimationClip.findByName(this.modelAnimations, 'Idle')
+        THREE.AnimationClip.findByName(this.modelAnimations, 'idle')
+      ),
+      run: this.animationMixer.clipAction(
+        THREE.AnimationClip.findByName(this.modelAnimations, 'run')
       )
     }
   }
@@ -169,10 +171,15 @@ export default class Player extends THREE.Object3D {
     trail.rotation.copy(new THREE.Euler())
     trail.rotation.y = THREE.MathUtils.degToRad(rotation)
 
+    this.animations.run.play()
+
+    setTimeout(() => {
+      this.animations.run.stop()
+    }, 150)
+
     const material = trailMaterial.clone()
-    trail.getObjectByName('Body_black').material = material
-    trail.getObjectByName('Pattern_green').material = material
-    trail.getObjectByName('Lunettes').material = material
+    trail.getObjectByName('black').material = material
+    trail.getObjectByName('green').material = material
 
     const { scene } = useGame()
     scene.add(trail)
@@ -190,7 +197,7 @@ export default class Player extends THREE.Object3D {
     tl.to(
       this.model.rotation,
       {
-        duration: 0.1,
+        duration: 0.12,
         y: THREE.MathUtils.degToRad(rotation)
       },
       0
@@ -199,7 +206,7 @@ export default class Player extends THREE.Object3D {
     tl.to(
       this.position,
       {
-        duration: 0.1,
+        duration: 0.12,
         x: position.x,
         y: position.y,
         z: position.z
