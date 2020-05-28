@@ -77,7 +77,6 @@ export default class Level01 extends THREE.Object3D {
 
     this.signScreen = this.model.getObjectByName('model_sign_screen')
     this.signScreen.material = signScreenMaterial
-    console.log(this.signScreen)
 
     // load colis
     assetsManager.loader.addGroup({

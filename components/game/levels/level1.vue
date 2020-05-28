@@ -159,7 +159,7 @@ export default {
       // audioManager.play(introSound)
 
       const { events: keyboardEvents } = useKeyboard()
-      keyboardEvents.on('keydown', this.onKeydown)
+      keyboardEvents.on('keyup', this.onKeydown)
 
       this.initGUI()
 
