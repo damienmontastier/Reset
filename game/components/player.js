@@ -3,19 +3,16 @@ import gsap from 'gsap'
 
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
+import useRAF from '@/hooks/use-raf'
+import useGUI from '@/hooks/use-gui'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-const JUMP_DURATION = 0.1
+// const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
-  constructor() {
-    super()
-
-    this.init()
-
-    // const { raf } = useGame()
-    // raf.add('player', this.loop.bind(this))
+  loop({ deltaTime }) {
+    this.animationMixer.update(deltaTime)
   }
 
   async load() {
@@ -27,7 +24,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character.glb'
+          path: 'obj/character/character 01_Idle.glb'
         }
       ]
     })
@@ -37,19 +34,37 @@ export default class Player extends THREE.Object3D {
     this.model = this.files.model.scene
     this.modelAnimations = this.files.model.animations
 
-    // to remove
-    this.model.rotation.y = 135
+    const GUI = useGUI()
+
+    GUI.addObject3D('model', this.model)
+
+    this.model.rotation.y = THREE.MathUtils.degToRad(180)
+
+    this.modelSkinMaterial = new THREE.MeshStandardMaterial({
+      skinning: true,
+      flatShading: true
+    })
+
+    const m2 = new THREE.MeshStandardMaterial({
+      skinning: true,
+      emissive: 0xffffff,
+      flatShading: true
+    })
+
+    GUI.addMaterial('m', this.modelSkinMaterial)
+    GUI.addMaterial('m2', m2)
+
+    this.model.getObjectByName('Body_black').material = this.modelSkinMaterial
+    this.model.getObjectByName('Pattern_green').material = m2
+    this.model.getObjectByName('Lunettes').material = m2
   }
 
   initAnimations() {
     this.animationMixer = new THREE.AnimationMixer(this.model)
 
     this.animations = {
-      walking: this.animationMixer.clipAction(
-        THREE.AnimationClip.findByName(this.modelAnimations, 'walking')
-      ),
       idle: this.animationMixer.clipAction(
-        THREE.AnimationClip.findByName(this.modelAnimations, 'idle')
+        THREE.AnimationClip.findByName(this.modelAnimations, 'Idle')
       )
     }
   }
@@ -95,6 +110,9 @@ export default class Player extends THREE.Object3D {
     this.initHitbox()
 
     this.animations.idle.play()
+
+    const RAF = useRAF()
+    RAF.add('id', this.loop.bind(this))
   }
 
   destroy() {
@@ -102,22 +120,75 @@ export default class Player extends THREE.Object3D {
     raf.remove('player')
   }
 
-  // loop(clock) {
-  //   if (this.positionTween) {
-  //     const time = this.positionTween.time()
-  //     this.positionTween.time(time + clock.deltaTime)
-  //   }
-  // }
-
   moveTo(position) {
     const tl = new gsap.timeline()
 
-    tl.to(this.position, {
-      duration: JUMP_DURATION,
-      x: position.x,
-      y: position.y,
-      z: position.z
-    })
+    // console.log(this.position, position)
+
+    const d = this.position
+      .clone()
+      .sub(position)
+      .round()
+    let rotation
+    if (d.x === -1) {
+      rotation = 90
+    }
+
+    if (d.z === 1) {
+      rotation = 180
+    }
+
+    if (d.x === 1) {
+      rotation = 270
+    }
+
+    if (d.z === -1) {
+      rotation = 360
+    }
+
+    tl.to(
+      this.modelSkinMaterial.emissive,
+      {
+        duration: 0.1,
+        ease: 'expo.out',
+        r: 1,
+        g: 1,
+        b: 1
+      },
+      0
+    )
+
+    tl.to(
+      this.modelSkinMaterial.emissive,
+      {
+        duration: 0.1,
+        ease: 'expo.in',
+        r: 0,
+        g: 0,
+        b: 0
+      },
+      0.1
+    )
+
+    tl.to(
+      this.model.rotation,
+      {
+        duration: 0.05,
+        y: THREE.MathUtils.degToRad(rotation)
+      },
+      0
+    )
+
+    tl.to(
+      this.position,
+      {
+        duration: 0.1,
+        x: position.x,
+        y: position.y,
+        z: position.z
+      },
+      0
+    )
 
     this.positionTween = tl
 
@@ -129,52 +200,6 @@ export default class Player extends THREE.Object3D {
       })
     })
   }
-
-  // jumpAnimation() {
-  //   const duration = JUMP_DURATION
-
-  //   const tl = new gsap.timeline()
-
-  //   // tl.to(
-  //   //   this.position,
-  //   //   {
-  //   //     duration: duration * 0.3,
-  //   //     y: this.nextPosition.y + 0.5
-  //   //   },
-  //   //   duration * 0.4
-  //   // )
-
-  //   // tl.to(
-  //   //   this.position,
-  //   //   {
-  //   //     duration: duration * 0.3,
-  //   //     y: this.nextPosition.y
-  //   //   },
-  //   //   duration * 0.7
-  //   // )
-
-  //   // tl.to(
-  //   //   this.position,
-  //   //   {
-  //   //     duration: duration * 0.75,
-  //   //     x: this.nextPosition.x,
-  //   //     z: this.nextPosition.z,
-  //   //     ease: 'power2.in'
-  //   //   },
-  //   //   duration * 0.1
-  //   // )
-
-  //   tl.to(this.position, {
-  //     duration,
-  //     x: this.nextPosition.x,
-  //     y: this.nextPosition.y,
-  //     z: this.nextPosition.z
-  //   })
-
-  //   tl.pause()
-
-  //   return tl
-  // }
 
   get worldPosition() {
     return this.getWorldPosition(new THREE.Vector3())

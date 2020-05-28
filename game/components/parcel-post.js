@@ -34,6 +34,9 @@ export default class ParcelPost extends THREE.Object3D {
     } else if (type === 'facebook') {
       model = colis.facebook_obj.clone()
       map = colis.facebook_map
+    } else if (type === 'snapchat') {
+      model = colis.snapchat_obj.clone()
+      map = colis.snapchat_map
     }
 
     this.model = model

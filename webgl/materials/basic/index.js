@@ -20,9 +20,6 @@ export default class BasicMaterial extends THREE.ShaderMaterial {
           value: 1000
         }
       },
-      //   uniforms: new Map([
-      //     ['uColor', new THREE.Uniform(new THREE.Color(color))]
-      //   ]),
       transparent: true
     })
   }

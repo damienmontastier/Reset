@@ -1,6 +1,8 @@
+import windowFocus from '@/plugins/window-focus'
+
 export default class Raf {
   constructor(clock = new THREE.Clock()) {
-    this.rafs = {}
+    this.subscribers = {}
     this.isRunning = false
     this.clock = clock
     this.paused = false
@@ -21,10 +23,16 @@ export default class Raf {
     // clock
     const deltaTime = this.clock.getDelta()
     const time = this.clock.getElapsedTime()
-    const lagSmoothing = deltaTime / (1000 / 60 / 1000)
+    const lagSmoothing = windowFocus.visible
+      ? deltaTime / (1000 / 60 / 1000)
+      : 1
+
+    // if (lagSmoothing > 2) {
+    //   console.log(windowFocus.visible, lagSmoothing)
+    // }
 
     // callbacks
-    Object.values(this.rafs)
+    Object.values(this.subscribers)
       .sort((a, b) => {
         return a.priority - b.priority
       })
@@ -48,11 +56,11 @@ export default class Raf {
   }
 
   add(id, callback, priority = 0) {
-    if (this.rafs[id]) {
+    if (this.subscribers[id]) {
       console.log(`raf.add(): ${id} already added`)
       return
     }
-    this.rafs[id] = { id, callback, priority }
+    this.subscribers[id] = { id, callback, priority }
   }
 
   // set pause(bool) {
@@ -69,9 +77,9 @@ export default class Raf {
   // }
 
   remove(id) {
-    if (!this.rafs[id]) {
+    if (!this.subscribers[id]) {
       console.warn(`raf.remove(): ${id} callback doesn't exist`)
     }
-    delete this.rafs[id]
+    delete this.subscribers[id]
   }
 }

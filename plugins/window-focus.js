@@ -29,7 +29,9 @@ const focus = new Vue({
     document.addEventListener(
       'visibilitychange',
       () => {
-        this.visible = !document.hidden
+        setTimeout(() => {
+          this.visible = !document.hidden
+        }, 0)
       },
       false
     )

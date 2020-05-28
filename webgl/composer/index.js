@@ -50,10 +50,10 @@ export default class Composer {
 
     this.bloomEffect = new BloomEffect({
       blendFunction: BlendFunction.SCREEN,
-      kernelSize: KernelSize.SMALL,
-      intensity: 0.85,
-      luminanceThreshold: 0.212,
-      luminanceSmoothing: 0.0,
+      kernelSize: KernelSize.HUGE,
+      intensity: 0.6,
+      luminanceThreshold: 0,
+      luminanceSmoothing: 1,
       height: 1080
     })
 
@@ -104,6 +104,10 @@ export default class Composer {
 
     if (this.bloomEffect) {
       this.initBloomGUI()
+    }
+
+    if (this.noiseEffect) {
+      this.initNoiseGUI()
     }
   }
 
@@ -206,5 +210,15 @@ export default class Composer {
           bloomParams.luminance.smoothing
         )
       })
+  }
+
+  initNoiseGUI() {
+    const GUI = useGUI()
+    const noiseGUI = GUI.postprocessing.addFolder('Noise')
+
+    noiseGUI
+      .add(this.noiseEffect.uniforms.get('intensity'), 'value')
+      .step(0.01)
+      .name('intensity')
   }
 }

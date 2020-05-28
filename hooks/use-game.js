@@ -30,7 +30,7 @@ class Game {
 
   init() {
     this.initCamera()
-    this.initLights()
+    // this.initLights()
     // this.initGridTerrain()
 
     // this.addBox()
@@ -51,13 +51,19 @@ class Game {
     // camera.lookAt(scene.position)
 
     // camera.angle = new THREE.Vector3(1, 2.8, 2.9).normalize()
-    // camera.originPosition = camera.angle.setScalar(8)
-    // camera.originPosition = new THREE.Vector3(3, 8.4, 8.7)
-    camera.originPosition = new THREE.Vector3(1.1, 6.6, 6)
+    // camera.originPosition = new THREE.Vector3(1.1, 6.6, 6).normalize()
+    camera.originPosition = new THREE.Vector3(1.1, 6, 6).normalize()
+    camera.distance = 7
 
-    camera.position.copy(camera.originPosition)
+    camera.position.copy(
+      camera.originPosition.clone().multiplyScalar(camera.distance)
+    )
 
-    camera.lookAt(scene.position.clone().add(new THREE.Vector3(0, 1.5, 0)))
+    // camera.lookAt(scene.position.clone().add(new THREE.Vector3(0, 1.5, 0)))
+
+    // camera.lookAt(scene.position.clone().add(new THREE.Vector3(0, 0, 1)))
+
+    camera.lookAt(scene.position.clone())
   }
 
   initLights() {
@@ -236,8 +242,8 @@ class Game {
 
     // const time = clock.getElapsedTime()
 
-    this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
-    this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
+    // this.directionalLight.position.x = Math.sin(1 * 0.1) * 1000
+    // this.directionalLight.position.z = Math.cos(1 * 0.1) * 1000
     // this.directionalLightHelper.update()
 
     this.frameCount = (this.frameCount || 0) + 1
