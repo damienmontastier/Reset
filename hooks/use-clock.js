@@ -1,3 +1,4 @@
+import Events from 'events'
 import useRAF from '@/hooks/use-raf'
 
 // TODO FUNCTION HEURE VIRTUELLE
@@ -7,10 +8,17 @@ class Clock {
     const RAF = useRAF()
     RAF.add('use-clock', this.loop.bind(this))
 
+    this.events = new Events()
+
     this.elapsedTime = 0
     this.elapsedTimeCountdown = 0
     this.additionalTime = 0
     this.countdownDisabled = true
+    this.startTime = Date.now()
+
+    this.events.on('clock:toggleCountdown', (val) => {
+      this.countdownDisabled = val
+    })
 
     this.getTime()
   }
@@ -21,34 +29,33 @@ class Clock {
     setInterval(this.getTime.bind(this), 1000)
   }
 
-  get time() {
-    // const h = this.date.getHours()
-    // const m = this.date.getMinutes()
-    const h = this.date.getHours()
-    const m = Number(String(this.date.getMinutes()).padStart(2, '0'))
+  get virtualTime() {
+    this.virtualDate = new Date(
+      this.startTime +
+        (this.date - this.startTime) * 60 +
+        this.additionalTime * 60000
+    )
 
-    // console.log(h, m)
+    const h = String(this.virtualDate.getHours()).padStart(2, '0')
+    const m = String(this.virtualDate.getMinutes()).padStart(2, '0')
 
     return { h, m }
   }
 
-  get virtualTime() {
-    const hVirtual = this.time.h * 5
+  get time() {
+    const h = String(this.date.getHours()).padStart(2, '0')
+    const m = String(this.date.getMinutes()).padStart(2, '0')
 
-    return hVirtual
+    return { h, m }
   }
 
   get countdown() {
-    return Math.max(
-      0,
-      this.timeCountdown - this.elapsedTimeCountdown - this.additionalTime
-    )
+    return Math.min(this.timeCountdown, this.elapsedTimeCountdown)
   }
 
   startCountdown(val) {
     this.timeCountdown = val
     this.elapsedTimeCountdown = 0
-    this.countdownDisabled = false
   }
 
   loop(clock) {
@@ -59,7 +66,7 @@ class Clock {
   }
 
   add(time) {
-    this.additionalTime += 50
+    this.additionalTime += time
   }
 
   pause() {

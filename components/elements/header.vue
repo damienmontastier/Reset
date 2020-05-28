@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="right__time">
-        <span>{{ time.h }} : {{ time.m }}</span>
+        <span>{{ virtualTime.h }} : {{ virtualTime.m }}</span>
       </div>
     </div>
   </div>
@@ -40,6 +40,7 @@ export default {
     return {
       clock: undefined,
       time: 0,
+      virtualTime: 0,
       timeLeft: 0,
       additionalTime: 0,
       appearReduceTime: false
@@ -49,22 +50,18 @@ export default {
     'clock.countdown'(val) {
       this.timeLeft = val
 
-      if (this.timeLeft === 0) {
+      if (val === this.clock.timeCountdown) {
         console.log('countdown finish, game over')
       }
     },
-
     'clock.time'(val) {
-      // console.log('time', val)
       this.time = val
     },
-
     'clock.virtualTime'(val) {
-      console.log('virtualTime', val)
+      this.virtualTime = val
     },
-
     'clock.additionalTime'(val, old) {
-      if (!old === undefined) return
+      if (old === undefined) return
 
       this.appearReduceTime = true
 
@@ -79,7 +76,6 @@ export default {
     this.clock = useClock()
 
     this.clock.startCountdown(300)
-    // this.clock.countdownDisabled = true
 
     this.appearReduceTime = false
   },
