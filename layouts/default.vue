@@ -9,10 +9,13 @@
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
+    <div id="appOverlay" v-if="overlayOpened"></div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 // import { Howler } from 'howler'
 
 import useAudio from '@/hooks/use-audio'
@@ -38,6 +41,12 @@ export default {
       endgame: false
     }
   },
+  computed: {
+    ...mapState({
+      overlayOpened: (state) => state.overlayOpened
+    })
+  },
+
   async mounted() {
     const audioManager = useAudio()
 
@@ -46,10 +55,12 @@ export default {
       this.soundLoaded.bind(this)
     )
   },
+
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
   },
+
   methods: {
     soundLoaded() {
       const audioManager = useAudio()
@@ -91,6 +102,15 @@ export default {
   top: 0;
   width: 100%;
   z-index: 6;
+}
+
+#appOverlay {
+  background-color: rgba(0, 0, 0, 0.85);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
 }
 
 #appView {

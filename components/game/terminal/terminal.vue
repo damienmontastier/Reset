@@ -82,7 +82,7 @@ export default {
   height: 100vh;
   margin-left: 64px;
   position: relative;
-  width: 595px;
+  width: 65vh;
 
   &__inner {
     padding: 75px;

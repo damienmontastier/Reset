@@ -4,7 +4,7 @@ export const state = () => ({
   levels: [],
   posts: [],
   terminalOpened: false,
-  overlayIsOpened: false
+  overlayOpened: false
 })
 
 export const mutations = {
@@ -18,10 +18,11 @@ export const mutations = {
 
   setTerminalOpened(state, value) {
     state.terminalOpened = value
+    this.commit('setOverlayOpened', value)
   },
 
   setOverlayOpened(state, value) {
-    state.overlayIsOpened = value
+    state.overlayOpened = value
   }
 }
 

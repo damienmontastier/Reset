@@ -1,47 +1,65 @@
 import useRAF from '@/hooks/use-raf'
 
+// TODO FUNCTION HEURE VIRTUELLE
+
 class Clock {
   constructor() {
-    this.pause()
-
     const RAF = useRAF()
     RAF.add('use-clock', this.loop.bind(this))
 
     this.elapsedTime = 0
-    this.addionalTime = 0
+    this.elapsedTimeCountdown = 0
+    this.additionalTime = 0
+    this.countdownDisabled = true
 
-    this.refreshDate()
+    this.getTime()
+  }
 
-    setInterval(this.refreshDate, 1000)
+  getTime() {
+    this.date = new Date()
+
+    setInterval(this.getTime.bind(this), 1000)
   }
 
   get time() {
-    return 120 - this.elapsedTime - this.addionalTime
-  }
-
-  virtualHour() {
+    // const h = this.date.getHours()
+    // const m = this.date.getMinutes()
     const h = this.date.getHours()
-    const m = this.date.getMinutes()
-    const s = this.date.getSeconds()
-    console.log('coucou')
+    const m = Number(String(this.date.getMinutes()).padStart(2, '0'))
 
-    return `${h} : ${m} : ${s}`
+    // console.log(h, m)
+
+    return { h, m }
   }
 
-  refreshDate() {
-    this.date = new Date()
+  get virtualTime() {
+    const hVirtual = this.time.h * 5
 
-    // console.log(test)
+    return hVirtual
+  }
+
+  get countdown() {
+    return Math.max(
+      0,
+      this.timeCountdown - this.elapsedTimeCountdown - this.additionalTime
+    )
+  }
+
+  startCountdown(val) {
+    this.timeCountdown = val
+    this.elapsedTimeCountdown = 0
+    this.countdownDisabled = false
   }
 
   loop(clock) {
     if (!this.paused) {
+      if (!this.countdownDisabled) this.elapsedTimeCountdown += clock.deltaTime
       this.elapsedTime += clock.deltaTime
     }
   }
 
   add(time) {
-    this.addionalTime += time
+    this.additionalTime += 50
   }
 
   pause() {

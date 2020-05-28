@@ -1,27 +1,32 @@
 <template>
   <div class="appGame">
-    <game-clock class="appGame__clock" />
+    <!-- <game-clock class="appGame__clock" /> -->
     <div class="appGame__router">
+      <span @click="goTerminal">Terminal</span>
       <router-link :to="'level1'">level1</router-link>
-      <router-link :to="'level2'">level2</router-link>
-      <router-link :to="'level3'">level3</router-link>
     </div>
   </div>
 </template>
 
 <script>
 import useGame from '@/hooks/use-game'
-import GameClock from '@/components/game/game-clock'
+
+// TODO DELETE Game clock component
 
 export default {
   components: {
-    GameClock
+    // GameClock: () => '@/components/game/game-clock'
   },
   mounted() {
     useGame()
   },
   beforeDestroy() {
     useGame().destroy()
+  },
+  methods: {
+    goTerminal() {
+      this.$events.emit('teleportToTerminal')
+    }
   }
 }
 </script>
@@ -34,6 +39,7 @@ export default {
     bottom: 0;
     color: #fff;
     padding: 8px;
+    pointer-events: all;
     position: absolute;
     right: 0;
   }

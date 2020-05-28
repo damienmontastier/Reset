@@ -60,6 +60,11 @@ export default {
       // console.log('treadmill', this.playerIsOnTreadmill)
       // console.log('endgame', this.playerIsOnEndgame)
     },
+    terminalOpened(bool) {
+      const keyboard = useKeyboard()
+
+      keyboard.disabled = bool
+    },
     playerIsOnTuto(newVal, oldVal) {
       if (this.playerIsOnTuto === true) {
         console.log('TUTO ENTER')
@@ -78,6 +83,7 @@ export default {
       if (this.playerIsOnTerminal === true) {
         this.setTerminalOpened(true)
       } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
+        console.log('here')
         this.setTerminalOpened(false)
       }
     }
@@ -85,13 +91,17 @@ export default {
   mounted() {
     this.init()
 
+    // TO DELETE
+    this.$events.on('teleportToTerminal', this.teleportToTerminal)
+    // TO DELETE
+
     this.$events.on('level:restart', this.doRespawn.bind(this))
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
-    const { events: keyboardEvents } = useKeyboard()
-    keyboardEvents.off('keydown', this.onKeydown)
+    const keyboard = useKeyboard()
+    keyboard.events.off('keydown', this.onKeydown)
   },
   methods: {
     ...mapMutations({
@@ -158,13 +168,20 @@ export default {
       // await audioManager.add(introSound)
       // audioManager.play(introSound)
 
-      const { events: keyboardEvents } = useKeyboard()
-      keyboardEvents.on('keydown', this.onKeydown)
+      const keyboard = useKeyboard()
+      keyboard.events.on('keydown', this.onKeydown)
 
       this.initGUI()
 
       const RAF = useRAF()
       RAF.add('level1', this.loop.bind(this))
+    },
+
+    teleportToTerminal() {
+      console.log('teleporte', this.player.position)
+      this.player.position.copy(
+        new THREE.Vector3(-0.5, 1.1000051240667137, -31.5)
+      )
     },
 
     doRespawn(e) {

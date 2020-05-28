@@ -44,7 +44,7 @@ export default {
   margin-top: 5px;
   position: relative;
   transition: all 0.8s;
-  width: 100%;
+  width: 20vw;
 
   &::before {
     background: var(--color);
