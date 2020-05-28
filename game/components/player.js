@@ -171,15 +171,15 @@ export default class Player extends THREE.Object3D {
     trail.rotation.copy(new THREE.Euler())
     trail.rotation.y = THREE.MathUtils.degToRad(rotation)
 
-    const material = trailMaterial.clone()
-    trail.getObjectByName('black').material = material
-    trail.getObjectByName('green').material = material
-
     this.animations.run.play()
 
     setTimeout(() => {
       this.animations.run.stop()
     }, 150)
+
+    const material = trailMaterial.clone()
+    trail.getObjectByName('black').material = material
+    trail.getObjectByName('green').material = material
 
     const { scene } = useGame()
     scene.add(trail)
