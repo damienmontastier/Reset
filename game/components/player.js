@@ -173,10 +173,6 @@ export default class Player extends THREE.Object3D {
 
     this.animations.run.play()
 
-    setTimeout(() => {
-      this.animations.run.stop()
-    }, 150)
-
     const material = trailMaterial.clone()
     trail.getObjectByName('black').material = material
     trail.getObjectByName('green').material = material
@@ -220,6 +216,7 @@ export default class Player extends THREE.Object3D {
 
     this.positionTween.eventCallback('onComplete', () => {
       requestAnimationFrame(() => {
+        this.animations.run.stop()
         this.positionTween = false
       })
     })
