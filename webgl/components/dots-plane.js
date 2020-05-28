@@ -27,6 +27,9 @@ export default class DotsPlane extends THREE.Object3D {
         },
         uOffset: {
           value: new THREE.Vector2(0, 0)
+        },
+        uColor: {
+          value: new THREE.Color(0x00ff00)
         }
       },
       vertexShader,
