@@ -13,6 +13,7 @@ import BoxGeometry from '@/webgl/geometries/box'
 import GreenMaterial from '@/webgl/materials/green'
 import BlackMaterial from '@/webgl/materials/black'
 import signScreenMaterial from '@/webgl/materials/sign-screen'
+import terminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
 
 import LIGHT_CONFIG from '@/config/light'
@@ -77,6 +78,14 @@ export default class Level01 extends THREE.Object3D {
 
     this.signScreen = this.model.getObjectByName('model_sign_screen')
     this.signScreen.material = signScreenMaterial
+
+    this.model.getObjectByName(
+      'model_terminal_black'
+    ).material = standardMaterial.clone()
+    this.model.getObjectByName('model_terminal_green').material = GreenMaterial
+    this.model.getObjectByName(
+      'model_terminal_screen'
+    ).material = terminalScreenMaterial
 
     // load colis
     assetsManager.loader.addGroup({
@@ -223,7 +232,7 @@ export default class Level01 extends THREE.Object3D {
 
     // up stream
     this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-14.8, 1, 0))
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-13, 1, 0))
 
     this.add(this.outHitboxUpstreamMesh)
     this.outHitboxUpstreamMesh.visible = false
@@ -239,7 +248,7 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(13.8, 1, 0))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(12, 1, 0))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false
