@@ -168,6 +168,9 @@ export default {
     },
 
     onKeydown(e) {
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
+        return
+
       const delta = new THREE.Vector3()
       switch (e.code) {
         case 'ArrowLeft':
