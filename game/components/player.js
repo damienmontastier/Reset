@@ -41,7 +41,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character.glb'
+          path: 'obj/character/character 05_Idle_Run_Fall.glb'
         }
       ]
     })
@@ -84,6 +84,9 @@ export default class Player extends THREE.Object3D {
       ),
       run: this.animationMixer.clipAction(
         THREE.AnimationClip.findByName(this.modelAnimations, 'run')
+      ),
+      fall: this.animationMixer.clipAction(
+        THREE.AnimationClip.findByName(this.modelAnimations, 'fall')
       )
     }
   }
@@ -120,6 +123,13 @@ export default class Player extends THREE.Object3D {
     intersections.addHitbox(this.hitbox)
   }
 
+  setInitialState() {
+    this.model.rotation.y = THREE.MathUtils.degToRad(180)
+    this.animations.run.stop()
+    this.animations.fall.stop()
+    this.animations.idle.play()
+  }
+
   async init() {
     this.events = new Events()
     await this.load()
@@ -130,7 +140,10 @@ export default class Player extends THREE.Object3D {
     this.initModel()
     this.initHitbox()
 
-    this.animations.idle.play()
+    // this.animations.idle.play()
+    // this.animations.fall.play()
+
+    this.setInitialState()
 
     const RAF = useRAF()
     RAF.add('id', this.loop.bind(this))
@@ -139,6 +152,28 @@ export default class Player extends THREE.Object3D {
   destroy() {
     keyboadEvents.off('keydown', this.onKeydownHandler)
     raf.remove('player')
+  }
+
+  fall() {
+    this.isFalling = true
+    if (this.positionTween) {
+      this.positionTween.kill()
+      this.positionTween = null
+    }
+
+    this.animations.idle.stop()
+    this.animations.run.stop()
+    this.animations.fall.play()
+
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        this.animations.fall.stop()
+        this.isFalling = false
+
+        console.log('stop falling')
+        resolve()
+      }, 700)
+    })
   }
 
   moveTo(position) {

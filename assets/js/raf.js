@@ -27,10 +27,6 @@ export default class Raf {
       ? deltaTime / (1000 / 60 / 1000)
       : 1
 
-    // if (lagSmoothing > 2) {
-    //   console.log(windowFocus.visible, lagSmoothing)
-    // }
-
     // callbacks
     Object.values(this.subscribers)
       .sort((a, b) => {

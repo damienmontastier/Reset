@@ -28,7 +28,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_07.glb'
+          path: 'obj/level_01/level01_09.glb'
         },
         {
           name: 'wireframe',

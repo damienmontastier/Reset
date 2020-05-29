@@ -225,7 +225,7 @@ export default {
           break
       }
 
-      if (this.player.positionTween) return
+      if (this.player.positionTween || this.player.isFalling) return
 
       delta.add(this.player.position)
 
@@ -371,25 +371,29 @@ export default {
       }
     },
 
-    onPlayerIntersectsWithParcelPost() {
+    async onPlayerIntersectsWithParcelPost() {
       this.$refs.notifications.addNotification(
         this.posts[Math.floor(Math.random() * this.posts.length)]
       )
 
+      const clock = useClock()
+      clock.add(10)
+
+      // if (this.player.positionTween) {
+      //   this.player.positionTween.kill()
+      //   this.player.positionTween = null
+      // }
+      // // TODO checkpoint
+      // this.doRespawn()
+
+      await this.player.fall()
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
       }
-      if (this.player.positionTween) {
-        this.player.positionTween.kill()
-        this.player.positionTween = null
-      }
 
-      // TODO checkpoint
+      this.player.setInitialState()
 
       this.doRespawn()
-
-      const clock = useClock()
-      clock.add(10)
     },
 
     initGUI() {
