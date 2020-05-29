@@ -105,7 +105,7 @@ export default {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
     const keyboard = useKeyboard()
-    keyboard.events.off('keydown', this.onKeydown)
+    keyboard.events.off('keyup', this.onKeydown)
   },
   methods: {
     ...mapMutations({
@@ -173,7 +173,7 @@ export default {
       // audioManager.play(introSound)
 
       const keyboard = useKeyboard()
-      keyboard.events.on('keydown', this.onKeydown)
+      keyboard.events.on('keyup', this.onKeydown)
 
       this.initGUI()
 
@@ -307,19 +307,19 @@ export default {
         ease: 'power2.out'
       })
 
-      // gsap.to(this.dotsPlane.position, {
-      //   x: nextPosition.x,
-      //   z: nextPosition.z,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.position, {
+        x: nextPosition.x,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
 
-      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-      //   x: nextPosition.x * 0.01,
-      //   y: -nextPosition.z * 0.01,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+        x: nextPosition.x * 0.01,
+        y: -nextPosition.z * 0.01,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
