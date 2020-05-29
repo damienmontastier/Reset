@@ -29,7 +29,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_11.glb'
+          path: 'obj/level_01/level01_12.glb'
         },
         {
           name: 'wireframe',
@@ -58,7 +58,7 @@ export default class Level01 extends THREE.Object3D {
     this.add(this.model)
     this.add(this.wireframe)
 
-    const GUI = useGUI()
+    // const GUI = useGUI()
 
     this.model.traverse((child) => {
       if (child.name.includes('model_border')) {
@@ -68,10 +68,9 @@ export default class Level01 extends THREE.Object3D {
       if (child.name.includes('zone_chekpoint')) {
         // console.log(child)
         child.material = new CheckpointMaterial({ color: 0xffffff })
-        child.position.y += 0.01
+        child.position.y += -0.01
 
-        GUI.addObject3D(child.name, child)
-        // child.material = new THREE.MeshBasicMaterial()
+        // GUI.addObject3D(child.name, child)
       }
     })
 
