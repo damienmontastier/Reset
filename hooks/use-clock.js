@@ -26,7 +26,7 @@ class Clock {
   getTime() {
     this.date = new Date()
 
-    setInterval(this.getTime.bind(this), 1000)
+    setTimeout(this.getTime.bind(this), 1000)
   }
 
   get virtualTime() {

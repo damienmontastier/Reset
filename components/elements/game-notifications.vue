@@ -29,13 +29,17 @@ export default {
 
       this.posts.push({ id, content: post })
 
+      console.log('here add')
+
       setTimeout(() => {
         const index = this.posts.findIndex((x) => {
           return x.id === id
         })
 
+        console.log('here delete')
+
         this.posts.splice(index, 1)
-      }, 5000)
+      }, 2500)
     }
   }
 }
@@ -44,7 +48,7 @@ export default {
 <style lang="scss" scoped>
 .notification-enter,
 .notification-leave-to {
-  transform: translateX(150vw);
+  transform: translateX(100%);
 }
 
 .notification-leave-active {
