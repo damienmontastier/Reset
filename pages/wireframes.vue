@@ -3,16 +3,14 @@
 </template>
 
 <script>
-import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
+import useCamera from '@/hooks/use-camera'
 import useGUI from '@/hooks/use-gui'
-import useAssetsManager from '@/hooks/use-assets-manager'
 
-import BasicMaterial from '@/webgl/materials/basic'
+import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
 export default {
-  async mounted() {
-    // camera
+  mounted() {
     const {
       OrbitControls
     } = require('three/examples/jsm/controls/OrbitControls.js')
@@ -23,56 +21,17 @@ export default {
       document.querySelector('#__nuxt')
     )
     cameraControls.enableKeys = false
+    // cameraControls.enabled = false
 
-    // objects
-    const assetsManager = useAssetsManager()
-
-    assetsManager.loader.addGroup({
-      name: 'level_01',
-      base: '/',
-      files: [
-        {
-          name: 'solid',
-          path: 'obj/level_01/level01_07.glb'
-        },
-        {
-          name: 'wireframe',
-          path: 'obj/level_01/level01_07_wireframe.obj'
-        }
-      ]
-    })
-
-    const files = await assetsManager.get('level_01')
-    this.solid = files.solid.scene
-    this.wireframe = files.wireframe
+    const geometry = new THREE.BoxBufferGeometry(1, 1, 1)
+    const material = new CheckpointMaterial()
+    const cube = new THREE.Mesh(geometry, material)
 
     const { scene } = useGame()
-    scene.add(this.solid)
-    scene.add(this.wireframe)
-
-    this.wireframe.scale.setScalar(1.01)
-
-    const m = new BasicMaterial({ color: 0x1a1a1a })
+    scene.add(cube)
 
     const GUI = useGUI()
-    GUI.add(m.uniforms.uAlpha, 'value')
-      .min(0)
-      .max(1)
-
-    this.solid.traverse((child) => {
-      child.material = m
-    })
-
-    this.wireframe.traverse((child) => {
-      if (child.name.includes('green')) {
-        const material = new BasicMaterial({ color: 0x00ff00 })
-        child.material = material
-
-        GUI.add(material.uniforms.uAppear, 'value')
-          .min(0)
-          .max(1)
-      }
-    })
+    GUI.addObject3D('box', cube)
   }
 }
 </script>

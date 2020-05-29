@@ -243,7 +243,13 @@ export default {
         )
         const checkpoint = intersects[checkpointIndex]
         if (checkpoint) {
-          console.log(checkpoint)
+          gsap.to(checkpoint.object.material.uniforms.uColor.value, {
+            ease: 'expo.out',
+            duration: 2,
+            r: 0,
+            g: 1,
+            b: 0
+          })
           this.spawnPoint = checkpoint.object.position
             .clone()
             .add(new THREE.Vector3(-0.5, 0, 0))

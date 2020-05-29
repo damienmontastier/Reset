@@ -15,6 +15,7 @@ import BlackMaterial from '@/webgl/materials/black'
 import signScreenMaterial from '@/webgl/materials/sign-screen'
 import terminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
+import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
 import LIGHT_CONFIG from '@/config/light'
 
@@ -28,7 +29,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_09.glb'
+          path: 'obj/level_01/level01_11.glb'
         },
         {
           name: 'wireframe',
@@ -57,9 +58,20 @@ export default class Level01 extends THREE.Object3D {
     this.add(this.model)
     this.add(this.wireframe)
 
+    const GUI = useGUI()
+
     this.model.traverse((child) => {
       if (child.name.includes('model_border')) {
         child.material = GreenMaterial
+      }
+
+      if (child.name.includes('zone_chekpoint')) {
+        // console.log(child)
+        child.material = new CheckpointMaterial({ color: 0xffffff })
+        child.position.y += 0.01
+
+        GUI.addObject3D(child.name, child)
+        // child.material = new THREE.MeshBasicMaterial()
       }
     })
 
