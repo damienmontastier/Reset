@@ -30,14 +30,14 @@ class Clock {
   }
 
   get virtualTime() {
-    this.virtualDate = new Date(
+    const virtualDate = new Date(
       this.startTime +
         (this.date - this.startTime) * 60 +
         this.additionalTime * 60000
     )
 
-    const h = String(this.virtualDate.getHours()).padStart(2, '0')
-    const m = String(this.virtualDate.getMinutes()).padStart(2, '0')
+    const h = String(virtualDate.getHours()).padStart(2, '0')
+    const m = String(virtualDate.getMinutes()).padStart(2, '0')
 
     return { h, m }
   }

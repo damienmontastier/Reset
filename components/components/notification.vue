@@ -3,7 +3,7 @@
     <div class="notification__inner">
       <div class="notification__top">
         <span>{{ post.content.social_network }}</span>
-        <span>HEURE</span>
+        <span>{{ hour }}</span>
       </div>
       <p>{{ post.content.title }}</p>
       <picture v-if="post.content.picture">
@@ -29,9 +29,11 @@ export default {
       return {
         '--color': `var(--color-${this.post.content.social_network.toLowerCase()})`
       }
+    },
+    hour() {
+      return `${this.post.hour.h}:${this.post.hour.m}`
     }
-  },
-  mounted() {}
+  }
 }
 </script>
 
@@ -73,7 +75,7 @@ export default {
   p {
     color: #fff;
     font-family: var(--font-violet);
-    font-size: 10px;
+    font-size: 12px;
     line-height: 11px;
   }
 

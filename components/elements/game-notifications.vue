@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import useClock from '@/hooks/use-clock'
+
 export default {
   components: {
     Notification: () => import('@/components/components/notification')
@@ -20,26 +22,26 @@ export default {
     }
   },
   computed: {},
-  mounted() {},
+  mounted() {
+    this.clock = useClock()
+  },
+
   methods: {
     addNotification(post) {
       const id = Math.random()
         .toString(36)
         .substr(2, 9)
 
-      this.posts.push({ id, content: post })
+      const hour = this.clock.virtualTime
 
-      console.log('here add')
+      this.posts.push({ id, content: post, hour })
 
       setTimeout(() => {
         const index = this.posts.findIndex((x) => {
           return x.id === id
         })
-
-        console.log('here delete')
-
         this.posts.splice(index, 1)
-      }, 2500)
+      }, 5000)
     }
   }
 }
