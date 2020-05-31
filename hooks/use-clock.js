@@ -15,18 +15,19 @@ class Clock {
     this.additionalTime = 0
     this.countdownDisabled = true
     this.startTime = Date.now()
+    this.date = new Date()
 
     this.events.on('clock:toggleCountdown', (val) => {
       this.countdownDisabled = val
     })
 
     this.getTime()
+
+    setInterval(this.getTime.bind(this), 1000)
   }
 
   getTime() {
     this.date = new Date()
-
-    setTimeout(this.getTime.bind(this), 1000)
   }
 
   get virtualTime() {
