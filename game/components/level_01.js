@@ -1,6 +1,8 @@
 import Treadmill from './treadmill'
 // import ToonMaterial from '@/webgl/materials/toon.js'
 
+import PostsInstances from '@/game/components/posts-instances'
+
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
@@ -104,63 +106,7 @@ export default class Level01 extends THREE.Object3D {
       'model_terminal_screen'
     ).material = terminalScreenMaterial
 
-    // load colis
-    assetsManager.loader.addGroup({
-      name: 'colis',
-      base: '/',
-      files: [
-        {
-          name: 'youtube_obj',
-          path: 'obj/colis/youtube.obj'
-        },
-        {
-          name: 'youtube_map',
-          path: 'img/materials/youtube.png'
-        },
-        {
-          name: 'instagram_obj',
-          path: 'obj/colis/instagram.obj'
-        },
-        {
-          name: 'instagram_map',
-          path: 'img/materials/instagram.png'
-        },
-        {
-          name: 'twitter_obj',
-          path: 'obj/colis/twitter.obj'
-        },
-        {
-          name: 'twitter_map',
-          path: 'img/materials/twitter.png'
-        },
-        {
-          name: 'whatsapp_obj',
-          path: 'obj/colis/whatsapp.obj'
-        },
-        {
-          name: 'whatsapp_map',
-          path: 'img/materials/whatsapp.png'
-        },
-        {
-          name: 'facebook_obj',
-          path: 'obj/colis/facebook.obj'
-        },
-        {
-          name: 'facebook_map',
-          path: 'img/materials/facebook.png'
-        },
-        {
-          name: 'snapchat_obj',
-          path: 'obj/colis/snapchat.obj'
-        },
-        {
-          name: 'snapchat_map',
-          path: 'img/materials/snapchat.png'
-        }
-      ]
-    })
-
-    await assetsManager.get('colis')
+    await PostsInstances.load()
 
     this.init()
   }

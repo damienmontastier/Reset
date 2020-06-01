@@ -1,64 +1,32 @@
 import useGame from '@/hooks/use-game'
-// import useGUI from '@/hooks/use-gui'
-// import ToonMaterial from '@/webgl/materials/toon.js'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-// import BoxGeometry from '@/webgl/geometries/box'
-
-import useAssetsManager from '@/hooks/use-assets-manager'
+import PostsInstances from '@/game/components/posts-instances'
 
 export default class ParcelPost extends THREE.Object3D {
   constructor(type) {
     super()
 
-    const assetsManager = useAssetsManager()
-
-    const colis = assetsManager.get('colis', true)
-
     let model
-    let map
 
     if (type === 'youtube') {
-      model = colis.youtube_obj.clone()
-      map = colis.youtube_map
+      model = PostsInstances.youtube.clone()
     } else if (type === 'instagram') {
-      model = colis.instagram_obj.clone()
-      map = colis.instagram_map
+      model = PostsInstances.instagram.clone()
     } else if (type === 'twitter') {
-      model = colis.twitter_obj.clone()
-      map = colis.twitter_map
+      model = PostsInstances.twitter.clone()
     } else if (type === 'whatsapp') {
-      model = colis.whatsapp_obj.clone()
-      map = colis.whatsapp_map
+      model = PostsInstances.whatsapp.clone()
     } else if (type === 'facebook') {
-      model = colis.facebook_obj.clone()
-      map = colis.facebook_map
+      model = PostsInstances.facebook.clone()
     } else if (type === 'snapchat') {
-      model = colis.snapchat_obj.clone()
-      map = colis.snapchat_map
+      model = PostsInstances.snapchat.clone()
     }
 
     this.model = model
-    this.model.getObjectByName(
-      'model_solid'
-    ).material = new THREE.MeshBasicMaterial({
-      map
-    })
     this.add(this.model)
-
-    // this.initMaterial()
     this.initHitbox()
-  }
-
-  initMaterial() {
-    // const material = new ToonMaterial({
-    //   color: Math.floor(Math.random() * 16777215),
-    //   emissive: Math.floor(Math.random() * 16777215)
-    // })
-    // this.model.material = material
-    // const gui = useGUI()
-    // gui.addMaterial(this.model.uuid.substring(0, 10), material)
   }
 
   initHitbox() {
@@ -102,10 +70,17 @@ export default class ParcelPost extends THREE.Object3D {
 
   destroy() {
     const { intersections: intersectionsWorld } = useGame()
-    // intersectionsWorld.addHitbox(this.hitbox)
 
-    // this.model.geometry.dispose()
-    // this.model.material.dispose()
+    this.traverse((child) => {
+      if (child.geometry) {
+        child.geometry.dispose()
+      }
+
+      if (child.material) {
+        child.material.dispose()
+      }
+    })
+
     this.parent.remove(this)
 
     this.hitboxMesh.geometry.dispose()
