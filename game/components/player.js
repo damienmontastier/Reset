@@ -208,6 +208,9 @@ export default class Player extends THREE.Object3D {
 
     this.animations.run.play()
 
+    // trail.getObjectByName('black').material.dispose()
+    // trail.getObjectByName('green').material.dispose()
+
     const material = trailMaterial.clone()
     trail.getObjectByName('black').material = material
     trail.getObjectByName('green').material = material
@@ -222,6 +225,12 @@ export default class Player extends THREE.Object3D {
       onComplete: () => {
         scene.remove(trail)
         material.dispose()
+
+        trail.traverse((child) => {
+          if (child.skeleton) {
+            child.skeleton.boneTexture.dispose()
+          }
+        })
       }
     })
 
