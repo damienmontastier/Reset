@@ -11,7 +11,7 @@ export default class CheckpointMaterial extends THREE.ShaderMaterial {
           value: new THREE.Color(color)
         }
       },
-      side: THREE.BackSide,
+      alphaTest: 0.1,
       // depthWrite: false,
       // depthTest: false,
       transparent: true

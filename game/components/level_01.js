@@ -9,13 +9,14 @@ import useRAF from '@/hooks/use-raf'
 import useKeyboard from '@/hooks/use-keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
+import Checkpoint from '@/webgl/components/checkpoint'
 
 import GreenMaterial from '@/webgl/materials/green'
 import BlackMaterial from '@/webgl/materials/black'
 import signScreenMaterial from '@/webgl/materials/sign-screen'
 import terminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
-import CheckpointMaterial from '@/webgl/materials/checkpoint'
+// import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
 import LIGHT_CONFIG from '@/config/light'
 
@@ -66,11 +67,15 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (child.name.includes('zone_chekpoint')) {
-        // console.log(child)
-        child.material = new CheckpointMaterial({ color: 0xffffff })
         child.position.y += -0.01
 
-        // GUI.addObject3D(child.name, child)
+        child.scale.setScalar(1, 1, 1)
+
+        child.material.visible = false
+
+        child.component = new Checkpoint()
+
+        child.add(child.component)
       }
     })
 
@@ -80,7 +85,8 @@ export default class Level01 extends THREE.Object3D {
     // spawn point
     this.spawnPoint = this.model
       .getObjectByName('zone_spawn')
-      .position.add(new THREE.Vector3(-0.5, 0, 0))
+      .position.clone()
+      .add(new THREE.Vector3(-0.5, 0, 0))
 
     // sign
     this.sign = this.model.getObjectByName('model_sign')

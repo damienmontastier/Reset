@@ -238,26 +238,8 @@ export default {
       if (intersects.length > 0) {
         // if intersects = can walk on next zone
 
-        const checkpointIndex = intersects.findIndex((intersect) =>
-          intersect.object.name.includes('zone_chekpoint')
-        )
-        const checkpoint = intersects[checkpointIndex]
-        if (checkpoint) {
-          gsap.to(checkpoint.object.material.uniforms.uColor.value, {
-            ease: 'expo.out',
-            duration: 2,
-            r: 0,
-            g: 1,
-            b: 0
-          })
-          this.spawnPoint = checkpoint.object.position
-            .clone()
-            .add(new THREE.Vector3(-0.5, 0, 0))
-        }
         const intersect = intersects[0]
         const zoneName = intersect.object.name
-
-        // if player on treadmill -> unhook()
 
         const position = intersect.point
 
@@ -281,6 +263,33 @@ export default {
         //   this.$events.emit('endgame')
         // }
 
+        // checkpoints
+        const checkpointIndex = intersects.findIndex((intersect) =>
+          intersect.object.name.includes('zone_chekpoint')
+        )
+        const checkpoint = intersects[checkpointIndex]
+        if (checkpoint) {
+          gsap.to(
+            [
+              checkpoint.object.component.material1.uniforms.uColor.value,
+              checkpoint.object.component.material2.uniforms.uColor.value
+            ],
+            {
+              ease: 'expo.out',
+              duration: 2,
+              r: 0,
+              g: 1,
+              b: 0
+            }
+          )
+          this.spawnPoint = checkpoint.object.position
+            .clone()
+            .add(new THREE.Vector3(-0.5, 0, 0))
+
+          position.y = this.player.position.y
+        }
+
+        // treadmills
         if (!zoneName.includes('treadmill')) {
           // player is not on treadmill
           if (this.hookingTreadmill) {
