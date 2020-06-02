@@ -13,7 +13,6 @@ import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
-import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
@@ -65,9 +64,8 @@ export default {
       // console.log('endgame', this.playerIsOnEndgame)
     },
     terminalOpened(bool) {
-      const keyboard = useKeyboard()
-
-      keyboard.disabled = bool
+      // const keyboard = useKeyboard()
+      // keyboard.disabled = bool
     },
     playerIsOnTuto(newVal, oldVal) {
       if (this.playerIsOnTuto === true) {
@@ -104,8 +102,7 @@ export default {
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
-    const keyboard = useKeyboard()
-    keyboard.events.off('keyup', this.onKeydown)
+    this.$controller.events.off('keyup', this.onKeydown)
   },
   methods: {
     ...mapMutations({
@@ -172,8 +169,7 @@ export default {
       // await audioManager.add(introSound)
       // audioManager.play(introSound)
 
-      const keyboard = useKeyboard()
-      keyboard.events.on('keyup', this.onKeydown)
+      this.$controller.events.on('keyup', this.onKeydown)
 
       this.initGUI()
 
@@ -204,25 +200,19 @@ export default {
       if (clock.countdownDisabled) {
         clock.events.emit('clock:toggleCountdown', false)
       }
-      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
-        return
 
       const delta = new THREE.Vector3()
-      switch (e.code) {
-        case 'ArrowLeft':
-          delta.x -= 1
-          break
-        case 'ArrowRight':
-          delta.x += 1
-          break
-        case 'ArrowDown':
-          delta.z += 1
-          break
-        case 'ArrowUp':
-          delta.z -= 1
-          break
-        default:
-          break
+
+      if (e.includes('MOVE_LEFT')) {
+        delta.x -= 1
+      } else if (e.includes('MOVE_RIGHT')) {
+        delta.x += 1
+      } else if (e.includes('MOVE_FORWARD')) {
+        delta.z -= 1
+      } else if (e.includes('MOVE_BACKWARD')) {
+        delta.z += 1
+      } else {
+        return
       }
 
       if (this.player.positionTween || this.player.isFalling) return
@@ -285,6 +275,7 @@ export default {
           this.spawnPoint = checkpoint.object.position
             .clone()
             .add(new THREE.Vector3(-0.5, 0, 0))
+          this.spawnPoint.y = this.player.position.y
 
           position.y = this.player.position.y
         }

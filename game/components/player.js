@@ -1,8 +1,6 @@
 import Events from 'events'
 import gsap from 'gsap'
 
-// import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
-
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useRAF from '@/hooks/use-raf'
@@ -57,22 +55,22 @@ export default class Player extends THREE.Object3D {
 
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
 
-    this.modelSkinMaterial = new THREE.MeshStandardMaterial({
+    const modelSkinMaterial = new THREE.MeshStandardMaterial({
       skinning: true,
       flatShading: true
     })
 
-    const m2 = new THREE.MeshStandardMaterial({
+    const modelSkinMaterial2 = new THREE.MeshStandardMaterial({
       skinning: true,
       emissive: 0xffffff,
       flatShading: true
     })
 
-    GUI.addMaterial('m', this.modelSkinMaterial)
-    GUI.addMaterial('m2', m2)
+    GUI.addMaterial('modelSkinMaterial', modelSkinMaterial)
+    GUI.addMaterial('modelSkinMaterial2', modelSkinMaterial2)
 
-    this.model.getObjectByName('black').material = this.modelSkinMaterial
-    this.model.getObjectByName('green').material = m2
+    this.model.getObjectByName('black').material = modelSkinMaterial
+    this.model.getObjectByName('green').material = modelSkinMaterial2
   }
 
   initAnimations() {

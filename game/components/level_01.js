@@ -8,7 +8,9 @@ import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
-import useKeyboard from '@/hooks/use-keyboard'
+// import useKeyboard from '@/hooks/use-keyboard'
+
+import keyboard from '@/plugins/keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
 import Checkpoint from '@/webgl/components/checkpoint'
@@ -113,7 +115,6 @@ export default class Level01 extends THREE.Object3D {
 
   async init() {
     this.initLights()
-    const keyboard = useKeyboard()
     keyboard.events.on('keydown', (e) => {
       // SHIFT+P to stop
       if (e.keyCode === 80 && e.shiftKey) {
@@ -153,6 +154,7 @@ export default class Level01 extends THREE.Object3D {
   }
 
   initZones() {
+    // this.zones.visible = false
     // debug materials
     this.zones.traverse((zone) => {
       const name = zone.name
