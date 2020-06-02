@@ -141,11 +141,11 @@ export default {
 
       // this.dotsPlane.position.z = -10
 
-      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.scale.setScalar(25)
       this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
-      this.dotsPlane.position.y = -2
+      // this.dotsPlane.position.y = -2
 
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
