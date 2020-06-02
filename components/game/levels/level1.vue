@@ -14,6 +14,7 @@ import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useRAF from '@/hooks/use-raf'
+import useAudio from '@/hooks/use-audio'
 
 import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
@@ -108,7 +109,19 @@ export default {
     ...mapMutations({
       setTerminalOpened: 'setTerminalOpened'
     }),
+    async load() {
+      const audioManager = useAudio()
+      await audioManager.add([
+        { path: '/sounds/level01.mp3', id: 'level01' },
+        { path: '/sounds/factory_ambiance.mp3', id: 'factory_ambiance' }
+      ])
+    },
     async init() {
+      await this.load()
+
+      const audioManager = useAudio()
+      audioManager.play('level01')
+      audioManager.play('factory_ambiance')
       // const {
       //   OrbitControls
       // } = require('three/examples/jsm/controls/OrbitControls.js')
@@ -259,19 +272,7 @@ export default {
         )
         const checkpoint = intersects[checkpointIndex]
         if (checkpoint) {
-          gsap.to(
-            [
-              checkpoint.object.component.material1.uniforms.uColor.value,
-              checkpoint.object.component.material2.uniforms.uColor.value
-            ],
-            {
-              ease: 'expo.out',
-              duration: 2,
-              r: 0,
-              g: 1,
-              b: 0
-            }
-          )
+          checkpoint.object.component.trigger()
           this.spawnPoint = checkpoint.object.position
             .clone()
             .add(new THREE.Vector3(-0.5, 0, 0))

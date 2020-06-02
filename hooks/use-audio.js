@@ -1,4 +1,6 @@
-import { Howl } from 'howler'
+import { Howl, Howler } from 'howler'
+
+import useGUI from '@/hooks/use-gui'
 
 // Gerer le son global de howler
 
@@ -6,10 +8,28 @@ let audio
 
 class AudioManager {
   constructor() {
+    const params = {
+      volume: 0.1
+    }
+
+    Howler.volume(params.volume)
+
+    const GUI = useGUI()
+    GUI.audio
+      .add(params, 'volume')
+      .name('global volume')
+      .step(0.05)
+      .min(0)
+      .max(1)
+      .onChange(() => {
+        Howler.volume(params.volume)
+      })
+
     this.sounds = {}
   }
 
-  add(sounds, cb) {
+  add(sounds) {
+    const GUI = useGUI()
     const promises = []
 
     sounds.forEach((sound) => {
@@ -24,6 +44,20 @@ class AudioManager {
               this.sounds[sound.id] = howl
 
               resolve()
+
+              const params = {
+                volume: 1
+              }
+
+              GUI.audio
+                .add(params, 'volume')
+                .name(sound.id)
+                .step(0.05)
+                .min(0)
+                .max(1)
+                .onChange(() => {
+                  howl.volume(params.volume)
+                })
             }
           })
         })
@@ -34,9 +68,13 @@ class AudioManager {
       }
     })
 
-    Promise.all(promises).then(() => {
-      cb()
+    return new Promise((resolve, reject) => {
+      Promise.all(promises).then(resolve)
     })
+
+    // Promise.all(promises).then(() => {
+    //   cb()
+    // })
   }
 
   play(id) {
@@ -53,9 +91,9 @@ class AudioManager {
     this.sounds[sound].stop()
   }
 
-  pathToId(path) {
-    return path.split(/\.|\//).splice(-2, 1)[0]
-  }
+  // pathToId(path) {
+  //   return path.split(/\.|\//).splice(-2, 1)[0]
+  // }
 }
 
 const useAudioManager = () => {

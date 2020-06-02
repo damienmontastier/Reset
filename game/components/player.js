@@ -6,6 +6,8 @@ import useGame from '@/hooks/use-game'
 import useRAF from '@/hooks/use-raf'
 import useGUI from '@/hooks/use-gui'
 
+import useAudio from '@/hooks/use-audio'
+
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
 let SkeletonUtils
@@ -31,6 +33,15 @@ export default class Player extends THREE.Object3D {
   }
 
   async load() {
+    const audioManager = useAudio()
+
+    await audioManager.add([
+      { path: '/sounds/dash_01.mp3', id: 'dash_01' },
+      { path: '/sounds/dash_02.mp3', id: 'dash_02' },
+      { path: '/sounds/dash_03.mp3', id: 'dash_03' },
+      { path: '/sounds/dash_04.mp3', id: 'dash_04' }
+    ])
+
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -144,12 +155,14 @@ export default class Player extends THREE.Object3D {
     this.setInitialState()
 
     const RAF = useRAF()
-    RAF.add('id', this.loop.bind(this))
+    RAF.add('player', this.loop.bind(this))
   }
 
   destroy() {
     keyboadEvents.off('keydown', this.onKeydownHandler)
-    raf.remove('player')
+
+    const RAF = useRAF()
+    RAF.remove('player')
   }
 
   fall() {
@@ -175,7 +188,10 @@ export default class Player extends THREE.Object3D {
   }
 
   moveTo(position) {
-    const tl = new gsap.timeline()
+    const audioManager = useAudio()
+    const dashs = ['dash_01', 'dash_02', 'dash_03', 'dash_04']
+    const dashSound = dashs[Math.floor(Math.random() * dashs.length)]
+    audioManager.play(dashSound)
 
     const d = this.position
       .clone()
@@ -221,16 +237,18 @@ export default class Player extends THREE.Object3D {
       duration: 0.7,
       ease: 'expo.out',
       onComplete: () => {
-        scene.remove(trail)
-        material.dispose()
-
         trail.traverse((child) => {
           if (child.skeleton) {
             child.skeleton.boneTexture.dispose()
           }
         })
+
+        scene.remove(trail)
+        material.dispose()
       }
     })
+
+    const tl = new gsap.timeline()
 
     tl.to(
       this.model.rotation,

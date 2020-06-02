@@ -17,8 +17,6 @@
 import { mapState } from 'vuex'
 
 // import { Howler } from 'howler'
-
-import useAudio from '@/hooks/use-audio'
 // import useClock from '@/hooks/use-clock'
 // import useKeyboard from '@/hooks/use-keyboard'
 import useGUI from '@/hooks/use-gui'
@@ -47,29 +45,9 @@ export default {
     })
   },
 
-  async mounted() {
-    const audioManager = useAudio()
-
-    await audioManager.add(
-      [{ path: '/sounds/level1.mp3', id: 'level1' }],
-      this.soundLoaded.bind(this)
-    )
-  },
-
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
-  },
-
-  methods: {
-    soundLoaded() {
-      const audioManager = useAudio()
-
-      audioManager
-        .play('level1')
-        .volume(0.2)
-        .loop(true)
-    }
   }
 }
 </script>
