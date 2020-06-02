@@ -146,13 +146,15 @@ export default {
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
       this.dotsPlane.position.y = -2
-
+      this.dotsPlane.position.x = -4
+      this.dotsPlane.position.z = -15
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
 
       // bloomEffect.selection.add(this.dotsPlane)
 
       this.levelGroup = new THREE.Group()
+
       gameScene.add(this.levelGroup)
       this.map = new MapLevel01()
       await this.map.load()
