@@ -145,7 +145,7 @@ export default {
       this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
-      // this.dotsPlane.position.y = -2
+      this.dotsPlane.position.y = -2
 
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
@@ -315,8 +315,8 @@ export default {
       })
 
       gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x,
-        z: nextPosition.z,
+        x: nextPosition.x - 4,
+        z: nextPosition.z - 15,
         duration: 1,
         ease: 'power2.out'
       })
