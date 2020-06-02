@@ -3,27 +3,131 @@
 </template>
 
 <script>
+// import gsap from 'gsap'
+
+import useGame from '@/hooks/use-game'
+import useCamera from '@/hooks/use-camera'
+import useClock from '@/hooks/use-clock'
+import useKeyboard from '@/hooks/use-keyboard'
+
+import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
-import useIntro from '@/hooks/use-intro'
-// import useCamera from '@/hooks/use-camera'
+import GridTerrain from '@/game/features/grid-terrain'
 
 export default {
+  data() {
+    return {
+      currentZones: [],
+      playerIsInteract: undefined
+    }
+  },
+  watch: {
+    currentZones() {
+      this.playerIsInteract = this.currentZones.includes('zone_interact')
+    },
+    playerIsInteract(val, oldVal) {
+      if (val) {
+        console.log('Interaction with smartphone')
+      }
+    }
+  },
   mounted() {
     this.init()
   },
   methods: {
     async init() {
+      const { scene } = useGame()
+      const { camera } = useCamera()
+
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
+
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
+      camera.position.set(16, 4.8, 12.89)
+      camera.rotation.set(0, 1.25, 0)
+
+      this.introGroup = new THREE.Group()
+      scene.add(this.introGroup)
+
       this.map = new MapIntroduction()
       await this.map.load()
+      this.introGroup.add(this.map)
 
-      const { scene } = useIntro()
+      this.terrain = new GridTerrain(this.map.zones)
 
       const light = new THREE.AmbientLight(0x404040) // soft white light
-      scene.add(light)
+      const light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1)
+      this.introGroup.add(light)
+      this.introGroup.add(light2)
 
-      scene.add(this.map)
+      this.player = new Player()
+      await this.player.init()
+      this.spawnPoint = this.map.spawnPoint.clone()
+      this.player.position.copy(this.spawnPoint)
+      this.introGroup.add(this.player)
 
-      console.log(this.map)
+      const keyboard = useKeyboard()
+      keyboard.events.on('keyup', this.onKeydown)
+    },
+
+    onKeydown(e) {
+      const clock = useClock()
+
+      if (clock.countdownDisabled) {
+        clock.events.emit('clock:toggleCountdown', false)
+      }
+      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
+        return
+
+      const delta = new THREE.Vector3()
+      switch (e.code) {
+        case 'ArrowLeft':
+          delta.x -= 1
+          break
+        case 'ArrowRight':
+          delta.x += 1
+          break
+        case 'ArrowDown':
+          delta.z += 1
+          break
+        case 'ArrowUp':
+          delta.z -= 1
+          break
+        default:
+          break
+      }
+
+      if (this.player.positionTween || this.player.isFalling) return
+
+      delta.add(this.player.position)
+
+      const { scene: gameScene } = useGame()
+
+      const nextPosition = delta.clone().applyMatrix4(gameScene.matrixWorld)
+
+      const intersects = this.terrain.castCell(nextPosition)
+
+      if (intersects.length > 0) {
+        const intersect = intersects[0]
+
+        const position = intersect.point
+
+        const m = new THREE.Matrix4().getInverse(gameScene.matrixWorld)
+        position.applyMatrix4(m)
+
+        const intersectZones = intersects.map(
+          (intersect) => intersect.object.name
+        )
+
+        this.currentZones = intersectZones
+
+        this.player.moveTo(position)
+      }
     }
   }
 }

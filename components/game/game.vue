@@ -1,7 +1,7 @@
 <template>
   <div class="appGame">
-    <!-- <game-clock class="appGame__clock" /> -->
     <div class="appGame__router">
+      <router-link to="/">Introduction</router-link>
       <span @click="goTerminal">Terminal</span>
       <router-link :to="'level1'">level1</router-link>
     </div>
@@ -11,12 +11,7 @@
 <script>
 import useGame from '@/hooks/use-game'
 
-// TODO DELETE Game clock component
-
 export default {
-  components: {
-    // GameClock: () => '@/components/game/game-clock'
-  },
   mounted() {
     useGame()
   },

@@ -3,6 +3,7 @@ import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
 
 import standardMaterial from '@/webgl/materials/standard'
+import GreenMaterial from '@/webgl/materials/green'
 
 export default class Introduction extends THREE.Object3D {
   async load() {
@@ -23,67 +24,53 @@ export default class Introduction extends THREE.Object3D {
 
     this.model = this.files.model.scene
 
-    this.spawnPoint = this.model
-      .getObjectByName('zone_spawn')
-      .position.add(new THREE.Vector3(-0.5, 0, 0))
+    this.zones = this.model.getObjectByName('zones')
 
-    // this.wireframe.traverse((child) => {
-    //   if (child.name.includes('green')) {
-    //     child.material = GreenMaterial
-    //   }
+    this.models = this.model.getObjectByName('models')
 
-    //   if (child.name.includes('black')) {
-    //     child.material = BlackMaterial
-    //   }
-    // })
+    this.models.traverse((child) => {
+      if (child.name.includes('model_pipes_vert')) {
+        child.material = GreenMaterial.clone()
+      } else if (child.name.includes('model_smartphone_screen')) {
+        child.material = standardMaterial.clone()
+        child.material.side = THREE.DoubleSide
+      } else if (
+        child.name.includes('model_smartphone') ||
+        child.name.includes('model_smartphone_cam')
+      ) {
+        child.material = standardMaterial.clone()
+        child.material.emissive = new THREE.Color(0xeeeeee)
+      }
+    })
+
+    this.spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
 
     this.add(this.model)
-
-    // this.model.traverse((child) => {
-    //   if (child.name.includes('model_border')) {
-    //     child.material = GreenMaterial
-    //   }
-    // })
 
     this.init()
   }
 
   init() {
     this.paused = false
-    // this.initZones()
+    this.initZones()
 
     const RAF = useRAF()
     RAF.add('intro', this.update.bind(this), 0)
   }
 
   initZones() {
-    // debug materials
     this.zones.traverse((zone) => {
       const name = zone.name
-      if (name.includes('floor')) {
+
+      if (name.includes('zone_floor')) {
         zone.material = standardMaterial.clone()
+        zone.material.emissive = new THREE.Color(0xeeeeee)
 
         const gui = useGUI()
         gui.addMaterial(zone.uuid.substring(0, 10), zone.material)
       }
 
-      if (name.includes('treadmill')) {
-        zone.visible = false
-      }
-
-      if (name.includes('terminal')) {
-        zone.visible = false
-      }
-
       if (name.includes('zone_spawn')) {
-        zone.visible = false
-      }
-
-      if (name.includes('zone_tuto')) {
-        zone.visible = false
-      }
-
-      if (name.includes('zone_endgame')) {
         zone.visible = false
       }
     })
