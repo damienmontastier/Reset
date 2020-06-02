@@ -13,14 +13,4 @@ void main() {
     gl_FragColor = vec4(uColor, alpha);
 
     gl_FragColor *= uAlpha;
-
-    // gl_FragColor = vec4(vNormal, 1.0);
-
-    // if(vNormal.g > 0.) {
-    //     gl_FragColor.rgb = vec3(0.);
-    // }
-
-    // if(vNormal.r > 0.) {
-    //     gl_FragColor.rgb = vec3(0.);
-    // }
 }

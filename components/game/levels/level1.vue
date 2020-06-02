@@ -105,7 +105,7 @@ export default {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
     const keyboard = useKeyboard()
-    keyboard.events.off('keydown', this.onKeydown)
+    keyboard.events.off('keyup', this.onKeydown)
   },
   methods: {
     ...mapMutations({
@@ -173,7 +173,7 @@ export default {
       // audioManager.play(introSound)
 
       const keyboard = useKeyboard()
-      keyboard.events.on('keydown', this.onKeydown)
+      keyboard.events.on('keyup', this.onKeydown)
 
       this.initGUI()
 
@@ -225,7 +225,7 @@ export default {
           break
       }
 
-      if (this.player.positionTween) return
+      if (this.player.positionTween || this.player.isFalling) return
 
       delta.add(this.player.position)
 
@@ -238,20 +238,8 @@ export default {
       if (intersects.length > 0) {
         // if intersects = can walk on next zone
 
-        const checkpointIndex = intersects.findIndex((intersect) =>
-          intersect.object.name.includes('zone_chekpoint')
-        )
-        const checkpoint = intersects[checkpointIndex]
-        if (checkpoint) {
-          console.log(checkpoint)
-          this.spawnPoint = checkpoint.object.position
-            .clone()
-            .add(new THREE.Vector3(-0.5, 0, 0))
-        }
         const intersect = intersects[0]
         const zoneName = intersect.object.name
-
-        // if player on treadmill -> unhook()
 
         const position = intersect.point
 
@@ -275,6 +263,33 @@ export default {
         //   this.$events.emit('endgame')
         // }
 
+        // checkpoints
+        const checkpointIndex = intersects.findIndex((intersect) =>
+          intersect.object.name.includes('zone_chekpoint')
+        )
+        const checkpoint = intersects[checkpointIndex]
+        if (checkpoint) {
+          gsap.to(
+            [
+              checkpoint.object.component.material1.uniforms.uColor.value,
+              checkpoint.object.component.material2.uniforms.uColor.value
+            ],
+            {
+              ease: 'expo.out',
+              duration: 2,
+              r: 0,
+              g: 1,
+              b: 0
+            }
+          )
+          this.spawnPoint = checkpoint.object.position
+            .clone()
+            .add(new THREE.Vector3(-0.5, 0, 0))
+
+          position.y = this.player.position.y
+        }
+
+        // treadmills
         if (!zoneName.includes('treadmill')) {
           // player is not on treadmill
           if (this.hookingTreadmill) {
@@ -307,19 +322,19 @@ export default {
         ease: 'power2.out'
       })
 
-      // gsap.to(this.dotsPlane.position, {
-      //   x: nextPosition.x,
-      //   z: nextPosition.z,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.position, {
+        x: nextPosition.x,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
 
-      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-      //   x: nextPosition.x * 0.01,
-      //   y: -nextPosition.z * 0.01,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+        x: nextPosition.x * 0.01,
+        y: -nextPosition.z * 0.01,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
@@ -371,25 +386,29 @@ export default {
       }
     },
 
-    onPlayerIntersectsWithParcelPost() {
+    async onPlayerIntersectsWithParcelPost() {
       this.$refs.notifications.addNotification(
         this.posts[Math.floor(Math.random() * this.posts.length)]
       )
 
+      const clock = useClock()
+      clock.add(10)
+
+      // if (this.player.positionTween) {
+      //   this.player.positionTween.kill()
+      //   this.player.positionTween = null
+      // }
+      // // TODO checkpoint
+      // this.doRespawn()
+
+      await this.player.fall()
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
       }
-      if (this.player.positionTween) {
-        this.player.positionTween.kill()
-        this.player.positionTween = null
-      }
 
-      // TODO checkpoint
+      this.player.setInitialState()
 
       this.doRespawn()
-
-      const clock = useClock()
-      clock.add(10)
     },
 
     initGUI() {

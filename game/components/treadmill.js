@@ -143,30 +143,6 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   addParcelPost() {
-    // const assetsManager = useAssetsManager()
-    // const colis = assetsManager.get('colis', true)
-    // console.log(colis)
-    // const randomIndex = Math.floor(Math.random() * colors.posts.length)
-    // const [color, emissive] = colors.posts[randomIndex]
-
-    // const material = new ToonMaterial({
-    //   color,
-    //   emissive
-    // })
-
-    // const postMesh = new THREE.Mesh(
-    //   colis.youtube_obj,
-    //   new THREE.MeshBasicMaterial()
-    // )
-
-    // console.log(colis.youtube_obj)
-    // postMesh.scale.set(0.7, 0.4, 0.5)
-
-    // const mesh = colis.youtube_obj.clone()
-    // mesh.getObjectByName('model_solid').material = new THREE.MeshBasicMaterial({
-    //   map: colis.youtube_map
-    // })
-
     const types = [
       'instagram',
       'youtube',
