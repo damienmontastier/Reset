@@ -125,7 +125,7 @@ export default class Level01 extends THREE.Object3D {
     this.paused = false
 
     this.treadmills = []
-    // this.initTreadmillsHitboxes()
+    this.initTreadmillsHitboxes()
     this.initZones()
 
     // instances
