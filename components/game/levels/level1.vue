@@ -13,8 +13,8 @@ import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
-import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
+import useAudio from '@/hooks/use-audio'
 
 import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
@@ -65,9 +65,8 @@ export default {
       // console.log('endgame', this.playerIsOnEndgame)
     },
     terminalOpened(bool) {
-      const keyboard = useKeyboard()
-
-      keyboard.disabled = bool
+      // const keyboard = useKeyboard()
+      // keyboard.disabled = bool
     },
     playerIsOnTuto(newVal, oldVal) {
       if (this.playerIsOnTuto === true) {
@@ -104,48 +103,72 @@ export default {
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
-    const keyboard = useKeyboard()
-    keyboard.events.off('keyup', this.onKeydown)
+    this.$controller.events.off('keyup', this.onKeydown)
   },
   methods: {
     ...mapMutations({
       setTerminalOpened: 'setTerminalOpened'
     }),
-    async init() {
-      // const {
-      //   OrbitControls
-      // } = require('three/examples/jsm/controls/OrbitControls.js')
+    async load() {
+      this.map = new MapLevel01()
+      await this.map.load()
 
-      // const { camera } = useCamera()
-      // const cameraControls = new OrbitControls(
-      //   camera,
-      //   document.querySelector('#__nuxt')
-      // )
-      // cameraControls.enableKeys = false
+      this.player = new Player()
+      await this.player.init()
+
+      const audioManager = useAudio()
+      await audioManager.add([
+        { path: '/sounds/level01.mp3', id: 'level01' },
+        { path: '/sounds/factory_ambiance.mp3', id: 'factory_ambiance' }
+      ])
+    },
+    async init() {
+      await this.load()
+
+      const audioManager = useAudio()
+      audioManager
+        .play('level01')
+        .volume(0.65)
+        .loop(true)
+      audioManager
+        .play('factory_ambiance')
+        .volume(1)
+        .loop(true)
+
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
+
+      const { camera } = useCamera()
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
 
       this.dotsPlane = new DotsPlane()
-      gameScene.add(this.dotsPlane)
+      // gameScene.add(this.dotsPlane)
 
       // this.dotsPlane.position.z = -10
 
-      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.scale.setScalar(25)
       this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
       this.dotsPlane.position.y = -2
-
+      this.dotsPlane.position.x = -4
+      this.dotsPlane.position.z = -15
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
 
       // bloomEffect.selection.add(this.dotsPlane)
 
       this.levelGroup = new THREE.Group()
+
       gameScene.add(this.levelGroup)
-      this.map = new MapLevel01()
-      await this.map.load()
 
       this.levelGroup.add(this.map)
 
@@ -153,8 +176,6 @@ export default {
       // const { scene: webglScene } = useWebGL()
       // webglScene.add(this.terrain.debug)
 
-      this.player = new Player()
-      await this.player.init()
       this.initIntersections()
 
       this.spawnPoint = this.map.spawnPoint.clone()
@@ -172,8 +193,7 @@ export default {
       // await audioManager.add(introSound)
       // audioManager.play(introSound)
 
-      const keyboard = useKeyboard()
-      keyboard.events.on('keyup', this.onKeydown)
+      this.$controller.events.on('keyup', this.onKeydown)
 
       this.initGUI()
 
@@ -204,25 +224,19 @@ export default {
       if (clock.countdownDisabled) {
         clock.events.emit('clock:toggleCountdown', false)
       }
-      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
-        return
 
       const delta = new THREE.Vector3()
-      switch (e.code) {
-        case 'ArrowLeft':
-          delta.x -= 1
-          break
-        case 'ArrowRight':
-          delta.x += 1
-          break
-        case 'ArrowDown':
-          delta.z += 1
-          break
-        case 'ArrowUp':
-          delta.z -= 1
-          break
-        default:
-          break
+
+      if (e.includes('MOVE_LEFT')) {
+        delta.x -= 1
+      } else if (e.includes('MOVE_RIGHT')) {
+        delta.x += 1
+      } else if (e.includes('MOVE_FORWARD')) {
+        delta.z -= 1
+      } else if (e.includes('MOVE_BACKWARD')) {
+        delta.z += 1
+      } else {
+        return
       }
 
       if (this.player.positionTween || this.player.isFalling) return
@@ -269,22 +283,11 @@ export default {
         )
         const checkpoint = intersects[checkpointIndex]
         if (checkpoint) {
-          gsap.to(
-            [
-              checkpoint.object.component.material1.uniforms.uColor.value,
-              checkpoint.object.component.material2.uniforms.uColor.value
-            ],
-            {
-              ease: 'expo.out',
-              duration: 2,
-              r: 0,
-              g: 1,
-              b: 0
-            }
-          )
+          checkpoint.object.component.trigger()
           this.spawnPoint = checkpoint.object.position
             .clone()
             .add(new THREE.Vector3(-0.5, 0, 0))
+          this.spawnPoint.y = this.player.position.y
 
           position.y = this.player.position.y
         }
@@ -314,17 +317,17 @@ export default {
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      gsap.to(camera.position, {
-        x: nextPosition.x,
-        y: nextPosition.y,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(camera.position, {
+      //   x: nextPosition.x,
+      //   y: nextPosition.y,
+      //   z: nextPosition.z,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
 
       gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x,
-        z: nextPosition.z,
+        x: nextPosition.x - 4,
+        z: nextPosition.z - 15,
         duration: 1,
         ease: 'power2.out'
       })

@@ -1,25 +1,28 @@
-let gui
+let GUI
 
 const useGUI = () => {
-  if (!gui) {
+  if (!GUI) {
     const dat = require('dat.gui')
     const init = require('three-dat.gui')
     init(dat)
 
-    gui = new dat.GUI()
-    gui.closed = true
+    GUI = new dat.GUI()
+    GUI.closed = true
 
     // camera
-    gui.camera = gui.addFolder('Camera')
+    GUI.camera = GUI.addFolder('Camera')
 
     // rendering
-    gui.rendering = gui.addFolder('Rendering')
+    GUI.rendering = GUI.addFolder('Rendering')
+
+    // audio
+    GUI.audio = GUI.addFolder('Audio')
 
     // postprocessing
-    gui.postprocessing = gui.rendering.addFolder('Post-processing')
+    GUI.postprocessing = GUI.rendering.addFolder('Post-processing')
   }
 
-  return gui
+  return GUI
 }
 
 export default useGUI

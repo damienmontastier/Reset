@@ -8,7 +8,7 @@
 import useGame from '@/hooks/use-game'
 import useCamera from '@/hooks/use-camera'
 import useClock from '@/hooks/use-clock'
-import useKeyboard from '@/hooks/use-keyboard'
+// import useKeyboard from '@/hooks/use-keyboard'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
@@ -36,6 +36,9 @@ export default {
   },
   mounted() {
     this.init()
+  },
+  beforeDestroy() {
+    this.$controller.events.off('keyup', this.onKeydown)
   },
   methods: {
     async init() {
@@ -74,8 +77,7 @@ export default {
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
 
-      const keyboard = useKeyboard()
-      keyboard.events.on('keyup', this.onKeydown)
+      this.$controller.events.on('keyup', this.onKeydown)
 
       this.dotsPlane = new DotsPlane()
       scene.add(this.dotsPlane)
@@ -97,26 +99,22 @@ export default {
       if (clock.countdownDisabled) {
         clock.events.emit('clock:toggleCountdown', false)
       }
-      if (!['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp'].includes(e.code))
-        return
 
       const delta = new THREE.Vector3()
-      switch (e.code) {
-        case 'ArrowLeft':
-          delta.x -= 1
-          break
-        case 'ArrowRight':
-          delta.x += 1
-          break
-        case 'ArrowDown':
-          delta.z += 1
-          break
-        case 'ArrowUp':
-          delta.z -= 1
-          break
-        default:
-          break
+
+      if (e.includes('MOVE_LEFT')) {
+        delta.x -= 1
+      } else if (e.includes('MOVE_RIGHT')) {
+        delta.x += 1
+      } else if (e.includes('MOVE_FORWARD')) {
+        delta.z -= 1
+      } else if (e.includes('MOVE_BACKWARD')) {
+        delta.z += 1
+      } else {
+        return
       }
+
+      console.log(delta.x, e)
 
       if (this.player.positionTween || this.player.isFalling) return
 

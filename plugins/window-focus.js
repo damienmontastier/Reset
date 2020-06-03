@@ -31,7 +31,7 @@ const focus = new Vue({
       () => {
         setTimeout(() => {
           this.visible = !document.hidden
-        }, 0)
+        }, 100)
       },
       false
     )

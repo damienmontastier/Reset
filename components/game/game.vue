@@ -4,6 +4,9 @@
       <router-link to="/">Introduction</router-link>
       <span @click="goTerminal">Terminal</span>
       <router-link :to="'level1'">level1</router-link>
+      <button @click="$events.emit('TERMINAL COMPLETED')">
+        complete terminal
+      </button>
     </div>
   </div>
 </template>

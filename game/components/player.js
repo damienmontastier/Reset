@@ -1,12 +1,12 @@
 import Events from 'events'
 import gsap from 'gsap'
 
-// import { SkeletonUtils } from 'three/examples/jsm/utils/SkeletonUtils.js'
-
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useRAF from '@/hooks/use-raf'
 import useGUI from '@/hooks/use-gui'
+
+import useAudio from '@/hooks/use-audio'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -17,7 +17,8 @@ const trailMaterial = new THREE.MeshBasicMaterial({
   transparent: true,
   color: 0x00ff00,
   wireframe: true,
-  opacity: 0.25
+  opacity: 0.25,
+  side: THREE.DoubleSide
 })
 
 // const JUMP_DURATION = 0.1
@@ -33,6 +34,16 @@ export default class Player extends THREE.Object3D {
   }
 
   async load() {
+    const audioManager = useAudio()
+
+    await audioManager.add([
+      { path: '/sounds/dash_01.mp3', id: 'dash_01' },
+      { path: '/sounds/dash_02.mp3', id: 'dash_02' },
+      { path: '/sounds/dash_03.mp3', id: 'dash_03' },
+      { path: '/sounds/dash_04.mp3', id: 'dash_04' },
+      { path: '/sounds/fall_01.mp3', id: 'fall_01' }
+    ])
+
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -57,22 +68,22 @@ export default class Player extends THREE.Object3D {
 
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
 
-    this.modelSkinMaterial = new THREE.MeshStandardMaterial({
+    const modelSkinMaterial = new THREE.MeshStandardMaterial({
       skinning: true,
       flatShading: true
     })
 
-    const m2 = new THREE.MeshStandardMaterial({
+    const modelSkinMaterial2 = new THREE.MeshStandardMaterial({
       skinning: true,
       emissive: 0xffffff,
       flatShading: true
     })
 
-    GUI.addMaterial('m', this.modelSkinMaterial)
-    GUI.addMaterial('m2', m2)
+    GUI.addMaterial('modelSkinMaterial', modelSkinMaterial)
+    GUI.addMaterial('modelSkinMaterial2', modelSkinMaterial2)
 
-    this.model.getObjectByName('black').material = this.modelSkinMaterial
-    this.model.getObjectByName('green').material = m2
+    this.model.getObjectByName('black').material = modelSkinMaterial
+    this.model.getObjectByName('green').material = modelSkinMaterial2
   }
 
   initAnimations() {
@@ -146,15 +157,20 @@ export default class Player extends THREE.Object3D {
     this.setInitialState()
 
     const RAF = useRAF()
-    RAF.add('id', this.loop.bind(this))
+    RAF.add('player', this.loop.bind(this))
   }
 
   destroy() {
     keyboadEvents.off('keydown', this.onKeydownHandler)
-    raf.remove('player')
+
+    const RAF = useRAF()
+    RAF.remove('player')
   }
 
   fall() {
+    const audioManager = useAudio()
+    audioManager.play('fall_01').volume(1)
+
     this.isFalling = true
     if (this.positionTween) {
       this.positionTween.kill()
@@ -177,7 +193,10 @@ export default class Player extends THREE.Object3D {
   }
 
   moveTo(position) {
-    const tl = new gsap.timeline()
+    const audioManager = useAudio()
+    const dashs = ['dash_01', 'dash_02', 'dash_03', 'dash_04']
+    const dashSound = dashs[Math.floor(Math.random() * dashs.length)]
+    audioManager.play(dashSound).volume(0.75)
 
     const d = this.position
       .clone()
@@ -223,16 +242,18 @@ export default class Player extends THREE.Object3D {
       duration: 0.7,
       ease: 'expo.out',
       onComplete: () => {
-        scene.remove(trail)
-        material.dispose()
-
         trail.traverse((child) => {
-          if (child.skeleton) {
+          if (child.skeleton && child.skeleton.boneTexture) {
             child.skeleton.boneTexture.dispose()
           }
         })
+
+        scene.remove(trail)
+        material.dispose()
       }
     })
+
+    const tl = new gsap.timeline()
 
     tl.to(
       this.model.rotation,

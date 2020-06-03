@@ -14,6 +14,7 @@ class Game {
     scene.add(this.scene)
 
     this.intersections = new INTERSECTIONS.World()
+    // scene.add(this.intersections)
 
     this.init()
   }

@@ -1,3 +1,5 @@
+import gsap from 'gsap'
+
 import Treadmill from './treadmill'
 // import ToonMaterial from '@/webgl/materials/toon.js'
 
@@ -8,22 +10,48 @@ import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
-import useKeyboard from '@/hooks/use-keyboard'
+// import useKeyboard from '@/hooks/use-keyboard'
+
+import keyboard from '@/plugins/keyboard'
 
 import BoxGeometry from '@/webgl/geometries/box'
 import Checkpoint from '@/webgl/components/checkpoint'
 
-import GreenMaterial from '@/webgl/materials/green'
-import BlackMaterial from '@/webgl/materials/black'
+// import GreenMaterial from '@/webgl/materials/green'
+// import BlackMaterial from '@/webgl/materials/black'
 import signScreenMaterial from '@/webgl/materials/sign-screen'
 import terminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
 // import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
+import BasicMaterial from '@/webgl/materials/basic'
+
 import LIGHT_CONFIG from '@/config/light'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
+    // materials
+    this.standardMaterial = standardMaterial.clone()
+    this.greenMaterial = new BasicMaterial({ color: 0x00ff00 })
+    this.blackMaterial = new BasicMaterial({ color: 0x000000 })
+
+    const GUI = useGUI()
+    GUI.addMaterial('solid material', this.standardMaterial)
+    GUI.add(this.greenMaterial.uniforms.uAppear, 'value')
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name('green appear')
+
+    GUI.add(this.blackMaterial.uniforms.uAppear, 'value')
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name('black appear')
+
+    GUI.add(this, 'appear').name('trigger appear')
+    // materials
+
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -50,11 +78,14 @@ export default class Level01 extends THREE.Object3D {
 
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
-        child.material = GreenMaterial
+        // child.material = GreenMaterial
+        child.material = this.greenMaterial
       }
 
       if (child.name.includes('black')) {
-        child.material = BlackMaterial
+        // child.material = BlackMaterial
+
+        child.material = this.blackMaterial
       }
     })
 
@@ -65,13 +96,15 @@ export default class Level01 extends THREE.Object3D {
 
     this.model.traverse((child) => {
       if (child.name.includes('model_border')) {
-        child.material = GreenMaterial
+        // child.material = GreenMaterial
+
+        child.material = this.greenMaterial
       }
 
       if (child.name.includes('zone_chekpoint')) {
-        child.position.y += -0.01
+        child.position.y += -0.035
 
-        child.scale.setScalar(1, 1, 1)
+        child.scale.setScalar(0.95)
 
         child.material.visible = false
 
@@ -93,27 +126,34 @@ export default class Level01 extends THREE.Object3D {
     // sign
     this.sign = this.model.getObjectByName('model_sign')
 
-    this.sign.material = standardMaterial.clone()
+    this.sign.material = this.standardMaterial
 
     this.signScreen = this.model.getObjectByName('model_sign_screen')
     this.signScreen.material = signScreenMaterial
 
     this.model.getObjectByName(
       'model_terminal_black'
-    ).material = standardMaterial.clone()
-    this.model.getObjectByName('model_terminal_green').material = GreenMaterial
+    ).material = this.standardMaterial
+    // this.model.getObjectByName('model_terminal_green').material = GreenMaterial
+
+    this.model.getObjectByName(
+      'model_terminal_green'
+    ).material = this.greenMaterial
+
     this.model.getObjectByName(
       'model_terminal_screen'
     ).material = terminalScreenMaterial
 
     await PostsInstances.load()
 
+    // instances
+    await this.replaceInstances()
+
     this.init()
   }
 
-  async init() {
+  init() {
     this.initLights()
-    const keyboard = useKeyboard()
     keyboard.events.on('keydown', (e) => {
       // SHIFT+P to stop
       if (e.keyCode === 80 && e.shiftKey) {
@@ -122,11 +162,19 @@ export default class Level01 extends THREE.Object3D {
       }
     })
     this.paused = false
+
     this.initTreadmillsHitboxes()
     this.initZones()
 
-    // instances
-    await this.replaceInstances()
+    // // instances
+    // await this.replaceInstances()
+
+    const appearTl = this.appear()
+    appearTl.pause()
+
+    setTimeout(() => {
+      appearTl.play()
+    }, 3000)
 
     const RAF = useRAF()
     RAF.add('level_01', this.update.bind(this), 0)
@@ -153,14 +201,12 @@ export default class Level01 extends THREE.Object3D {
   }
 
   initZones() {
+    // this.zones.visible = false
     // debug materials
     this.zones.traverse((zone) => {
       const name = zone.name
       if (name.includes('floor')) {
-        zone.material = standardMaterial.clone()
-
-        const gui = useGUI()
-        gui.addMaterial(zone.uuid.substring(0, 10), zone.material)
+        zone.material = this.standardMaterial
       }
 
       if (name.includes('treadmill')) {
@@ -186,8 +232,6 @@ export default class Level01 extends THREE.Object3D {
   }
 
   initTreadmillsHitboxes() {
-    this.treadmills = []
-
     const { intersections } = useGame()
 
     const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
@@ -195,7 +239,8 @@ export default class Level01 extends THREE.Object3D {
 
     // up stream
     this.outHitboxUpstreamMesh = box.clone()
-    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-13, 1, 0))
+    // this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-13, 1, 0))
+    this.outHitboxUpstreamMesh.position.copy(new THREE.Vector3(-12, 1, 0))
 
     this.add(this.outHitboxUpstreamMesh)
     this.outHitboxUpstreamMesh.visible = false
@@ -211,7 +256,8 @@ export default class Level01 extends THREE.Object3D {
 
     // down stream
     this.outHitboxDownstreamMesh = box.clone()
-    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(12, 1, 0))
+    // this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(12, 1, 0))
+    this.outHitboxDownstreamMesh.position.copy(new THREE.Vector3(11, 1, 0))
 
     this.add(this.outHitboxDownstreamMesh)
     this.outHitboxDownstreamMesh.visible = false
@@ -248,34 +294,40 @@ export default class Level01 extends THREE.Object3D {
     const treadmillWireframe = files.wireframe
 
     treadmillModel.traverse((child) => {
-      // child.material = new ToonMaterial({
-      //   color: 0x0d0d0d,
-      //   emissive: 0x080808
-      // })
-
-      child.material = standardMaterial.clone()
+      child.material = this.standardMaterial
     })
 
-    treadmillModel.getObjectByName('soustapis_green').material = GreenMaterial
-    // treadmillModel.getObjectByName('bordure_black').material =
+    // treadmillModel.getObjectByName('soustapis_green').material = GreenMaterial
+    treadmillModel.getObjectByName(
+      'soustapis_green'
+    ).material = this.greenMaterial
 
     treadmillWireframe.traverse((child) => {
       if (child.name.includes('green')) {
-        child.material = GreenMaterial
+        // child.material = GreenMaterial
+
+        child.material = this.greenMaterial
       }
 
       if (child.name.includes('black')) {
-        child.material = BlackMaterial
+        // child.material = BlackMaterial
+
+        child.material = this.blackMaterial
       }
     })
 
-    treadmillModel.getObjectByName('machine_green').material = GreenMaterial
+    // treadmillModel.getObjectByName('machine_green').material = GreenMaterial
+
+    treadmillModel.getObjectByName(
+      'machine_green'
+    ).material = this.greenMaterial
 
     treadmillModel.getObjectByName('spawn_downstream').visible = false
     treadmillModel.getObjectByName('spawn_upstream').visible = false
 
     this.instances = this.model.getObjectByName('instances')
 
+    this.treadmills = []
     this.instances.children.forEach((child) => {
       const instanceName = child.userData.instance
       if (instanceName === 'treadmill') {
@@ -295,5 +347,35 @@ export default class Level01 extends THREE.Object3D {
     this.treadmills.forEach((treadmill) => {
       treadmill.update(clock)
     })
+  }
+
+  appear() {
+    const tl = new gsap.timeline()
+
+    tl.from(
+      [
+        this.greenMaterial.uniforms.uAppear,
+        this.blackMaterial.uniforms.uAppear
+      ],
+      {
+        duration: 10,
+        ease: 'expo.out',
+        value: 0,
+        stagger: 1
+      },
+      0
+    )
+
+    tl.from(
+      this.standardMaterial,
+      {
+        duration: 3,
+        ease: 'expo.out',
+        opacity: 0
+      },
+      3
+    )
+
+    return tl
   }
 }

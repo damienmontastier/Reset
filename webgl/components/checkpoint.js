@@ -1,3 +1,5 @@
+import gsap from 'gsap'
+
 import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
 export default class Checkpoint extends THREE.Object3D {
@@ -19,5 +21,21 @@ export default class Checkpoint extends THREE.Object3D {
     this.cube2.material.side = THREE.FrontSide
 
     this.matrixAutoUpdate = false
+  }
+
+  trigger() {
+    gsap.to(
+      [
+        this.material1.uniforms.uColor.value,
+        this.material2.uniforms.uColor.value
+      ],
+      {
+        ease: 'expo.out',
+        duration: 2,
+        r: 0,
+        g: 1,
+        b: 0
+      }
+    )
   }
 }

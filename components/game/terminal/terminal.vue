@@ -66,6 +66,8 @@ export default {
     terminalCompleted() {
       this.closeTerminal()
       console.log('finish, close terminal, apply modification')
+
+      this.$events.emit('TERMINAL COMPLETED')
     },
     closeTerminal() {
       this.setTerminalOpened(false)
