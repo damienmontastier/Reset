@@ -9,10 +9,13 @@ import useGame from '@/hooks/use-game'
 import useCamera from '@/hooks/use-camera'
 import useClock from '@/hooks/use-clock'
 import useKeyboard from '@/hooks/use-keyboard'
+import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
 import GridTerrain from '@/game/features/grid-terrain'
+
+import DotsPlane from '@/webgl/components/dots-plane'
 
 export default {
   data() {
@@ -73,6 +76,19 @@ export default {
 
       const keyboard = useKeyboard()
       keyboard.events.on('keyup', this.onKeydown)
+
+      this.dotsPlane = new DotsPlane()
+      scene.add(this.dotsPlane)
+      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.rotation.x = -Math.PI / 2
+      this.dotsPlane.position.y = -2
+
+      const RAF = useRAF()
+      RAF.add('introduction', this.loop.bind(this))
+    },
+
+    loop(clock) {
+      this.dotsPlane.update(clock)
     },
 
     onKeydown(e) {

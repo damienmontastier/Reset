@@ -34,7 +34,8 @@ export default class DotsPlane extends THREE.Object3D {
       },
       vertexShader,
       fragmentShader,
-      transparent: true,
+      // transparent: true,
+      color: new THREE.Color(0xffffff),
       extensions: {
         derivatives: true
       }

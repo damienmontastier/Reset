@@ -1,9 +1,12 @@
+import gsap from 'gsap'
+
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
 
 import standardMaterial from '@/webgl/materials/standard'
 import GreenMaterial from '@/webgl/materials/green'
+import BlackMaterial from '@/webgl/materials/black'
 
 export default class Introduction extends THREE.Object3D {
   async load() {
@@ -16,6 +19,10 @@ export default class Introduction extends THREE.Object3D {
         {
           name: 'model',
           path: 'obj/intro/intro.glb'
+        },
+        {
+          name: 'wireframe',
+          path: 'obj/intro/intro_wireframe.obj'
         }
       ]
     })
@@ -23,10 +30,20 @@ export default class Introduction extends THREE.Object3D {
     this.files = await assetsManager.get('introduction')
 
     this.model = this.files.model.scene
+    this.wireframe = this.files.wireframe
+
+    this.wireframe.traverse((child) => {
+      child.material = BlackMaterial.clone()
+    })
 
     this.zones = this.model.getObjectByName('zones')
-
     this.models = this.model.getObjectByName('models')
+    this.smartphone = this.model.getObjectByName('model_smartphone')
+    this.smartphoneWireframe = this.wireframe.getObjectByName(
+      'model_smartphone_wireframe'
+    )
+
+    console.log(this)
 
     this.models.traverse((child) => {
       if (child.name.includes('model_pipes_vert')) {
@@ -46,6 +63,7 @@ export default class Introduction extends THREE.Object3D {
     this.spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
 
     this.add(this.model)
+    this.add(this.wireframe)
 
     this.init()
   }
@@ -77,6 +95,16 @@ export default class Introduction extends THREE.Object3D {
   }
 
   update(clock) {
-    // if (this.paused) return
+    if (this.paused) return
+
+    const sin = (Math.sin(clock.time) / 2 + 0.5) * 0.25
+
+    gsap.to(this.smartphone.position, {
+      z: sin
+    })
+
+    gsap.to(this.smartphoneWireframe.position, {
+      y: -sin
+    })
   }
 }
