@@ -43,9 +43,14 @@ export default class ParcelPost extends THREE.Object3D {
     // this.hitboxMesh.scale.setScalar(0.6)
     this.add(this.hitboxMesh)
     this.hitboxMesh.visible = false
+    // this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
+    //   layers: ['parcel_post'],
+    //   filters: ['treadmill_edge']
+    // })
+
     this.hitbox = new INTERSECTIONS.Hitbox(this.hitboxMesh, {
       layers: ['parcel_post'],
-      filters: ['treadmill_edge']
+      filters: []
     })
 
     const { intersections: intersectionsWorld } = useGame()

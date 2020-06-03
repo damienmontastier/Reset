@@ -1,7 +1,9 @@
 // import SimplexNoise from 'simplex-noise'
-
+import gsap from 'gsap'
 import useGame from '@/hooks/use-game'
 // import useAssetsManager from '@/hooks/use-assets-manager'
+
+import useCamera from '@/hooks/use-camera'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import ParcelPost from '@/game/components/parcel-post'
@@ -15,11 +17,23 @@ import treadmillConfig from '@/config/treadmills'
 
 import windowFocus from '@/plugins/window-focus'
 
+import events from '@/plugins/events'
+
+const postTypes = [
+  'instagram',
+  'youtube',
+  'twitter',
+  'whatsapp',
+  'facebook',
+  'snapchat'
+]
+
 export default class Treadmill extends THREE.Object3D {
   constructor(model, wireframe, zone) {
     super()
     this.model = model
     this.wireframe = wireframe
+    this.zone = zone
     this.add(this.model)
     this.add(this.wireframe)
     this.model.matrixAutoUpdate = false
@@ -38,8 +52,34 @@ export default class Treadmill extends THREE.Object3D {
     this.model.children[2].visible = false
     this.hookedGroup = []
 
+    if (this.zone === 'zone_C') {
+      events.on('TERMINAL COMPLETED', this.onTerminalCompleted.bind(this))
+    }
+
     this.initHitbox()
     this.initParcelPostsApparition()
+  }
+
+  onTerminalCompleted() {
+    console.log('onTerminalCompleted')
+
+    const {
+      speedScale,
+      speedMinimum,
+      speedRandomness,
+      appearIntervalMinimum,
+      appearIntervalRandomness
+    } = treadmillConfig.zone_C_resolved
+
+    gsap.to(this.config, {
+      duration: 5,
+      ease: 'expo.out',
+      speedScale,
+      speedMinimum,
+      speedRandomness,
+      appearIntervalMinimum,
+      appearIntervalRandomness
+    })
   }
 
   initHitbox() {
@@ -103,9 +143,10 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   update(clock) {
-    // if (this.index > 1) return
-
     if (!windowFocus.visible) return
+
+    const { camera } = useCamera()
+    if (camera.position.distanceTo(this.parent.position) > 20) return
 
     const deltaPosition = this.deltaPosition.multiply(
       new THREE.Vector3(clock.lagSmoothing, 0, 0)
@@ -121,7 +162,7 @@ export default class Treadmill extends THREE.Object3D {
       post.position.add(deltaPosition)
       post.updateMatrixWorld()
 
-      if (post.position.x > 50 || post.position.x < -50) {
+      if (post.position.x > 7 || post.position.x < -7) {
         post.destroy()
       }
     })
@@ -143,16 +184,7 @@ export default class Treadmill extends THREE.Object3D {
   }
 
   addParcelPost() {
-    const types = [
-      'instagram',
-      'youtube',
-      'twitter',
-      'whatsapp',
-      'facebook',
-      'snapchat'
-    ]
-
-    const type = types[Math.floor(Math.random() * types.length)]
+    const type = postTypes[Math.floor(Math.random() * postTypes.length)]
 
     const post = new ParcelPost(type)
     post.position.copy(this.spawnPoint)

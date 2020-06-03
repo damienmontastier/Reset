@@ -28,8 +28,6 @@ export default class World extends THREE.Object3D {
 
   intersects() {
     let i = 0
-    // console.time('intersections')
-    // console.log(this.hitboxes.children.length)
     // get intersections
     let hitboxes = this.hitboxes.children
 
@@ -47,11 +45,7 @@ export default class World extends THREE.Object3D {
       }
 
       targets.forEach((target) => {
-        // const distance = hitbox.box.distanceToPoint(
-        //   target.box.getCenter(new THREE.Vector3())
-        // )
         if (hitbox.uuid !== target.uuid) {
-          // console.log(distance)
           i++
 
           const lastIntersecting = hitbox.intersections[target.uuid]
