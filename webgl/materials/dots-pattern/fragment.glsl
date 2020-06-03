@@ -56,7 +56,7 @@ void main(void) {
 	float t2 = uTime * 0.1428571428571429;
 	float t3 = uTime * 0.2;
 	float t4 = uTime * 0.3333333333333333;
-	vec2 uv = vUv * 10. + uOffset;
+	vec2 uv = vUv * 8. + uOffset;
 	// uv = ( gl_FragCoord.xy * 2.0 - resolution.xy ) / min( resolution.x, resolution.y );
 	vec2 uv_b = uv;
 	float v = 0.;
@@ -66,7 +66,7 @@ void main(void) {
 	vec2 ifft = vec2( fft, -fft ) * 0.12;
     float o = clamp( osc( -12.0, 8.0, uTime * 0.0625 ), -1.5, 0.7 );
     float ost = osc( 0.021, 0.055, uTime * 0.33 );
-	for( int i = 0; i < 4; i++ ) {
+	for( int i = 0; i < 3; i++ ) {
 		float v1 = vn( uv * f + 5.0 );
 		float v2 = 0.0;
         if( i > 0 ) {

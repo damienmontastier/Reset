@@ -120,8 +120,14 @@ export default {
       await this.load()
 
       const audioManager = useAudio()
-      audioManager.play('level01')
-      audioManager.play('factory_ambiance')
+      audioManager
+        .play('level01')
+        .volume(0.65)
+        .loop(true)
+      audioManager
+        .play('factory_ambiance')
+        .volume(1)
+        .loop(true)
       // const {
       //   OrbitControls
       // } = require('three/examples/jsm/controls/OrbitControls.js')

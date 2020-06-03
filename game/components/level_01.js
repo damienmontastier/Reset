@@ -71,9 +71,9 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (child.name.includes('zone_chekpoint')) {
-        child.position.y += -0.01
+        child.position.y += -0.035
 
-        child.scale.setScalar(1, 1, 1)
+        child.scale.setScalar(0.95)
 
         child.material.visible = false
 
