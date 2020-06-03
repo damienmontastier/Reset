@@ -144,7 +144,7 @@ export default {
       const { scene: gameScene } = useGame()
 
       this.dotsPlane = new DotsPlane()
-      gameScene.add(this.dotsPlane)
+      // gameScene.add(this.dotsPlane)
 
       // this.dotsPlane.position.z = -10
 

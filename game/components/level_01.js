@@ -123,7 +123,9 @@ export default class Level01 extends THREE.Object3D {
       }
     })
     this.paused = false
-    this.initTreadmillsHitboxes()
+
+    this.treadmills = []
+    // this.initTreadmillsHitboxes()
     this.initZones()
 
     // instances
@@ -188,8 +190,6 @@ export default class Level01 extends THREE.Object3D {
   }
 
   initTreadmillsHitboxes() {
-    this.treadmills = []
-
     const { intersections } = useGame()
 
     const box = new THREE.Mesh(BoxGeometry, new THREE.MeshBasicMaterial())
