@@ -110,6 +110,12 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     async load() {
+      this.map = new MapLevel01()
+      await this.map.load()
+
+      this.player = new Player()
+      await this.player.init()
+
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/level01.mp3', id: 'level01' },
@@ -129,16 +135,16 @@ export default {
         .volume(1)
         .loop(true)
 
-      // const {
-      //   OrbitControls
-      // } = require('three/examples/jsm/controls/OrbitControls.js')
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      // const { camera } = useCamera()
-      // const cameraControls = new OrbitControls(
-      //   camera,
-      //   document.querySelector('#__nuxt')
-      // )
-      // cameraControls.enableKeys = false
+      const { camera } = useCamera()
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
@@ -163,8 +169,6 @@ export default {
       this.levelGroup = new THREE.Group()
 
       gameScene.add(this.levelGroup)
-      this.map = new MapLevel01()
-      await this.map.load()
 
       this.levelGroup.add(this.map)
 
@@ -172,8 +176,6 @@ export default {
       // const { scene: webglScene } = useWebGL()
       // webglScene.add(this.terrain.debug)
 
-      this.player = new Player()
-      await this.player.init()
       this.initIntersections()
 
       this.spawnPoint = this.map.spawnPoint.clone()
@@ -315,13 +317,13 @@ export default {
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      gsap.to(camera.position, {
-        x: nextPosition.x,
-        y: nextPosition.y,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(camera.position, {
+      //   x: nextPosition.x,
+      //   y: nextPosition.y,
+      //   z: nextPosition.z,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
 
       gsap.to(this.dotsPlane.position, {
         x: nextPosition.x - 4,
