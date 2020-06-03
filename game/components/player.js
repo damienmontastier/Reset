@@ -243,7 +243,7 @@ export default class Player extends THREE.Object3D {
       ease: 'expo.out',
       onComplete: () => {
         trail.traverse((child) => {
-          if (child.skeleton) {
+          if (child.skeleton && child.skeleton.boneTexture) {
             child.skeleton.boneTexture.dispose()
           }
         })
