@@ -5,7 +5,7 @@
     <div class="tuto" v-if="tuto" />
     <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
     <!-- <app-noise id="appNoise" /> -->
-    <app-header id="appHeader" />
+    <app-header v-if="appearHeader" id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
@@ -41,7 +41,8 @@ export default {
   },
   computed: {
     ...mapState({
-      overlayOpened: (state) => state.overlayOpened
+      overlayOpened: (state) => state.overlayOpened,
+      appearHeader: (state) => state.appearHeader
     })
   },
 

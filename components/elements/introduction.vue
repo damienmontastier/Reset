@@ -26,6 +26,13 @@ export default {
     component() {
       return this.introductionComponents[this.index]
     }
+  },
+  watch: {
+    index(val) {
+      if (val % this.introductionComponents.length === 0) {
+        this.$emit('startMission')
+      }
+    }
   }
 }
 </script>

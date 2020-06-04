@@ -19,9 +19,12 @@
     </div>
     <div class="introductionP2__signature introduction--wrapper">
       <span>Signature :</span>
-      <div @click="triggerSignature" class="signature_insert">
-        Click for sign<br />
-        {{ isSigned ? 'Signé' : 'Pas signé' }}
+      <div
+        @click="triggerSignature"
+        class="signature_insert"
+        :class="{ 'is-signed': isSigned }"
+      >
+        {{ isSigned ? 'Signé' : ' Click for sign, Pas signé' }}
       </div>
     </div>
     <btn
@@ -85,12 +88,22 @@ export default {
   &__signature {
     display: flex;
 
+    span {
+      font-size: 16px;
+    }
+
     .signature_insert {
-      background: #f00;
+      background: var(--color-grey-lighten);
+      border: 1px solid var(--color-green);
       height: 80px;
       margin-left: auto;
       margin-right: 50px;
       width: 50%;
+
+      &.is-signed {
+        background-color: transparent;
+        border: transparent;
+      }
     }
   }
 }

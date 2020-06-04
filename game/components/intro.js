@@ -9,7 +9,7 @@ import standardMaterial from '@/webgl/materials/standard'
 import GreenMaterial from '@/webgl/materials/green'
 import BlackMaterial from '@/webgl/materials/black'
 
-import LIGHT_CONFIG from '@/config/light'
+import INTRODUCTION_CONFIG from '@/config/introduction'
 
 export default class Introduction extends THREE.Object3D {
   async load() {
@@ -82,7 +82,7 @@ export default class Introduction extends THREE.Object3D {
   init() {
     this.paused = false
     this.initZones()
-    // this.initLights()
+    this.initLights()
 
     const RAF = useRAF()
     RAF.add('intro', this.update.bind(this), 0)
@@ -95,11 +95,11 @@ export default class Introduction extends THREE.Object3D {
     scene.add(this.ambientLight)
 
     this.directionalLight = new THREE.DirectionalLight(
-      LIGHT_CONFIG.color,
-      LIGHT_CONFIG.intensity
+      INTRODUCTION_CONFIG.lights.color,
+      INTRODUCTION_CONFIG.lights.intensity
     )
     // this.directionalLight.position.set(0, 512, 0)
-    this.directionalLight.position.copy(LIGHT_CONFIG.position)
+    this.directionalLight.position.copy(INTRODUCTION_CONFIG.lights.position)
     this.directionalLight.lookAt(scene.position)
     scene.add(this.directionalLight)
 

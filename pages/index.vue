@@ -1,5 +1,5 @@
 <template>
-  <introduction></introduction>
+  <introduction @startMission="start"></introduction>
 </template>
 
 <script>
@@ -25,7 +25,8 @@ export default {
   data() {
     return {
       currentZones: [],
-      playerIsInteract: undefined
+      playerIsInteract: undefined,
+      movementEnabled: false
     }
   },
   watch: {
@@ -98,7 +99,16 @@ export default {
       this.dotsPlane.update(clock)
     },
 
+    start() {
+      console.log('do movement camera to player')
+      console.log('appear player')
+      console.log('show controls keys')
+      console.log('enabled movement player')
+      this.movementEnabled = true
+    },
+
     onKeydown(e) {
+      if (!this.movementEnabled) return
       const clock = useClock()
 
       if (clock.countdownDisabled) {

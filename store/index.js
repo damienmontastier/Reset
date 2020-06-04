@@ -4,7 +4,8 @@ export const state = () => ({
   levels: [],
   posts: [],
   terminalOpened: false,
-  overlayOpened: false
+  overlayOpened: false,
+  appearHeader: false
 })
 
 export const mutations = {
@@ -23,6 +24,10 @@ export const mutations = {
 
   setOverlayOpened(state, value) {
     state.overlayOpened = value
+  },
+
+  setHeader(state, value) {
+    state.appearHeader = value
   }
 }
 
