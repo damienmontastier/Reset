@@ -68,22 +68,22 @@ export default class Player extends THREE.Object3D {
 
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
 
-    const modelSkinMaterial = new THREE.MeshStandardMaterial({
+    this.modelSkinMaterial = new THREE.MeshStandardMaterial({
       skinning: true,
       flatShading: true
     })
 
-    const modelSkinMaterial2 = new THREE.MeshStandardMaterial({
+    this.modelSkinMaterial2 = new THREE.MeshStandardMaterial({
       skinning: true,
       emissive: 0xffffff,
       flatShading: true
     })
 
-    GUI.addMaterial('modelSkinMaterial', modelSkinMaterial)
-    GUI.addMaterial('modelSkinMaterial2', modelSkinMaterial2)
+    GUI.addMaterial('modelSkinMaterial', this.modelSkinMaterial)
+    GUI.addMaterial('modelSkinMaterial2', this.modelSkinMaterial2)
 
-    this.model.getObjectByName('black').material = modelSkinMaterial
-    this.model.getObjectByName('green').material = modelSkinMaterial2
+    this.model.getObjectByName('black').material = this.modelSkinMaterial
+    this.model.getObjectByName('green').material = this.modelSkinMaterial2
   }
 
   initAnimations() {

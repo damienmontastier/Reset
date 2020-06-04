@@ -3,10 +3,13 @@ import gsap from 'gsap'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGUI from '@/hooks/use-gui'
 import useRAF from '@/hooks/use-raf'
+import useGame from '@/hooks/use-game'
 
 import standardMaterial from '@/webgl/materials/standard'
 import GreenMaterial from '@/webgl/materials/green'
 import BlackMaterial from '@/webgl/materials/black'
+
+import LIGHT_CONFIG from '@/config/light'
 
 export default class Introduction extends THREE.Object3D {
   async load() {
@@ -38,21 +41,29 @@ export default class Introduction extends THREE.Object3D {
 
     this.zones = this.model.getObjectByName('zones')
     this.models = this.model.getObjectByName('models')
-    this.smartphone = this.model.getObjectByName('model_smartphone')
+    this.smartphone = this.model.getObjectByName('smartphone')
     this.smartphoneWireframe = this.wireframe.getObjectByName(
       'model_smartphone_wireframe'
     )
 
-    console.log(this)
-
     this.models.traverse((child) => {
-      if (child.name.includes('model_pipes_vert')) {
+      if (
+        child.name.includes('model_pipes_vert') ||
+        child.name.includes('model_spawn')
+      ) {
         child.material = GreenMaterial.clone()
-      } else if (child.name.includes('model_smartphone_screen')) {
-        child.material = standardMaterial.clone()
-        child.material.side = THREE.DoubleSide
       } else if (
-        child.name.includes('model_smartphone') ||
+        child.name.includes('model_floor') ||
+        child.name.includes('model_interact')
+      ) {
+        child.material = standardMaterial.clone()
+        child.material.emissive = new THREE.Color(0xeeeeee)
+      }
+    })
+
+    this.smartphone.traverse((child) => {
+      if (
+        child.name.includes('model_smartphone_coque') ||
         child.name.includes('model_smartphone_cam')
       ) {
         child.material = standardMaterial.clone()
@@ -71,9 +82,30 @@ export default class Introduction extends THREE.Object3D {
   init() {
     this.paused = false
     this.initZones()
+    // this.initLights()
 
     const RAF = useRAF()
     RAF.add('intro', this.update.bind(this), 0)
+  }
+
+  initLights() {
+    const { scene } = useGame()
+
+    this.ambientLight = new THREE.AmbientLight(0x383838, 0)
+    scene.add(this.ambientLight)
+
+    this.directionalLight = new THREE.DirectionalLight(
+      LIGHT_CONFIG.color,
+      LIGHT_CONFIG.intensity
+    )
+    // this.directionalLight.position.set(0, 512, 0)
+    this.directionalLight.position.copy(LIGHT_CONFIG.position)
+    this.directionalLight.lookAt(scene.position)
+    scene.add(this.directionalLight)
+
+    const GUI = useGUI()
+
+    GUI.addLight('light', this.directionalLight)
   }
 
   initZones() {
@@ -88,9 +120,7 @@ export default class Introduction extends THREE.Object3D {
         gui.addMaterial(zone.uuid.substring(0, 10), zone.material)
       }
 
-      if (name.includes('zone_spawn')) {
-        zone.visible = false
-      }
+      zone.visible = false
     })
   }
 
@@ -99,12 +129,8 @@ export default class Introduction extends THREE.Object3D {
 
     const sin = (Math.sin(clock.time) / 2 + 0.5) * 0.25
 
-    gsap.to(this.smartphone.position, {
-      z: sin
-    })
-
-    gsap.to(this.smartphoneWireframe.position, {
-      y: -sin
+    gsap.to([this.smartphone.position, this.smartphoneWireframe.position], {
+      y: sin
     })
   }
 }

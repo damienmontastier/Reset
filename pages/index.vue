@@ -71,14 +71,11 @@ export default {
 
       this.terrain = new GridTerrain(this.map.zones)
 
-      const light = new THREE.AmbientLight(0x404040) // soft white light
-      const light2 = new THREE.HemisphereLight(0xffffbb, 0x080820, 1)
-      this.introGroup.add(light)
-      this.introGroup.add(light2)
-
       this.player = new Player()
       await this.player.init()
       this.spawnPoint = this.map.spawnPoint.clone()
+      console.log(this.player.modelSkinMaterial2)
+      this.player.modelSkinMaterial2.emissive = new THREE.Color(0x00ff00)
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
 
