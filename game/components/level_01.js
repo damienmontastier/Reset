@@ -19,7 +19,7 @@ import Checkpoint from '@/webgl/components/checkpoint'
 
 // import GreenMaterial from '@/webgl/materials/green'
 // import BlackMaterial from '@/webgl/materials/black'
-import signScreenMaterial from '@/webgl/materials/sign-screen'
+import SignScreenMaterial from '@/webgl/materials/sign-screen'
 import terminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
 // import CheckpointMaterial from '@/webgl/materials/checkpoint'
@@ -32,7 +32,9 @@ export default class Level01 extends THREE.Object3D {
   async load() {
     // materials
     this.standardMaterial = standardMaterial.clone()
+    // this.standardMaterial.alphaTest = 0.5
     this.greenMaterial = new BasicMaterial({ color: 0x00ff00 })
+
     this.blackMaterial = new BasicMaterial({ color: 0x000000 })
 
     const GUI = useGUI()
@@ -60,7 +62,7 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/level_01/level01_12.glb'
+          path: 'obj/level_01/level01_14.glb'
         },
         {
           name: 'wireframe',
@@ -74,7 +76,7 @@ export default class Level01 extends THREE.Object3D {
     this.model = this.files.model.scene
     this.wireframe = this.files.wireframe
 
-    // this.wireframe.scale.setScalar(1.008)
+    // this.wireframe.scale.setScalar(1.1)
 
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
@@ -129,7 +131,7 @@ export default class Level01 extends THREE.Object3D {
     this.sign.material = this.standardMaterial
 
     this.signScreen = this.model.getObjectByName('model_sign_screen')
-    this.signScreen.material = signScreenMaterial
+    this.signScreen.material = new SignScreenMaterial().getMaterial()
 
     this.model.getObjectByName(
       'model_terminal_black'
@@ -166,15 +168,12 @@ export default class Level01 extends THREE.Object3D {
     this.initTreadmillsHitboxes()
     this.initZones()
 
-    // // instances
-    // await this.replaceInstances()
+    // const appearTl = this.appear()
+    // appearTl.pause()
 
-    const appearTl = this.appear()
-    appearTl.pause()
-
-    setTimeout(() => {
-      appearTl.play()
-    }, 3000)
+    // setTimeout(() => {
+    //   appearTl.play()
+    // }, 3000)
 
     const RAF = useRAF()
     RAF.add('level_01', this.update.bind(this), 0)
