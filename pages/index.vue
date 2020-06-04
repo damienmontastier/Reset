@@ -1,5 +1,5 @@
 <template>
-  <h1>nuxt-three</h1>
+  <introduction></introduction>
 </template>
 
 <script>
@@ -14,12 +14,14 @@ import useRAF from '@/hooks/use-raf'
 import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
 import GridTerrain from '@/game/features/grid-terrain'
-
 import DotsPlane from '@/webgl/components/dots-plane'
 
 import INTRODUCTION_CONFIG from '@/config/introduction'
 
 export default {
+  components: {
+    Introduction: () => import('@/components/elements/introduction')
+  },
   data() {
     return {
       currentZones: [],
