@@ -114,8 +114,6 @@ export default {
         return
       }
 
-      console.log(delta.x, e)
-
       if (this.player.positionTween || this.player.isFalling) return
 
       delta.add(this.player.position)
