@@ -32,8 +32,13 @@ export default class Level01 extends THREE.Object3D {
   async load() {
     // materials
     this.standardMaterial = standardMaterial.clone()
+    // this.standardMaterial.visible = false
     // this.standardMaterial.alphaTest = 0.5
     this.greenMaterial = new BasicMaterial({ color: 0x00ff00 })
+    // this.greenMaterial = new THREE.MeshBasicMaterial({
+    //   color: 0x00ff00
+    //   // transparent: true
+    // })
 
     this.blackMaterial = new BasicMaterial({ color: 0x000000 })
 
@@ -75,6 +80,7 @@ export default class Level01 extends THREE.Object3D {
 
     this.model = this.files.model.scene
     this.wireframe = this.files.wireframe
+    // this.wireframe.visible = false
 
     // this.wireframe.scale.setScalar(1.1)
 
@@ -118,6 +124,7 @@ export default class Level01 extends THREE.Object3D {
 
     // zones
     this.zones = this.model.getObjectByName('zones')
+    // this.zones.visible = false
 
     // spawn point
     this.spawnPoint = this.model
@@ -206,24 +213,20 @@ export default class Level01 extends THREE.Object3D {
       const name = zone.name
       if (name.includes('floor')) {
         zone.material = this.standardMaterial
+        // zone.visible = false
       }
-
       if (name.includes('treadmill')) {
         zone.visible = false
       }
-
       if (name.includes('terminal')) {
         zone.visible = false
       }
-
       if (name.includes('zone_spawn')) {
         zone.visible = false
       }
-
       if (name.includes('zone_tuto')) {
         zone.visible = false
       }
-
       if (name.includes('zone_endgame')) {
         zone.visible = false
       }

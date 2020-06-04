@@ -17,8 +17,8 @@ const trailMaterial = new THREE.MeshBasicMaterial({
   transparent: true,
   color: 0x00ff00,
   wireframe: true,
-  opacity: 0.25,
-  side: THREE.DoubleSide
+  opacity: 0.25
+  // side: THREE.DoubleSide
 })
 
 // const JUMP_DURATION = 0.1
