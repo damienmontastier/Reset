@@ -13,9 +13,10 @@ export default class SignScreenMaterial {
   }
 
   getMaterial() {
-    return new THREE.MeshBasicMaterial({
+    this.material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       map: this.texture
     })
+    return this.material
   }
 }
