@@ -135,16 +135,16 @@ export default {
         .volume(1)
         .loop(true)
 
-      // const {
-      //   OrbitControls
-      // } = require('three/examples/jsm/controls/OrbitControls.js')
+      const {
+        OrbitControls
+      } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      // const { camera } = useCamera()
-      // const cameraControls = new OrbitControls(
-      //   camera,
-      //   document.querySelector('#__nuxt')
-      // )
-      // cameraControls.enableKeys = false
+      const { camera } = useCamera()
+      const cameraControls = new OrbitControls(
+        camera,
+        document.querySelector('#__nuxt')
+      )
+      cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
@@ -316,13 +316,13 @@ export default {
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      gsap.to(camera.position, {
-        x: nextPosition.x,
-        y: nextPosition.y,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(camera.position, {
+      //   x: nextPosition.x,
+      //   y: nextPosition.y,
+      //   z: nextPosition.z,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
 
       gsap.to(this.dotsPlane.position, {
         x: nextPosition.x - 4,
