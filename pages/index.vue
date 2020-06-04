@@ -8,7 +8,7 @@
 import useGame from '@/hooks/use-game'
 import useCamera from '@/hooks/use-camera'
 import useClock from '@/hooks/use-clock'
-// import useKeyboard from '@/hooks/use-keyboard'
+import useWebGL from '@/hooks/use-webgl'
 import useRAF from '@/hooks/use-raf'
 
 import Player from '@/game/components/player'
@@ -16,6 +16,8 @@ import MapIntroduction from '@/game/components/intro'
 import GridTerrain from '@/game/features/grid-terrain'
 
 import DotsPlane from '@/webgl/components/dots-plane'
+
+import INTRODUCTION_CONFIG from '@/config/introduction'
 
 export default {
   data() {
@@ -43,7 +45,10 @@ export default {
   methods: {
     async init() {
       const { scene } = useGame()
+      const { scene: webglScene } = useWebGL()
       const { camera } = useCamera()
+
+      webglScene.background = new THREE.Color(0xffffff)
 
       const {
         OrbitControls
@@ -79,7 +84,8 @@ export default {
 
       this.$controller.events.on('keyup', this.onKeydown)
 
-      this.dotsPlane = new DotsPlane()
+      this.dotsPlane = new DotsPlane(INTRODUCTION_CONFIG.dots)
+
       scene.add(this.dotsPlane)
       this.dotsPlane.scale.setScalar(50)
       this.dotsPlane.rotation.x = -Math.PI / 2

@@ -154,13 +154,13 @@ export default {
 
       // this.dotsPlane.position.z = -10
 
-      this.dotsPlane.scale.setScalar(25)
-      this.dotsPlane.rotation.x = -Math.PI / 2
+      // this.dotsPlane.scale.setScalar(25)
+      // this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
-      this.dotsPlane.position.y = -2
-      this.dotsPlane.position.x = -4
-      this.dotsPlane.position.z = -15
+      // this.dotsPlane.position.y = -2
+      // this.dotsPlane.position.x = -4
+      // this.dotsPlane.position.z = -15
       // const { composer } = useWebGL()
       // const { bloomEffect } = composer
 
@@ -214,8 +214,7 @@ export default {
         this.player.position.copy(this.spawnPoint)
       }
 
-      // Restart chronometre du niveau
-      // Respaw personnage au spaw point
+      // TODO - Restart chronometre du niveau
     },
 
     onKeydown(e) {

@@ -63,7 +63,7 @@ export default class Introduction extends THREE.Object3D {
     this.spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
 
     this.add(this.model)
-    // this.add(this.wireframe)
+    this.add(this.wireframe)
 
     this.init()
   }

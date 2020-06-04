@@ -4,8 +4,15 @@ import fragmentShader from '@/webgl/materials/dots-pattern/fragment.glsl'
 import useGUI from '@/hooks/use-gui'
 
 export default class DotsPlane extends THREE.Object3D {
-  constructor() {
+  constructor({
+    noiseAmplitude = 0.0025,
+    noiseFrequency = 10,
+    dotsFrenquency = 100,
+    dotsRadius = 0.2,
+    color = 0x00ff00
+  } = {}) {
     super()
+
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100)
 
     this.material = new THREE.ShaderMaterial({
@@ -14,33 +21,31 @@ export default class DotsPlane extends THREE.Object3D {
           value: 0
         },
         uNoiseAmplitude: {
-          value: 0.0025
+          value: noiseAmplitude
         },
         uNoiseFrequency: {
-          value: 10
+          value: noiseFrequency
         },
         uDotsFrenquency: {
-          value: 100
+          value: dotsFrenquency
         },
         uDotsRadius: {
-          value: 0.07
+          value: dotsRadius
         },
         uOffset: {
           value: new THREE.Vector2(0, 0)
         },
         uColor: {
-          value: new THREE.Color(0x00ff00)
+          value: new THREE.Color(color)
         }
       },
       vertexShader,
       fragmentShader,
-      // transparent: true,
-      color: new THREE.Color(0xffffff),
+      transparent: true,
       extensions: {
         derivatives: true
       }
     })
-    // this.mesh = new THREE.Points(this.geometry, this.material)
     this.mesh = new THREE.Mesh(this.geometry, this.material)
     this.add(this.mesh)
 
