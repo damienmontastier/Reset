@@ -26,20 +26,31 @@ export default {
         base: '/',
         files: [
           {
-            name: 'solid',
+            name: 'debug_solid',
             path: 'obj/debug/debug_solid.glb'
           },
           {
-            name: 'wireframe',
+            name: 'debug_wireframe',
             path: 'obj/debug/debug_wireframe.obj'
+          },
+          {
+            name: 'level01_solid',
+            path: 'obj/level_01/level01_14.glb'
+          },
+          {
+            name: 'level01_wireframe',
+            path: 'obj/level_01/level01_07_wireframe.obj'
           }
         ]
       })
 
       this.files = await assetsManager.get('debug')
 
-      this.model = this.files.solid.scene
-      this.wireframe = this.files.wireframe
+      this.debug_solid = this.files.debug_solid.scene
+      this.debug_wireframe = this.files.debug_wireframe
+
+      this.level01_solid = this.files.level01_solid.scene
+      this.level01_wireframe = this.files.level01_wireframe
     },
     async init() {
       await this.load()
@@ -69,12 +80,24 @@ export default {
       this.directionalLight.lookAt(scene.position)
       scene.add(this.directionalLight)
 
-      scene.add(this.model)
-      scene.add(this.wireframe)
+      scene.add(this.debug_solid)
+      scene.add(this.debug_wireframe)
+
+      scene.add(this.level01_solid)
+      scene.add(this.level01_wireframe)
+
+      this.level01_solid.position.y = 5
+      this.level01_wireframe.position.y = 5
 
       this.standardMaterial = standardMaterial.clone()
 
-      this.model.getObjectByName('model_floor').material = this.standardMaterial
+      this.debug_solid.traverse((child) => {
+        child.material = this.standardMaterial
+      })
+
+      this.level01_solid.traverse((child) => {
+        child.material = this.standardMaterial
+      })
 
       const GUI = useGUI()
 
@@ -88,8 +111,11 @@ export default {
         .step(0.01)
         .name('green appear')
 
-      this.wireframe.scale.setScalar(1.01)
-      this.wireframe.traverse((child) => {
+      this.debug_wireframe.scale.setScalar(1.01)
+      this.debug_wireframe.traverse((child) => {
+        child.material = this.greenMaterial
+      })
+      this.level01_wireframe.traverse((child) => {
         child.material = this.greenMaterial
       })
     }

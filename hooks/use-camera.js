@@ -1,19 +1,16 @@
-import * as THREE from 'three'
+// import { TweenLite } from 'gsap'
+// import { RoughEase, Linear } from 'gsap'
+
+import gsap from 'gsap'
 import viewport from '@/plugins/viewport'
 
 let camera
 
-class Camera {
+class Camera extends THREE.Object3D {
   constructor() {
-    // camera
-    // this.camera = new THREE.OrthographicCamera(
-    //   viewport.width / -2,
-    //   viewport.width / 2,
-    //   viewport.height / 2,
-    //   viewport.height / -2,
-    //   -10000,
-    //   10000
-    // )
+    super()
+    gsap.registerPlugin(CustomEase)
+    gsap.registerPlugin(CustomWiggle)
 
     this.camera = new THREE.PerspectiveCamera(
       40,
@@ -22,24 +19,25 @@ class Camera {
       1000
     )
 
-    // this.originPosition = new THREE.Vector3(1.1, 6.6, 6).normalize()
-    // this.distance = 10
+    this.add(this.camera)
 
     // events
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
     viewport.events.on('resize', this.onWindowResizeHandler)
   }
 
+  shake() {
+    CustomWiggle.create('myWiggle', { wiggles: 12, type: 'easeOut' })
+
+    gsap.to(this.camera.position, {
+      duration: 0.8,
+      x: 1,
+      ease: 'myWiggle'
+    })
+  }
+
   onWindowResize() {
-    if (this.camera.type === 'PerspectiveCamera') {
-      this.camera.aspect = viewport.width / viewport.height
-    } else if (this.camera.type === 'OrthographicCamera') {
-      this.camera.left = viewport.width / -2
-      this.camera.right = viewport.width / 2
-      this.camera.top = viewport.height / 2
-      this.camera.bottom = viewport.height / -2
-      this.camera.updateProjectionMatrix()
-    }
+    this.camera.aspect = viewport.width / viewport.height
 
     this.camera.updateProjectionMatrix()
   }

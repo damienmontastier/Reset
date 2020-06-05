@@ -135,16 +135,16 @@ export default {
         .volume(1)
         .loop(true)
 
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
@@ -312,32 +312,32 @@ export default {
       // this.cameraMouvement.loop()
       this.dotsPlane.update(clock)
 
-      const { camera } = useCamera()
+      const camera = useCamera()
       const nextPosition = this.player.worldPosition
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      // gsap.to(camera.position, {
-      //   x: nextPosition.x,
-      //   y: nextPosition.y,
-      //   z: nextPosition.z,
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: nextPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
+
+      // gsap.to(this.dotsPlane.position, {
+      //   x: nextPosition.x - 4,
+      //   z: nextPosition.z - 15,
       //   duration: 1,
       //   ease: 'power2.out'
       // })
 
-      gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x - 4,
-        z: nextPosition.z - 15,
-        duration: 1,
-        ease: 'power2.out'
-      })
-
-      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-        x: nextPosition.x * 0.01,
-        y: -nextPosition.z * 0.01,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+      //   x: nextPosition.x * 0.01,
+      //   y: -nextPosition.z * 0.01,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
     },
 
     initIntersections() {
@@ -404,6 +404,9 @@ export default {
       // // TODO checkpoint
       // this.doRespawn()
 
+      const camera = useCamera()
+      camera.shake()
+
       await this.player.fall()
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
@@ -417,17 +420,17 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      const { camera } = useCamera()
+      // const camera = useCamera()
 
-      const params = {
-        lookAtPlayer: () => {
-          camera.lookAt(this.player.position)
-        }
-      }
+      // const params = {
+      //   lookAtPlayer: () => {
+      //     camera.camera.lookAt(this.player.position)
+      //   }
+      // }
 
-      GUI.camera.addVector('origin position', camera.originPosition)
-      GUI.camera.add(params, 'lookAtPlayer')
-      GUI.camera.add(camera, 'distance')
+      // GUI.camera.addVector('origin position', camera.originPosition)
+      // GUI.camera.add(params, 'lookAtPlayer')
+      // GUI.camera.add(camera, 'distance')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

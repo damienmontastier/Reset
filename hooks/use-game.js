@@ -1,6 +1,7 @@
 import useWebGL from '@/hooks/use-webgl'
 import useCamera from '@/hooks/use-camera'
 import useRAF from '@/hooks/use-raf'
+import useGUI from '@/hooks/use-gui'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -27,8 +28,10 @@ class Game {
   }
 
   initCamera() {
-    const { scene } = useWebGL()
-    const { camera } = useCamera()
+    // const { scene } = useWebGL()
+    const camera = useCamera()
+
+    this.scene.add(camera)
 
     camera.originPosition = new THREE.Vector3(1.1, 6, 6).normalize()
     camera.distance = 7
@@ -37,7 +40,10 @@ class Game {
       camera.originPosition.clone().multiplyScalar(camera.distance)
     )
 
-    camera.lookAt(scene.position.clone())
+    camera.camera.lookAt(this.scene.position.clone())
+
+    const GUI = useGUI()
+    GUI.addObject3D('camera', camera)
   }
 
   loop() {
