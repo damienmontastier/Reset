@@ -92,6 +92,7 @@ export default {
 }
 
 #appView {
+  pointer-events: none;
   position: relative;
   z-index: 10;
 }

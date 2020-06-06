@@ -1,5 +1,5 @@
 <template>
-  <div :class="{ 'btn--inverted': inverted }" class="btn">
+  <div class="btn">
     <div class="btn__inner">
       <slot />
       <div class="btn__arrows">
@@ -16,20 +16,15 @@ import ArrowIcon from '@/components/svg/arrow'
 export default {
   components: {
     ArrowIcon
-  },
-  props: {
-    inverted: {
-      type: Boolean,
-      default: false
-    }
   }
 }
 </script>
 
 <style lang="scss">
 .btn {
-  border: solid 1px var(--color-green);
-  color: var(--color-green);
+  background-color: var(--bg-color);
+  border: solid 1px var(--border-color);
+  color: var(--color);
   cursor: pointer;
   font-family: var(--font-cindie-d);
   font-size: 11px;
@@ -47,17 +42,6 @@ export default {
         .arrows__inner {
           transform: translateX(0%);
         }
-      }
-    }
-  }
-
-  &--inverted {
-    background-color: var(--color-green);
-    color: var(--color-black);
-
-    svg {
-      polygon {
-        fill: var(--color-black) !important;
       }
     }
   }
@@ -87,7 +71,7 @@ export default {
 
   svg {
     polygon {
-      fill: var(--color-green);
+      fill: var(--color);
     }
   }
 

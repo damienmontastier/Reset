@@ -1,7 +1,8 @@
 <template>
-  <div class="gameLevel1">
+  <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" />
+    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <solutions class="gameLevel01__solutions" />
   </div>
 </template>
 
@@ -29,7 +30,8 @@ import treadmillConfig from '@/config/treadmills'
 export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
-    gameNotifications: () => import('@/components/elements/game-notifications')
+    gameNotifications: () => import('@/components/elements/game-notifications'),
+    Solutions: () => import('@/components/game/solutions/solutions')
   },
   data() {
     return {
@@ -517,3 +519,22 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.gameLevel01 {
+  height: 100vh;
+  width: 100vw;
+
+  &__solutions,
+  &__terminal {
+    pointer-events: all;
+  }
+
+  &__solutions {
+    left: 64px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+</style>

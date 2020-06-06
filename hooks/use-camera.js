@@ -31,7 +31,7 @@ class Camera extends THREE.Object3D {
 
     gsap.to(this.camera.position, {
       duration: 0.8,
-      x: 1,
+      x: 0.5,
       ease: 'myWiggle'
     })
   }

@@ -19,7 +19,7 @@
       </terminal-fieldset>
 
       <div class="terminalP4__submit">
-        <btn @click.native="triggerCompleted" :inverted="true">Terminer</btn>
+        <btn @click.native="triggerCompleted">Terminer</btn>
       </div>
     </div>
   </div>

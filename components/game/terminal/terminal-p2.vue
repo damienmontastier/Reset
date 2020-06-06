@@ -28,8 +28,20 @@
       </terminal-fieldset>
 
       <div class="terminal__submit">
-        <btn @click.native="closeTerminal" :inverted="true">Annuler</btn>
-        <btn @click.native="nextPage">Continuer</btn>
+        <btn
+          style="--color: var(--color-black);
+          --bg-color: var(--color-green);
+          --border-color: var(--color-green);"
+          @click.native="closeTerminal"
+          >Annuler</btn
+        >
+        <btn
+          style="--color: var(--color-green);
+          --bg-color: var(--color-black);
+          --border-color: var(--color-green);"
+          @click.native="nextPage"
+          >Continuer</btn
+        >
       </div>
     </div>
   </div>

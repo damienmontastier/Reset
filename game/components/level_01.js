@@ -164,6 +164,18 @@ export default class Level01 extends THREE.Object3D {
 
     // const GUI = useGUI()
 
+    // zones
+    this.zones = this.solid.getObjectByName('zones')
+    this.zones.children.forEach((zone) => {
+      zone.visible = false
+    })
+
+    console.log(this.zones)
+
+    // this.zones.traverse((zone) => {
+    //   zone.visible = false
+    // })
+
     this.solid.traverse((child) => {
       if (child.name.includes('model_border')) {
         // child.material = GreenMaterial
@@ -176,6 +188,7 @@ export default class Level01 extends THREE.Object3D {
       }
 
       if (child.name.includes('zone_chekpoint')) {
+        child.visible = true
         child.position.y += -0.035
 
         child.scale.setScalar(0.95)
@@ -187,10 +200,6 @@ export default class Level01 extends THREE.Object3D {
         child.add(child.component)
       }
     })
-
-    // zones
-    this.zones = this.solid.getObjectByName('zones')
-    this.zones.visible = false
 
     // spawn point
     this.spawnPoint = this.solid
