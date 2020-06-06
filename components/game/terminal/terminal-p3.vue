@@ -33,10 +33,10 @@
 
       <div class="terminalP3__submit">
         <btn
+          @click.native="proceed"
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          @click.native="proceed"
         >
           Confirmer
         </btn>
