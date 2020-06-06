@@ -1,7 +1,8 @@
 <template>
-  <div class="gameLevel1">
+  <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" />
+    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <solutions class="gameLevel01__solutions" />
   </div>
 </template>
 
@@ -29,7 +30,8 @@ import treadmillConfig from '@/config/treadmills'
 export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
-    gameNotifications: () => import('@/components/elements/game-notifications')
+    gameNotifications: () => import('@/components/elements/game-notifications'),
+    Solutions: () => import('@/components/game/solutions/solutions')
   },
   data() {
     return {
@@ -135,16 +137,16 @@ export default {
         .volume(1)
         .loop(true)
 
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
@@ -311,32 +313,32 @@ export default {
       // this.cameraMouvement.loop()
       this.dotsPlane.update(clock)
 
-      const { camera } = useCamera()
+      const camera = useCamera()
       const nextPosition = this.player.worldPosition
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      // gsap.to(camera.position, {
-      //   x: nextPosition.x,
-      //   y: nextPosition.y,
-      //   z: nextPosition.z,
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: nextPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
+
+      // gsap.to(this.dotsPlane.position, {
+      //   x: nextPosition.x - 4,
+      //   z: nextPosition.z - 15,
       //   duration: 1,
       //   ease: 'power2.out'
       // })
 
-      gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x - 4,
-        z: nextPosition.z - 15,
-        duration: 1,
-        ease: 'power2.out'
-      })
-
-      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-        x: nextPosition.x * 0.01,
-        y: -nextPosition.z * 0.01,
-        duration: 1,
-        ease: 'power2.out'
-      })
+      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+      //   x: nextPosition.x * 0.01,
+      //   y: -nextPosition.z * 0.01,
+      //   duration: 1,
+      //   ease: 'power2.out'
+      // })
     },
 
     initIntersections() {
@@ -403,6 +405,9 @@ export default {
       // // TODO checkpoint
       // this.doRespawn()
 
+      const camera = useCamera()
+      camera.shake()
+
       await this.player.fall()
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
@@ -416,17 +421,17 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      const { camera } = useCamera()
+      // const camera = useCamera()
 
-      const params = {
-        lookAtPlayer: () => {
-          camera.lookAt(this.player.position)
-        }
-      }
+      // const params = {
+      //   lookAtPlayer: () => {
+      //     camera.camera.lookAt(this.player.position)
+      //   }
+      // }
 
-      GUI.camera.addVector('origin position', camera.originPosition)
-      GUI.camera.add(params, 'lookAtPlayer')
-      GUI.camera.add(camera, 'distance')
+      // GUI.camera.addVector('origin position', camera.originPosition)
+      // GUI.camera.add(params, 'lookAtPlayer')
+      // GUI.camera.add(camera, 'distance')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')
@@ -513,3 +518,22 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.gameLevel01 {
+  height: 100vh;
+  width: 100vw;
+
+  &__solutions,
+  &__terminal {
+    pointer-events: all;
+  }
+
+  &__solutions {
+    left: 64px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+}
+</style>

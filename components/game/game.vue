@@ -7,12 +7,16 @@
       <button @click="$events.emit('TERMINAL COMPLETED')">
         complete terminal
       </button>
+      <button @click="cameraShake">
+        camera shake
+      </button>
     </div>
   </div>
 </template>
 
 <script>
 import useGame from '@/hooks/use-game'
+import useCamera from '@/hooks/use-camera'
 
 export default {
   mounted() {
@@ -24,6 +28,9 @@ export default {
   methods: {
     goTerminal() {
       this.$events.emit('teleportToTerminal')
+    },
+    cameraShake() {
+      useCamera().shake()
     }
   }
 }

@@ -1,5 +1,3 @@
-// export default new THREE.MeshBasicMaterial({ color: 0xffffff })
-
 export default class SignScreenMaterial {
   constructor() {
     this.video = document.createElement('video')
@@ -14,7 +12,6 @@ export default class SignScreenMaterial {
 
   getMaterial() {
     this.material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
       map: this.texture
     })
     return this.material

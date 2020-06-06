@@ -41,7 +41,8 @@ class WebGL {
       canvas: this.canvas,
       context,
       scene: this.scene,
-      powerPreference: 'high-performance'
+      powerPreference: 'high-performance',
+      premultipliedAlpha: false
     })
     this.renderer.setSize(viewport.width, viewport.height)
     // this.renderer.setPixelRatio(window.devicePixelRatio || 1)

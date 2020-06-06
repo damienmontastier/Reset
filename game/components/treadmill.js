@@ -145,7 +145,7 @@ export default class Treadmill extends THREE.Object3D {
   update(clock) {
     if (!windowFocus.visible) return
 
-    const { camera } = useCamera()
+    const camera = useCamera()
     if (camera.position.distanceTo(this.parent.position) > 20) return
 
     const deltaPosition = this.deltaPosition.multiply(
