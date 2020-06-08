@@ -93,16 +93,16 @@ export default {
   &__list {
     display: flex;
     justify-content: space-between;
-    left: -8px;
+    left: -10px;
     padding: 40px 0;
     position: relative;
-    width: calc(100% + 16px);
+    width: calc(100% + 20px);
   }
 
   &__buttons {
-    left: -8px;
+    left: -10px;
     position: relative;
-    width: calc(100% + 16px);
+    width: calc(100% + 20px);
 
     > * {
       margin-bottom: 8px;

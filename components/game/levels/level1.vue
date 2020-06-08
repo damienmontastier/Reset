@@ -3,6 +3,7 @@
     <game-notifications ref="notifications" />
     <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
     <solutions class="gameLevel01__solutions" />
+    <mission-report class="gameLevel01__missionReport" />
   </div>
 </template>
 
@@ -31,7 +32,9 @@ export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
     gameNotifications: () => import('@/components/elements/game-notifications'),
-    Solutions: () => import('@/components/game/solutions/solutions')
+    Solutions: () => import('@/components/game/solutions/solutions'),
+    MissionReport: () =>
+      import('@/components/game/mission-report/mission-report')
   },
   data() {
     return {
@@ -525,15 +528,24 @@ export default {
   width: 100vw;
 
   &__solutions,
-  &__terminal {
+  &__terminal,
+  &__missionReport {
     pointer-events: all;
   }
 
   &__solutions {
+    display: none;
     left: 64px;
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  &__missionReport {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
   }
 }
 </style>
