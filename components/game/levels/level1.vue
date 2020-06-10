@@ -154,13 +154,17 @@ export default {
 
       const { scene: gameScene } = useGame()
 
-      this.dotsPlane = new DotsPlane()
-      // gameScene.add(this.dotsPlane)
+      this.dotsPlane = new DotsPlane({
+        dotsFrenquency: 148,
+        dotsRadius: 0.07,
+        noiseAmplitude: 0.002
+      })
+      gameScene.add(this.dotsPlane)
 
-      // this.dotsPlane.position.z = -10
+      this.dotsPlane.position.z = -1
 
-      // this.dotsPlane.scale.setScalar(25)
-      // this.dotsPlane.rotation.x = -Math.PI / 2
+      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
       // this.dotsPlane.position.y = -2
@@ -329,19 +333,19 @@ export default {
         ease: 'power2.out'
       })
 
-      // gsap.to(this.dotsPlane.position, {
-      //   x: nextPosition.x - 4,
-      //   z: nextPosition.z - 15,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.position, {
+        x: nextPosition.x,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
 
-      // gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-      //   x: nextPosition.x * 0.01,
-      //   y: -nextPosition.z * 0.01,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
+        x: nextPosition.x * 0.02,
+        y: -nextPosition.z * 0.02,
+        duration: 1,
+        ease: 'power2.out'
+      })
     },
 
     initIntersections() {
@@ -542,6 +546,7 @@ export default {
   }
 
   &__missionReport {
+    display: none;
     left: 50%;
     position: absolute;
     top: 50%;
