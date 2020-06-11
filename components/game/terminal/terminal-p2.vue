@@ -28,19 +28,19 @@
       </terminal-fieldset>
 
       <div class="terminal__submit">
-        <btn
+        <ui-button
           @click.native="closeTerminal"
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          >Annuler</btn
+          >Annuler</ui-button
         >
-        <btn
+        <ui-button
           @click.native="nextPage"
           style="--color: var(--color-green);
           --bg-color: var(--color-black);
           --border-color: var(--color-green);"
-          >Continuer</btn
+          >Continuer</ui-button
         >
       </div>
     </div>
@@ -50,7 +50,7 @@
 <script>
 export default {
   components: {
-    Btn: () => import('@/components/components/btn'),
+    UiButton: () => import('@/components/components/ui-button'),
     TerminalFieldset: () =>
       import('@/components/game/terminal/terminal-fieldset')
   },

@@ -32,14 +32,14 @@
       </terminal-fieldset>
 
       <div class="terminalP3__submit">
-        <btn
+        <ui-button
           @click.native="proceed"
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
         >
           Confirmer
-        </btn>
+        </ui-button>
       </div>
     </div>
   </div>
@@ -48,7 +48,7 @@
 <script>
 export default {
   components: {
-    Btn: () => import('@/components/components/btn'),
+    UiButton: () => import('@/components/components/ui-button'),
     SliderRange: () => import('@/components/components/slider-range'),
     TerminalFieldset: () =>
       import('@/components/game/terminal/terminal-fieldset')

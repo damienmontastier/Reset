@@ -1,10 +1,5 @@
 <template>
   <div id="app">
-    <!-- <img class="intro" src="/img/intro.png" alt v-if="!clicked" />
-    <div class="gameplay" v-if="clicked && !keyDowned" />
-    <div class="tuto" v-if="tuto" />
-    <img class="endgame" src="/img/endgame.png" alt v-if="endgame" />-->
-    <!-- <app-noise id="appNoise" /> -->
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
@@ -15,21 +10,13 @@
 
 <script>
 import { mapState } from 'vuex'
-
-// import { Howler } from 'howler'
-// import useClock from '@/hooks/use-clock'
-// import useKeyboard from '@/hooks/use-keyboard'
 import useGUI from '@/hooks/use-gui'
-
-// import introSound from '~/static/sounds/intro_son_01.mp3'
-// import level01 from '~/static/sounds/level1.mp3'
 
 export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
     appHeader: () => import('@/components/elements/header')
-    // appNoise: () => import('@/components/shell/app-noise')
   },
   data() {
     return {

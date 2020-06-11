@@ -17,32 +17,29 @@
       />
     </div>
     <div class="solutions__buttons">
-      <btn
+      <ui-button
         style="--color: var(--color-grey-lighten);
           --bg-color: var(--color-black);
           --border-color: var(--color-grey-lighten);"
       >
         hard drive
-      </btn>
-      <btn
+      </ui-button>
+      <ui-button
         style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
       >
         continue
-      </btn>
+      </ui-button>
     </div>
   </section>
 </template>
 
 <script>
-import Solution from './solution'
-import Btn from '@/components/components/btn'
-
 export default {
   components: {
-    Solution,
-    Btn
+    Solution: () => import('./solution'),
+    UiButton: () => import('@/components/components/ui-button')
   },
   data() {
     return {

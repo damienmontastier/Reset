@@ -4,6 +4,6 @@ export default {
     dotsFrenquency: 100,
     noiseAmplitude: 0.0025,
     noiseFrequency: 10,
-    color: 0x00ff00
+    color: 0x2ff000
   }
 }

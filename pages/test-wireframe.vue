@@ -95,7 +95,7 @@ export default {
       })
 
       const wireframeMaterial = new THREE.MeshBasicMaterial({
-        color: 0x00ff00
+        color: 0x2ff000
       })
 
       this.wireframeModel.traverse((child) => {
@@ -158,7 +158,7 @@ export default {
       //   })
 
       // const wireframeMaterial = new THREE.MeshBasicMaterial({
-      //   color: 0x00ff00,
+      //   color: 0x2ff000,
       //   transparent: true
       //   // side: THREE.BackSide,
       //   // depthWrite: false

@@ -9,7 +9,7 @@ export default class DotsPlane extends THREE.Object3D {
     noiseFrequency = 10,
     dotsFrenquency = 100,
     dotsRadius = 0.2,
-    color = 0x00ff00
+    color = 0x2ff000
   } = {}) {
     super()
 

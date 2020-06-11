@@ -37,22 +37,21 @@
         <p>09</p>
       </div>
     </div>
-    <btn
+    <ui-button
       class="missionReport__btn"
       style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
     >
       end game
-    </btn>
+    </ui-button>
   </section>
 </template>
 
 <script>
-import Btn from '@/components/components/btn'
 export default {
   components: {
-    Btn
+    UiButton: () => import('@/components/components/ui-button')
   }
 }
 </script>

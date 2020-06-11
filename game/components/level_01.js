@@ -32,9 +32,9 @@ export default class Level01 extends THREE.Object3D {
   async load() {
     // materials
     this.standardMaterial = standardMaterial.clone()
-    this.greenMaterial = new BasicMaterial({ color: 0x00ff00 })
+    this.greenMaterial = new BasicMaterial({ color: 0x2ff000 })
 
-    // this.greenMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    // this.greenMaterial = new THREE.MeshBasicMaterial({ color: 0x2ff000 })
 
     this.blackMaterial = new BasicMaterial({ color: 0x000000 })
 

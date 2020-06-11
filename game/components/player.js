@@ -15,7 +15,7 @@ let SkeletonUtils
 const trailMaterial = new THREE.MeshBasicMaterial({
   skinning: true,
   transparent: true,
-  color: 0x00ff00,
+  color: 0x2ff000,
   wireframe: true,
   opacity: 0.25
 })

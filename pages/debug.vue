@@ -103,7 +103,7 @@ export default {
 
       GUI.addMaterial('standard material', this.standardMaterial)
 
-      this.greenMaterial = new BasicMaterial({ color: 0x00ff00 })
+      this.greenMaterial = new BasicMaterial({ color: 0x2ff000 })
 
       GUI.add(this.greenMaterial.uniforms.uAppear, 'value')
         .min(0)

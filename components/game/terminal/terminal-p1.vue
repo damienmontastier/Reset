@@ -33,19 +33,19 @@
       </terminal-fieldset>
 
       <div class="terminal__submit">
-        <btn
+        <ui-button
           @click.native="restartLevel"
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          >recommencer</btn
+          >recommencer</ui-button
         >
-        <btn
+        <ui-button
           @click.native="closeTerminal"
           style="--color: var(--color-green);
           --bg-color: var(--color-black);
           --border-color: var(--color-green);"
-          >fermer</btn
+          >fermer</ui-button
         >
         <div class="terminal__submit__continue">
           Pour
@@ -61,7 +61,7 @@
 <script>
 export default {
   components: {
-    Btn: () => import('@/components/components/btn'),
+    UiButton: () => import('@/components/components/ui-button'),
     TerminalFieldset: () =>
       import('@/components/game/terminal/terminal-fieldset')
   },
