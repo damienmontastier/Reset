@@ -62,8 +62,8 @@ export default {
         document.querySelector('#__nuxt')
       )
       cameraControls.enableKeys = false
-      camera.position.set(16, 4.8, 12.89)
-      camera.rotation.set(0, 1.25, 0)
+      camera.position.set(2.64, 3.189, 13.647)
+      camera.rotation.set(0, 70.6, 0)
 
       this.introGroup = new THREE.Group()
       scene.add(this.introGroup)
@@ -77,9 +77,9 @@ export default {
       this.player = new Player()
       await this.player.init()
       this.spawnPoint = this.map.spawnPoint.clone()
-      console.log(this.player.modelSkinMaterial2)
       this.player.modelSkinMaterial2.emissive = new THREE.Color(0x00ff00)
       this.player.position.copy(this.spawnPoint)
+      this.player.addSkeleton()
       this.introGroup.add(this.player)
 
       this.$controller.events.on('keyup', this.onKeydown)

@@ -41,7 +41,7 @@ export default class Introduction extends THREE.Object3D {
 
     this.zones = this.model.getObjectByName('zones')
     this.models = this.model.getObjectByName('models')
-    this.smartphone = this.model.getObjectByName('smartphone')
+    this.smartphone = this.model.getObjectByName('model_smartphone')
     this.smartphoneWireframe = this.wireframe.getObjectByName(
       'model_smartphone_wireframe'
     )
@@ -71,7 +71,13 @@ export default class Introduction extends THREE.Object3D {
       }
     })
 
-    this.spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
+    const spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
+
+    this.spawnPoint = new THREE.Vector3(
+      spawnPoint.x,
+      Math.abs(spawnPoint.y),
+      spawnPoint.z
+    )
 
     this.add(this.model)
     this.add(this.wireframe)

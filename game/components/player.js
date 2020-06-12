@@ -10,6 +10,8 @@ import useAudio from '@/hooks/use-audio'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
+import PlayerMaterial from '@/webgl/materials/mPlayer/standard'
+
 let SkeletonUtils
 
 const trailMaterial = new THREE.MeshBasicMaterial({
@@ -52,7 +54,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character 05_Idle_Run_Fall.glb'
+          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose.glb'
         }
       ]
     })
@@ -79,11 +81,21 @@ export default class Player extends THREE.Object3D {
       flatShading: true
     })
 
+    console.log(this.modelSkinMaterial2)
+
     GUI.addMaterial('modelSkinMaterial', this.modelSkinMaterial)
     GUI.addMaterial('modelSkinMaterial2', this.modelSkinMaterial2)
 
-    this.model.getObjectByName('black').material = this.modelSkinMaterial
-    this.model.getObjectByName('green').material = this.modelSkinMaterial2
+    const playerMaterial = new PlayerMaterial({
+      flatShading: true,
+      diffuse: 0xff0000
+    })
+    // const playerMaterialClone = playerMaterial.clone()
+
+    GUI.addMaterial('playerMaterial', playerMaterial)
+
+    this.model.getObjectByName('black').material = playerMaterial
+    this.model.getObjectByName('green').material = playerMaterial
   }
 
   initAnimations() {
@@ -98,6 +110,9 @@ export default class Player extends THREE.Object3D {
       ),
       fall: this.animationMixer.clipAction(
         THREE.AnimationClip.findByName(this.modelAnimations, 'fall')
+      ),
+      tPose: this.animationMixer.clipAction(
+        THREE.AnimationClip.findByName(this.modelAnimations, 'T-Pose')
       )
     }
   }
@@ -138,7 +153,7 @@ export default class Player extends THREE.Object3D {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
     this.animations.run.stop()
     this.animations.fall.stop()
-    this.animations.idle.play()
+    this.animations.idle.stop()
   }
 
   async init() {
@@ -150,9 +165,6 @@ export default class Player extends THREE.Object3D {
     this.initAnimations()
     this.initModel()
     this.initHitbox()
-
-    // this.animations.idle.play()
-    // this.animations.fall.play()
 
     this.setInitialState()
 
@@ -190,6 +202,26 @@ export default class Player extends THREE.Object3D {
         resolve()
       }, 700)
     })
+  }
+
+  addSkeleton() {
+    const trail = SkeletonUtils.clone(this.model)
+    // const material = trailMaterial.clone()
+
+    const playerMaterial = new PlayerMaterial({
+      wireframe: true,
+      color: 0x00ff00,
+      diffuse: 0x00ff00
+    })
+
+    trail.getObjectByName('black').material = playerMaterial
+    trail.getObjectByName('green').material = playerMaterial
+
+    trail.position.copy(this.position)
+
+    // const { scene } = useGame()
+
+    // scene.add(trail)
   }
 
   moveTo(position) {

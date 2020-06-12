@@ -1,6 +1,8 @@
 <template>
   <div class="introductionP1">
-    <logo></logo>
+    <div class="introductionP1__logo">
+      <logo></logo>
+    </div>
     <div class="introductionP1__intro border">
       <p>Will you help us fight the world's addiction to Smartphones ?</p>
 
@@ -21,6 +23,14 @@ export default {
 <style lang="scss">
 .introductionP1 {
   width: 23vw;
+
+  &__logo {
+    display: inline-block;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+    width: 100%;
+  }
 
   &__intro {
     background: var(--color-grey-introduction);
