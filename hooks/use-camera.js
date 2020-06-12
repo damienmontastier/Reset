@@ -6,20 +6,18 @@ import viewport from '@/plugins/viewport'
 
 let camera
 
-class Camera extends THREE.Object3D {
+class Camera {
   constructor() {
-    super()
+    // super()
     gsap.registerPlugin(CustomEase)
     gsap.registerPlugin(CustomWiggle)
 
     this.camera = new THREE.PerspectiveCamera(
       40,
       viewport.width / viewport.height,
-      1,
-      1000
+      0.1,
+      100000
     )
-
-    this.add(this.camera)
 
     // events
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
