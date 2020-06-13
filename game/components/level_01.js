@@ -34,17 +34,17 @@ export default class Level01 extends THREE.Object3D {
     this.standardMaterial = standardMaterial.clone()
     this.greenMaterial = new BasicMaterial({ color: 0x2ff000 })
 
-    // this.greenMaterial = new THREE.MeshBasicMaterial({ color: 0x2ff000 })
+    // this.solidGreenMaterial = new THREE.MeshBasicMaterial({ color: 0x2ff000 })
 
     this.blackMaterial = new BasicMaterial({ color: 0x000000 })
 
     const GUI = useGUI()
     GUI.addMaterial('solid material', this.standardMaterial)
-    // GUI.add(this.greenMaterial.uniforms.uAppear, 'value')
-    //   .min(0)
-    //   .max(1)
-    //   .step(0.01)
-    //   .name('green appear')
+    GUI.add(this.greenMaterial.uniforms.uAppear, 'value')
+      .min(0)
+      .max(1)
+      .step(0.01)
+      .name('green appear')
 
     GUI.add(this.greenMaterial, 'alphaTest')
       .min(0)

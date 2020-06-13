@@ -27,6 +27,7 @@ import DotsPlane from '@/webgl/components/dots-plane'
 // import Terminal from '@/components/game/terminal/terminal'
 
 import treadmillConfig from '@/config/treadmills'
+import level01Config from '@/config/level01'
 
 export default {
   components: {
@@ -154,26 +155,13 @@ export default {
 
       const { scene: gameScene } = useGame()
 
-      this.dotsPlane = new DotsPlane({
-        dotsFrenquency: 148,
-        dotsRadius: 0.07,
-        noiseAmplitude: 0.002
-      })
+      this.dotsPlane = new DotsPlane(level01Config.dots)
       gameScene.add(this.dotsPlane)
 
       this.dotsPlane.position.z = -1
 
       this.dotsPlane.scale.setScalar(50)
       this.dotsPlane.rotation.x = -Math.PI / 2
-      // this.dotsPlane.rotation.z = -Math.PI / 4
-
-      // this.dotsPlane.position.y = -2
-      // this.dotsPlane.position.x = -4
-      // this.dotsPlane.position.z = -15
-      // const { composer } = useWebGL()
-      // const { bloomEffect } = composer
-
-      // bloomEffect.selection.add(this.dotsPlane)
 
       this.levelGroup = new THREE.Group()
 
@@ -182,8 +170,6 @@ export default {
       this.levelGroup.add(this.map)
 
       this.terrain = new GridTerrain(this.map.zones)
-      // const { scene: webglScene } = useWebGL()
-      // webglScene.add(this.terrain.debug)
 
       this.initIntersections()
 
@@ -191,16 +177,6 @@ export default {
       this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
-
-      // this.cameraMouvement = new CameraMouvement({
-      //   mesh: this.player,
-      //   duration: 1
-      // })
-
-      // const audioManager = useAudioManager()
-
-      // await audioManager.add(introSound)
-      // audioManager.play(introSound)
 
       this.$controller.events.on('keyup', this.onKeydown)
 
@@ -320,7 +296,7 @@ export default {
       // this.cameraMouvement.loop()
       this.dotsPlane.update(clock)
 
-      const camera = useCamera()
+      const { camera } = useCamera()
       const nextPosition = this.player.worldPosition
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
@@ -428,17 +404,17 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      // const camera = useCamera()
+      const { camera } = useCamera()
 
-      // const params = {
-      //   lookAtPlayer: () => {
-      //     camera.camera.lookAt(this.player.position)
-      //   }
-      // }
+      const params = {
+        lookAtPlayer: () => {
+          camera.camera.lookAt(this.player.position)
+        }
+      }
 
-      // GUI.camera.addVector('origin position', camera.originPosition)
-      // GUI.camera.add(params, 'lookAtPlayer')
-      // GUI.camera.add(camera, 'distance')
+      GUI.camera.addVector('origin position', camera.originPosition)
+      GUI.camera.add(params, 'lookAtPlayer')
+      GUI.camera.add(camera, 'distance')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

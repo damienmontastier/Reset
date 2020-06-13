@@ -19,9 +19,10 @@ export default class BasicMaterial extends THREE.ShaderMaterial {
         uNoiseFrequency: {
           value: 1000
         }
-      }
-      // transparent: true,
-      // alphaTest: 0.2
+      },
+      transparent: true,
+      depthWrite: true,
+      depthTest: true
     })
   }
 }
