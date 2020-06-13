@@ -1,12 +1,7 @@
 import useAssetsManager from '@/hooks/use-assets-manager'
 
 export default class Spline extends THREE.Object3D {
-  constructor(file) {
-    super()
-    this.file = file
-  }
-
-  async load() {
+  async load(path) {
     const assetsManager = useAssetsManager()
 
     assetsManager.loader.addGroup({
@@ -15,23 +10,28 @@ export default class Spline extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: this.file
+          path
         }
       ]
     })
 
     this.files = await assetsManager.get('spline' + this.uuid)
+
+    this.init()
+
+    return this
   }
 
-  async init() {
-    await this.load()
-
+  init() {
     this.model = this.files.model
     this.path = this.model.children[0]
 
     this.vectors = this.computeVectors()
     this.curvedPath = new THREE.CatmullRomCurve3(this.vectors)
-    this.curvedPath.closed = true
+    // this.curvedPath = new THREE.SplineCurve3(this.vectors)
+
+    // console.log(this.curvedPath)
+    // this.curvedPath.closed = true
     this.curvedPath.curveType = 'chordal'
 
     const geometry = new THREE.SphereBufferGeometry(1, 1, 1)
@@ -39,17 +39,15 @@ export default class Spline extends THREE.Object3D {
     const sphere = new THREE.Mesh(geometry, material)
     sphere.scale.setScalar(1)
 
-    this.vectors.forEach((vector) => {
-      const s = sphere.clone()
-      s.position.copy(vector)
-      this.add(s)
-    })
+    // this.vectors.forEach((vector) => {
+    //   const s = sphere.clone()
+    //   s.position.copy(vector)
+    //   this.add(s)
+    // })
   }
 
   computeVectors() {
     this.vectors = []
-
-    // console.log(this.model)
 
     const position = this.path.geometry.attributes.position
 

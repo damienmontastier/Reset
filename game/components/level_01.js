@@ -1,15 +1,16 @@
 import gsap from 'gsap'
 
 import Treadmill from './treadmill'
-// import ToonMaterial from '@/webgl/materials/toon.js'
 
 import PostsInstances from '@/game/components/posts-instances'
+import DotsPlane from '@/webgl/components/dots-plane'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 import useAssetsManager from '@/hooks/use-assets-manager'
 import useGame from '@/hooks/use-game'
 import useGUI from '@/hooks/use-gui'
-import useRAF from '@/hooks/use-raf'
+import useCamera from '@/hooks/use-camera'
+// import useRAF from '@/hooks/use-raf'
 // import useKeyboard from '@/hooks/use-keyboard'
 
 import keyboard from '@/plugins/keyboard'
@@ -22,11 +23,10 @@ import Checkpoint from '@/webgl/components/checkpoint'
 import SignScreenMaterial from '@/webgl/materials/sign-screen'
 import TerminalScreenMaterial from '@/webgl/materials/terminal-screen'
 import standardMaterial from '@/webgl/materials/standard'
-// import CheckpointMaterial from '@/webgl/materials/checkpoint'
-
 import BasicMaterial from '@/webgl/materials/basic'
 
 import LIGHT_CONFIG from '@/config/light'
+import LEVEL01_CONFIG from '@/config/level01'
 
 export default class Level01 extends THREE.Object3D {
   async load() {
@@ -113,36 +113,54 @@ export default class Level01 extends THREE.Object3D {
     this.files = await assetsManager.get('level_01')
 
     this.solid = this.files.solid.scene
-    // this.solid.visible = false
     this.wireframe = this.files.wireframe
-    // this.wireframe.visible = false
+
+    this.add(this.solid)
+    this.add(this.wireframe)
 
     await PostsInstances.load()
 
     // instances
     await this.replaceInstances()
 
-    this.debug_model = this.files.debug_solid.scene
-    this.debug_wireframe = this.files.debug_wireframe
-    this.debug_wireframe.scale.setScalar(1.01)
-
-    this.debug_model.position.z = 9
-    this.debug_wireframe.position.z = 9
-
-    // this.debug_model.position.y = -1
-    // this.debug_wireframe.position.y = -1
-
-    this.debug_model.traverse((child) => {
-      child.material = this.standardMaterial
-    })
-
-    this.debug_wireframe.traverse((child) => {
-      child.material = this.greenMaterial
-    })
-    // this.wireframe.visible = false
-
     // this.wireframe.scale.setScalar(1.1)
 
+    this.init()
+  }
+
+  init() {
+    this.paused = false
+    keyboard.events.on('keydown', (e) => {
+      // SHIFT+P to stop
+      if (e.keyCode === 80 && e.shiftKey) {
+        this.paused = !this.paused
+        console.log('paused')
+      }
+    })
+
+    // spawn point
+    this.spawnPoint = this.solid
+      .getObjectByName('zone_spawn')
+      .position.clone()
+      .add(new THREE.Vector3(-0.5, 0, 0))
+
+    this.initLights()
+    this.applyMaterials()
+    this.initBackground()
+    this.initTreadmillsHitboxes()
+
+    // const appearTl = this.appear()
+    // appearTl.pause()
+
+    // setTimeout(() => {
+    //   appearTl.play()
+    // }, 3000)
+
+    // const RAF = useRAF()
+    // RAF.add('level_01', this.update.bind(this), 0)
+  }
+
+  applyMaterials() {
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
         // child.material = GreenMaterial
@@ -156,21 +174,11 @@ export default class Level01 extends THREE.Object3D {
       }
     })
 
-    this.add(this.solid)
-    this.add(this.wireframe)
-
-    // this.add(this.debug_model)
-    // this.add(this.debug_wireframe)
-
-    // const GUI = useGUI()
-
     // zones
     this.zones = this.solid.getObjectByName('zones')
     this.zones.children.forEach((zone) => {
       zone.visible = false
     })
-
-    console.log(this.zones)
 
     // this.zones.traverse((zone) => {
     //   zone.visible = false
@@ -201,12 +209,6 @@ export default class Level01 extends THREE.Object3D {
       }
     })
 
-    // spawn point
-    this.spawnPoint = this.solid
-      .getObjectByName('zone_spawn')
-      .position.clone()
-      .add(new THREE.Vector3(-0.5, 0, 0))
-
     // sign
     this.sign = this.solid.getObjectByName('model_sign')
 
@@ -227,33 +229,15 @@ export default class Level01 extends THREE.Object3D {
     this.solid.getObjectByName(
       'model_terminal_screen'
     ).material = new TerminalScreenMaterial().getMaterial()
-
-    this.init()
   }
 
-  init() {
-    this.initLights()
-    keyboard.events.on('keydown', (e) => {
-      // SHIFT+P to stop
-      if (e.keyCode === 80 && e.shiftKey) {
-        this.paused = !this.paused
-        console.log('paused')
-      }
-    })
-    this.paused = false
+  initBackground() {
+    const { scene } = useGame()
+    this.dotsPlane = new DotsPlane(LEVEL01_CONFIG.dots)
+    scene.add(this.dotsPlane)
 
-    this.initTreadmillsHitboxes()
-    // this.initZones()
-
-    // const appearTl = this.appear()
-    // appearTl.pause()
-
-    // setTimeout(() => {
-    //   appearTl.play()
-    // }, 3000)
-
-    const RAF = useRAF()
-    RAF.add('level_01', this.update.bind(this), 0)
+    this.dotsPlane.scale.setScalar(50)
+    this.dotsPlane.rotation.x = -Math.PI / 2
   }
 
   initLights() {
@@ -274,33 +258,6 @@ export default class Level01 extends THREE.Object3D {
     const GUI = useGUI()
 
     GUI.addLight('light', this.directionalLight)
-  }
-
-  initZones() {
-    // this.zones.visible = false
-    // debug materials
-    // this.zones.traverse((zone) => {
-    //   const name = zone.name
-    //   if (name.includes('floor')) {
-    //     zone.material = this.standardMaterial
-    //     // zone.visible = false
-    //   }
-    //   if (name.includes('treadmill')) {
-    //     zone.visible = false
-    //   }
-    //   if (name.includes('terminal')) {
-    //     zone.visible = false
-    //   }
-    //   if (name.includes('zone_spawn')) {
-    //     zone.visible = false
-    //   }
-    //   if (name.includes('zone_tuto')) {
-    //     zone.visible = false
-    //   }
-    //   if (name.includes('zone_endgame')) {
-    //     zone.visible = false
-    //   }
-    // })
   }
 
   initTreadmillsHitboxes() {
@@ -415,6 +372,19 @@ export default class Level01 extends THREE.Object3D {
   }
 
   update(clock) {
+    this.dotsPlane.update(clock)
+    const { camera } = useCamera()
+
+    const position = new THREE.Vector3(
+      camera.position.x,
+      this.dotsPlane.position.y,
+      camera.position.z
+    )
+    this.dotsPlane.position.copy(position)
+
+    this.dotsPlane.material.uniforms.uOffset.value.x = position.x * 0.02
+    this.dotsPlane.material.uniforms.uOffset.value.y = -position.z * 0.02
+
     if (this.paused) return
     this.treadmills.forEach((treadmill) => {
       treadmill.update(clock)
