@@ -302,7 +302,12 @@ export default {
           ease: 'power2.out'
         })
 
-        camera.camera.lookAt(camera._position.clone().sub(camera._angle))
+        camera.camera.lookAt(
+          camera._position
+            .clone()
+            .sub(camera._angle)
+            .sub(camera._shake)
+        )
         // camera.position.copy(nextPosition.clone())
       }
     },

@@ -29,7 +29,7 @@ class Camera {
 
     this._position = new THREE.Vector3()
 
-    this._shakePosition = new THREE.Vector3()
+    this._shake = new THREE.Vector3()
     this._mouse = new THREE.Vector2()
 
     // events
@@ -59,7 +59,7 @@ class Camera {
   get _computedPosition() {
     return this._position
       .clone()
-      .add(this._shakePosition)
+      .add(this._shake)
       .add(new THREE.Vector3(this._mouse.x, this._mouse.y, 0))
   }
 
@@ -69,7 +69,7 @@ class Camera {
 
   shake() {
     CustomWiggle.create('myWiggle', { wiggles: 6, type: 'easeOut' })
-    gsap.to(this._shakePosition, {
+    gsap.to(this._shake, {
       duration: 0.8,
       x: 0.25,
       ease: 'myWiggle'
