@@ -1,7 +1,9 @@
 <template>
-  <div class="gameLevel1">
+  <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" />
+    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <solutions class="gameLevel01__solutions" />
+    <mission-report class="gameLevel01__missionReport" />
   </div>
 </template>
 
@@ -29,7 +31,10 @@ import treadmillConfig from '@/config/treadmills'
 export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
-    gameNotifications: () => import('@/components/elements/game-notifications')
+    gameNotifications: () => import('@/components/elements/game-notifications'),
+    Solutions: () => import('@/components/game/solutions/solutions'),
+    MissionReport: () =>
+      import('@/components/game/mission-report/mission-report')
   },
   data() {
     return {
@@ -135,27 +140,31 @@ export default {
         .volume(1)
         .loop(true)
 
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
+      // const {
+      //   OrbitControls
+      // } = require('three/examples/jsm/controls/OrbitControls.js')
 
-      const { camera } = useCamera()
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
+      // const { camera } = useCamera()
+      // const cameraControls = new OrbitControls(
+      //   camera,
+      //   document.querySelector('#__nuxt')
+      // )
+      // cameraControls.enableKeys = false
       // cameraControls.enabled = false
 
       const { scene: gameScene } = useGame()
 
-      this.dotsPlane = new DotsPlane()
-      // gameScene.add(this.dotsPlane)
+      this.dotsPlane = new DotsPlane({
+        dotsFrenquency: 148,
+        dotsRadius: 0.07,
+        noiseAmplitude: 0.002
+      })
+      gameScene.add(this.dotsPlane)
 
-      // this.dotsPlane.position.z = -10
+      this.dotsPlane.position.z = -1
 
-      // this.dotsPlane.scale.setScalar(25)
-      // this.dotsPlane.rotation.x = -Math.PI / 2
+      this.dotsPlane.scale.setScalar(50)
+      this.dotsPlane.rotation.x = -Math.PI / 2
       // this.dotsPlane.rotation.z = -Math.PI / 4
 
       // this.dotsPlane.position.y = -2
@@ -311,29 +320,29 @@ export default {
       // this.cameraMouvement.loop()
       this.dotsPlane.update(clock)
 
-      const { camera } = useCamera()
+      const camera = useCamera()
       const nextPosition = this.player.worldPosition
         .clone()
         .add(camera.originPosition.clone().multiplyScalar(camera.distance))
 
-      // gsap.to(camera.position, {
-      //   x: nextPosition.x,
-      //   y: nextPosition.y,
-      //   z: nextPosition.z,
-      //   duration: 1,
-      //   ease: 'power2.out'
-      // })
+      gsap.to(camera.position, {
+        x: nextPosition.x,
+        y: nextPosition.y,
+        z: nextPosition.z,
+        duration: 1,
+        ease: 'power2.out'
+      })
 
       gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x - 4,
-        z: nextPosition.z - 15,
+        x: nextPosition.x,
+        z: nextPosition.z,
         duration: 1,
         ease: 'power2.out'
       })
 
       gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-        x: nextPosition.x * 0.01,
-        y: -nextPosition.z * 0.01,
+        x: nextPosition.x * 0.02,
+        y: -nextPosition.z * 0.02,
         duration: 1,
         ease: 'power2.out'
       })
@@ -403,6 +412,9 @@ export default {
       // // TODO checkpoint
       // this.doRespawn()
 
+      const camera = useCamera()
+      camera.shake()
+
       await this.player.fall()
       if (this.hookingTreadmill) {
         this.hookingTreadmill.unHook(this.player)
@@ -416,17 +428,17 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      const { camera } = useCamera()
+      // const camera = useCamera()
 
-      const params = {
-        lookAtPlayer: () => {
-          camera.lookAt(this.player.position)
-        }
-      }
+      // const params = {
+      //   lookAtPlayer: () => {
+      //     camera.camera.lookAt(this.player.position)
+      //   }
+      // }
 
-      GUI.camera.addVector('origin position', camera.originPosition)
-      GUI.camera.add(params, 'lookAtPlayer')
-      GUI.camera.add(camera, 'distance')
+      // GUI.camera.addVector('origin position', camera.originPosition)
+      // GUI.camera.add(params, 'lookAtPlayer')
+      // GUI.camera.add(camera, 'distance')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')
@@ -513,3 +525,32 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.gameLevel01 {
+  height: 100vh;
+  width: 100vw;
+
+  &__solutions,
+  &__terminal,
+  &__missionReport {
+    pointer-events: all;
+  }
+
+  &__solutions {
+    display: none;
+    left: 64px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__missionReport {
+    display: none;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  }
+}
+</style>

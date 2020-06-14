@@ -1,28 +1,35 @@
 <template>
   <div class="introductionP2 border">
-    <div class="introductionP2__title border-bottom">
-      MISSION Statement
-    </div>
+    <div class="introductionP2__title border-bottom">MISSION Statement</div>
     <div class="introductionP2__header introduction--wrapper border-bottom">
-      <p><span>From : "YouKnowWho"</span> <span>29/06/2020</span></p>
-      <p><span>To : "Agent X"</span> <span>Contrat #257468</span></p>
+      <p>
+        <span>From : "YouKnowWho"</span>
+        <span>29/06/2020</span>
+      </p>
+      <p>
+        <span>To : "Agent X"</span>
+        <span>Contrat #257468</span>
+      </p>
     </div>
     <div class="introductionP2__body introduction--wrapper border-bottom">
       <p>
-        The hour is serious, Agent X. <br /><br />
-        The world's population is in the grip of a mysterious device, the
-        Smartphone. <br /><br />
-        Infiltrate the device, avoid the time-consuming traps and bring us back
-        the solutions we need to defeat it. <br /><br />
-        You have 5min. Good luck.
+        The hour is serious, Agent X.
+        <br />
+        <br />The world's population is in the grip of a mysterious device, the
+        Smartphone.
+        <br />
+        <br />Infiltrate the device, avoid the time-consuming traps and bring us
+        back the solutions we need to defeat it.
+        <br />
+        <br />You have 5min. Good luck.
       </p>
     </div>
     <div class="introductionP2__signature introduction--wrapper">
       <span>Signature :</span>
       <div
         @click="triggerSignature"
-        class="signature_insert"
         :class="{ 'is-signed': isSigned }"
+        class="signature_insert"
       >
         {{ isSigned ? 'Signé' : ' Click for sign, Pas signé' }}
       </div>
@@ -30,20 +37,20 @@
     <btn
       @click.native="isSigned ? $emit('increment') : null"
       :inverted="isSigned"
-      >START THE MISSION
-    </btn>
+      >START THE MISSION</btn
+    >
   </div>
 </template>
 
 <script>
 export default {
+  components: {
+    Btn: () => import('@/components/components/btn-introduction')
+  },
   data() {
     return {
       isSigned: false
     }
-  },
-  components: {
-    Btn: () => import('@/components/components/btn-introduction')
   },
   methods: {
     triggerSignature() {

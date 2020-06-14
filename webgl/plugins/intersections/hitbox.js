@@ -17,7 +17,7 @@ export default class Hitbox extends THREE.Object3D {
 
     this.box = new THREE.Box3()
 
-    this.helper = new THREE.Box3Helper(this.box, 0x00ff00)
+    this.helper = new THREE.Box3Helper(this.box, 0x2ff000)
     this.add(this.helper)
 
     this.intersections = {}
@@ -41,7 +41,7 @@ export default class Hitbox extends THREE.Object3D {
     )
 
     this.helper.material.color = new THREE.Color(
-      intersecting ? 0xff0000 : 0x00ff00
+      intersecting ? 0xff0000 : 0x2ff000
     )
   }
 

@@ -7,14 +7,22 @@
       <button @click="$events.emit('TERMINAL COMPLETED')">
         complete terminal
       </button>
+      <button @click="cameraShake">
+        camera shake
+      </button>
     </div>
+    <game-controls class="appGame__controls" />
   </div>
 </template>
 
 <script>
 import useGame from '@/hooks/use-game'
+import useCamera from '@/hooks/use-camera'
 
 export default {
+  components: {
+    GameControls: () => import('@/components/game/game-controls')
+  },
   mounted() {
     useGame()
   },
@@ -24,6 +32,9 @@ export default {
   methods: {
     goTerminal() {
       this.$events.emit('teleportToTerminal')
+    },
+    cameraShake() {
+      useCamera().shake()
     }
   }
 }
@@ -51,6 +62,13 @@ export default {
     padding: 8px;
     position: absolute;
     top: 64px;
+  }
+
+  &__controls {
+    bottom: 40px;
+    pointer-events: all;
+    position: absolute;
+    right: 40px;
   }
 }
 </style>

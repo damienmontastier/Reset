@@ -19,7 +19,7 @@
       </terminal-fieldset>
 
       <div class="terminalP4__submit">
-        <btn @click.native="triggerCompleted" :inverted="true">Terminer</btn>
+        <ui-button @click.native="triggerCompleted">Terminer</ui-button>
       </div>
     </div>
   </div>
@@ -30,7 +30,7 @@ export default {
   components: {
     TerminalFieldset: () =>
       import('@/components/game/terminal/terminal-fieldset'),
-    Btn: () => import('@/components/components/btn'),
+    UiButton: () => import('@/components/components/ui-button'),
     checkBig: () => import('@/components/svg/checkBig')
   },
 

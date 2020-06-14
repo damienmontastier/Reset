@@ -58,8 +58,10 @@ input::-moz-focus-inner {
 }
 
 button {
-  background: rgba(0, 0, 0, 0);
+  all: unset;
+  background-color: inherit !important;
   border: unset;
+  color: inherit !important;
   font-size: inherit;
   padding: 0;
 
@@ -70,4 +72,8 @@ button {
 
 .dg.ac {
   z-index: 999999999 !important;
+}
+
+.u-uppercase {
+  text-transform: uppercase;
 }

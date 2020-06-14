@@ -97,6 +97,12 @@ export default class Composer {
     }
   }
 
+  setQuality(quality) {
+    this.quality = quality
+
+    console.log(this.quality)
+  }
+
   initGUI() {
     if (this.outlineEffect) {
       this.initSobelGUI()
