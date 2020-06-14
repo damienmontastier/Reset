@@ -12,7 +12,9 @@ export default class CheckpointMaterial extends THREE.ShaderMaterial {
         }
       },
       side: THREE.DoubleSide,
-      transparent: true
+      transparent: true,
+      depthWrite: false,
+      depthTest: true
     })
   }
 }

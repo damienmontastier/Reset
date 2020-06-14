@@ -22,9 +22,7 @@ import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
-import DotsPlane from '@/webgl/components/dots-plane'
-
-// import Terminal from '@/components/game/terminal/terminal'
+import Spline from '@/webgl/components/spline'
 
 import treadmillConfig from '@/config/treadmills'
 
@@ -121,6 +119,9 @@ export default {
       this.player = new Player()
       await this.player.init()
 
+      this.introRail = await new Spline().load('obj/splines/level01_01.obj')
+      this.map.add(this.introRail)
+
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/level01.mp3', id: 'level01' },
@@ -129,6 +130,8 @@ export default {
     },
     async init() {
       await this.load()
+
+      this.cameraPosition = 'follow player'
 
       const audioManager = useAudio()
       audioManager
@@ -154,27 +157,6 @@ export default {
 
       const { scene: gameScene } = useGame()
 
-      this.dotsPlane = new DotsPlane({
-        dotsFrenquency: 148,
-        dotsRadius: 0.07,
-        noiseAmplitude: 0.002
-      })
-      gameScene.add(this.dotsPlane)
-
-      this.dotsPlane.position.z = -1
-
-      this.dotsPlane.scale.setScalar(50)
-      this.dotsPlane.rotation.x = -Math.PI / 2
-      // this.dotsPlane.rotation.z = -Math.PI / 4
-
-      // this.dotsPlane.position.y = -2
-      // this.dotsPlane.position.x = -4
-      // this.dotsPlane.position.z = -15
-      // const { composer } = useWebGL()
-      // const { bloomEffect } = composer
-
-      // bloomEffect.selection.add(this.dotsPlane)
-
       this.levelGroup = new THREE.Group()
 
       gameScene.add(this.levelGroup)
@@ -182,8 +164,6 @@ export default {
       this.levelGroup.add(this.map)
 
       this.terrain = new GridTerrain(this.map.zones)
-      // const { scene: webglScene } = useWebGL()
-      // webglScene.add(this.terrain.debug)
 
       this.initIntersections()
 
@@ -191,16 +171,6 @@ export default {
       this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
-
-      // this.cameraMouvement = new CameraMouvement({
-      //   mesh: this.player,
-      //   duration: 1
-      // })
-
-      // const audioManager = useAudioManager()
-
-      // await audioManager.add(introSound)
-      // audioManager.play(introSound)
 
       this.$controller.events.on('keyup', this.onKeydown)
 
@@ -317,35 +287,23 @@ export default {
     },
 
     loop(clock) {
-      // this.cameraMouvement.loop()
-      this.dotsPlane.update(clock)
+      this.map.update(clock)
 
-      const camera = useCamera()
-      const nextPosition = this.player.worldPosition
-        .clone()
-        .add(camera.originPosition.clone().multiplyScalar(camera.distance))
+      if (this.cameraPosition === 'follow player') {
+        const { camera } = useCamera()
+        const nextPosition = this.player.worldPosition
+          .clone()
+          .add(camera.originPosition.clone().multiplyScalar(camera.distance))
+        gsap.to(camera.position, {
+          x: nextPosition.x,
+          y: nextPosition.y,
+          z: nextPosition.z,
+          duration: 1,
+          ease: 'power2.out'
+        })
 
-      gsap.to(camera.position, {
-        x: nextPosition.x,
-        y: nextPosition.y,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
-
-      gsap.to(this.dotsPlane.position, {
-        x: nextPosition.x,
-        z: nextPosition.z,
-        duration: 1,
-        ease: 'power2.out'
-      })
-
-      gsap.to(this.dotsPlane.material.uniforms.uOffset.value, {
-        x: nextPosition.x * 0.02,
-        y: -nextPosition.z * 0.02,
-        duration: 1,
-        ease: 'power2.out'
-      })
+        // camera.position.copy(nextPosition.clone())
+      }
     },
 
     initIntersections() {
@@ -425,20 +383,44 @@ export default {
       this.doRespawn()
     },
 
+    introCameraTraveling() {
+      this.cameraPosition = 'intro travelling'
+
+      const { camera } = useCamera()
+
+      this.progress = 0
+      gsap.to(this, {
+        duration: 10,
+        ease: 'none',
+        progress: 1,
+        onUpdate: () => {
+          const postion = this.introRail.curvedPath.getPoint(this.progress)
+          camera.lookAt(this.player.position)
+          camera.position.copy(postion)
+        },
+        onComplete: () => {
+          this.cameraPosition = 'follow player'
+          camera.lookAt(this.player.position)
+        }
+      })
+    },
+
     initGUI() {
       const GUI = useGUI()
 
-      // const camera = useCamera()
+      const { camera } = useCamera()
 
-      // const params = {
-      //   lookAtPlayer: () => {
-      //     camera.camera.lookAt(this.player.position)
-      //   }
-      // }
+      const params = {
+        lookAtPlayer: () => {
+          camera.lookAt(this.player.position)
+        }
+      }
 
-      // GUI.camera.addVector('origin position', camera.originPosition)
-      // GUI.camera.add(params, 'lookAtPlayer')
-      // GUI.camera.add(camera, 'distance')
+      GUI.camera.addVector('origin position', camera.originPosition)
+      GUI.camera.add(params, 'lookAtPlayer')
+      GUI.camera.add(camera, 'distance')
+
+      GUI.camera.add(this, 'introCameraTraveling')
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

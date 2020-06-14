@@ -53,7 +53,6 @@ import gsap from 'gsap'
 import Dragger from '@/assets/js/dragger'
 
 export default {
-  components: {},
   props: {
     quotient: {
       type: Number,

@@ -29,7 +29,7 @@ class Game {
 
   initCamera() {
     // const { scene } = useWebGL()
-    const camera = useCamera()
+    const { camera } = useCamera()
 
     this.scene.add(camera)
 
@@ -40,7 +40,7 @@ class Game {
       camera.originPosition.clone().multiplyScalar(camera.distance)
     )
 
-    camera.camera.lookAt(this.scene.position.clone())
+    camera.lookAt(this.scene.position.clone())
 
     const GUI = useGUI()
     GUI.addObject3D('camera', camera)

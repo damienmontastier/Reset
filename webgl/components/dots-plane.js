@@ -13,6 +13,8 @@ export default class DotsPlane extends THREE.Object3D {
   } = {}) {
     super()
 
+    this.renderOrder = 0.001
+
     this.geometry = new THREE.PlaneBufferGeometry(1, 1, 100, 100)
 
     this.material = new THREE.ShaderMaterial({

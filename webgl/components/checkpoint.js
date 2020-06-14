@@ -10,15 +10,9 @@ export default class Checkpoint extends THREE.Object3D {
 
     this.scale.setScalar(0.95)
     this.geometry = new THREE.PlaneBufferGeometry(1, 1)
-    // this.material = new THREE.MeshBasicMaterial({
-    //   opacity: 0.5,
-    //   transparent: true
-    // })
     this.material = new CheckpointMaterial({ color: 0xffffff })
-    // this.material2 = this.material1.clone()
 
     const GUI = useGUI()
-    console.log(GUI)
 
     this.face1 = new THREE.Mesh(this.geometry, this.material)
     this.face2 = this.face1.clone()
@@ -45,14 +39,7 @@ export default class Checkpoint extends THREE.Object3D {
     this.add(this.face3)
     this.add(this.face4)
 
-    // // this.add(this.cube2)
-
-    // this.material1.side = THREE.DoubleSide
-    // this.material2.side = THREE.DoubleSide
-
     this.matrixAutoUpdate = false
-
-    this.frustumCulled = false
   }
 
   trigger() {
