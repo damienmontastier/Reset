@@ -20,11 +20,9 @@
 </template>
 
 <script>
-import FolderSvg from '@/components/svg/folder'
-
 export default {
   components: {
-    FolderSvg
+    FolderSvg: () => import('@/components/svg/folder')
   },
   props: {
     solution: {
