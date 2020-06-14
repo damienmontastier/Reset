@@ -6,6 +6,9 @@ import viewport from '@/plugins/viewport'
 
 let camera
 
+// TODO : camera shake
+// TODO : mouse move
+
 class Camera {
   constructor() {
     // super()

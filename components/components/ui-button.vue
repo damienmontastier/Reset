@@ -12,10 +12,9 @@
 </template>
 
 <script>
-import ArrowIcon from '@/components/svg/arrow'
 export default {
   components: {
-    ArrowIcon
+    ArrowIcon: () => import('@/components/svg/arrow')
   }
 }
 </script>

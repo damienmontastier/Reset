@@ -20,8 +20,6 @@
     }
   },
   "dependencies": {
-    "@nuxtjs/device": "^1.2.7",
-    "@nuxtjs/dotenv": "^1.4.0",
     "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/style-resources": "^1.0.0",
     "dat.gui": "^0.7.6",
@@ -32,6 +30,8 @@
     "intersection-observer-polyfill": "^0.1.0",
     "nuxt": "^2.12.0",
     "nuxt-compress": "^1.1.0",
+    "nuxt-helmet": "^1.2.3",
+    "nuxt-ssr-cache": "^1.5.1",
     "postprocessing": "^6.13.0",
     "raw-loader": "^4.0.1",
     "simplex-noise": "^2.4.0",
