@@ -36,7 +36,8 @@ class Camera {
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
     viewport.events.on('resize', this.onWindowResizeHandler)
 
-    mouse.events.on('mousemove', this.onMouseMove.bind(this))
+    this.onMouseMoveHandler = this.onMouseMove.bind(this)
+    mouse.events.on('mousemove', this.onMouseMoveHandler)
 
     const RAF = useRAF()
     RAF.add('camera', this.loop.bind(this))
@@ -83,6 +84,7 @@ class Camera {
 
   destroy() {
     viewport.events.off('resize', this.onWindowResizeHandler)
+    mouse.events.off('mousemove', this.onMouseMoveHandler)
   }
 }
 
