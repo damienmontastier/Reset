@@ -290,11 +290,11 @@ export default {
       this.map.update(clock)
 
       if (this.cameraPosition === 'follow player') {
-        const { camera } = useCamera()
+        const camera = useCamera()
         const nextPosition = this.player.worldPosition
           .clone()
-          .add(camera.originPosition.clone().multiplyScalar(camera.distance))
-        gsap.to(camera.position, {
+          .add(camera._angle)
+        gsap.to(camera._position, {
           x: nextPosition.x,
           y: nextPosition.y,
           z: nextPosition.z,
@@ -302,6 +302,7 @@ export default {
           ease: 'power2.out'
         })
 
+        camera.camera.lookAt(camera._position.clone().sub(camera._angle))
         // camera.position.copy(nextPosition.clone())
       }
     },
@@ -386,7 +387,7 @@ export default {
     introCameraTraveling() {
       this.cameraPosition = 'intro travelling'
 
-      const { camera } = useCamera()
+      const camera = useCamera()
 
       this.progress = 0
       gsap.to(this, {
@@ -395,12 +396,11 @@ export default {
         progress: 1,
         onUpdate: () => {
           const postion = this.introRail.curvedPath.getPoint(this.progress)
-          camera.lookAt(this.player.position)
-          camera.position.copy(postion)
+          camera.camera.lookAt(this.player.position)
+          camera._position.copy(postion)
         },
         onComplete: () => {
           this.cameraPosition = 'follow player'
-          camera.lookAt(this.player.position)
         }
       })
     },
@@ -408,17 +408,17 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      const { camera } = useCamera()
+      // const { camera } = useCamera()
 
-      const params = {
-        lookAtPlayer: () => {
-          camera.lookAt(this.player.position)
-        }
-      }
+      // const params = {
+      //   lookAtPlayer: () => {
+      //     camera.lookAt(this.player.position)
+      //   }
+      // }
 
-      GUI.camera.addVector('origin position', camera.originPosition)
-      GUI.camera.add(params, 'lookAtPlayer')
-      GUI.camera.add(camera, 'distance')
+      // GUI.camera.addVector('origin position', camera.originPosition)
+      // GUI.camera.add(params, 'lookAtPlayer')
+      // GUI.camera.add(camera, 'distance')
 
       GUI.camera.add(this, 'introCameraTraveling')
 

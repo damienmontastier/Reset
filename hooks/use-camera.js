@@ -3,6 +3,8 @@
 
 import gsap from 'gsap'
 import viewport from '@/plugins/viewport'
+import mouse from '@/plugins/mouse'
+import useRAF from '@/hooks/use-raf'
 
 let camera
 
@@ -22,17 +24,53 @@ class Camera {
       100000
     )
 
+    this._normalizedAngle = new THREE.Vector3(1.1, 6, 6).normalize()
+    this._distance = 7
+
+    this._position = new THREE.Vector3()
+
+    this._shakePosition = new THREE.Vector3()
+    this._mouse = new THREE.Vector2()
+
     // events
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
     viewport.events.on('resize', this.onWindowResizeHandler)
+
+    mouse.events.on('mousemove', this.onMouseMove.bind(this))
+
+    const RAF = useRAF()
+    RAF.add('camera', this.loop.bind(this))
+  }
+
+  onMouseMove() {
+    gsap.to(this._mouse, {
+      duration: 2,
+      ease: 'power4.out',
+      x: mouse.normalized.x * 0.2,
+      y: mouse.normalized.y * 0.4
+    })
+  }
+
+  get _angle() {
+    return this._normalizedAngle.clone().multiplyScalar(this._distance)
+  }
+
+  get _computedPosition() {
+    return this._position
+      .clone()
+      .add(this._shakePosition)
+      .add(new THREE.Vector3(this._mouse.x, this._mouse.y, 0))
+  }
+
+  loop() {
+    this.camera.position.copy(this._computedPosition)
   }
 
   shake() {
-    CustomWiggle.create('myWiggle', { wiggles: 12, type: 'easeOut' })
-
-    gsap.to(this.camera.position, {
+    CustomWiggle.create('myWiggle', { wiggles: 6, type: 'easeOut' })
+    gsap.to(this._shakePosition, {
       duration: 0.8,
-      x: 0.5,
+      x: 0.25,
       ease: 'myWiggle'
     })
   }

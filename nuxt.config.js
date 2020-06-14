@@ -105,7 +105,6 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
     'nuxt-helmet',
     'nuxt-ssr-cache',

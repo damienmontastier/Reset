@@ -20,7 +20,6 @@
     }
   },
   "dependencies": {
-    "@nuxtjs/pwa": "^3.0.0-beta.20",
     "@nuxtjs/style-resources": "^1.0.0",
     "dat.gui": "^0.7.6",
     "events": "^3.1.0",
