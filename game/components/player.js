@@ -38,11 +38,11 @@ export default class Player extends THREE.Object3D {
     const audioManager = useAudio()
 
     await audioManager.add([
-      { path: '/sounds/dash_01.mp3', id: 'dash_01' },
-      { path: '/sounds/dash_02.mp3', id: 'dash_02' },
-      { path: '/sounds/dash_03.mp3', id: 'dash_03' },
-      { path: '/sounds/dash_04.mp3', id: 'dash_04' },
-      { path: '/sounds/fall_01.mp3', id: 'fall_01' }
+      { path: '/sounds/RESET_DASH_1.mp3', id: 'dash_01' },
+      { path: '/sounds/RESET_DASH_2.mp3', id: 'dash_02' },
+      { path: '/sounds/RESET_DASH_3.mp3', id: 'dash_03' },
+      { path: '/sounds/RESET_DASH_4.mp3', id: 'dash_04' },
+      { path: '/sounds/RESET_POST.mp3', id: 'fall_01' }
     ])
 
     const assetsManager = useAssetsManager()

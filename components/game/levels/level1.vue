@@ -25,6 +25,7 @@ import GridTerrain from '@/game/features/grid-terrain'
 import Spline from '@/webgl/components/spline'
 
 import treadmillConfig from '@/config/treadmills'
+import LEVEL01_CONFIG from '@/config/level01'
 
 export default {
   components: {
@@ -124,8 +125,8 @@ export default {
 
       const audioManager = useAudio()
       await audioManager.add([
-        { path: '/sounds/level01.mp3', id: 'level01' },
-        { path: '/sounds/factory_ambiance.mp3', id: 'factory_ambiance' }
+        { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
+        { path: '/sounds.old/factory_ambiance.mp3', id: 'factory_ambiance' }
       ])
     },
     async init() {
@@ -171,6 +172,19 @@ export default {
       this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
+
+      const camera = useCamera()
+      camera._position.copy(
+        this.player.worldPosition.clone().add(camera._angle)
+      )
+
+      camera.camera.lookAt(
+        camera._position
+          .clone()
+          .sub(camera._angle)
+          .sub(camera._shake)
+          .add(new THREE.Vector3(0, 0.75, 0))
+      )
 
       this.$controller.events.on('keyup', this.onKeydown)
 
@@ -307,7 +321,7 @@ export default {
             .clone()
             .sub(camera._angle)
             .sub(camera._shake)
-            .add(new THREE.Vector3(0, 0.5, 0))
+            .add(new THREE.Vector3(0, 0.75, 0))
         )
         // camera.position.copy(nextPosition.clone())
       }
@@ -390,6 +404,36 @@ export default {
       this.doRespawn()
     },
 
+    cameraAnimation(config) {
+      const camera = useCamera()
+
+      const { x, y, z } = config.normalized_angle
+      const distance = config.distance
+
+      const tl = new gsap.timeline()
+      tl.to(
+        camera._normalizedAngle,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          x,
+          y,
+          z
+        },
+        0
+      )
+
+      tl.to(
+        camera,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          _distance: distance
+        },
+        0
+      )
+    },
+
     introCameraTraveling() {
       this.cameraPosition = 'intro travelling'
 
@@ -427,6 +471,29 @@ export default {
       // GUI.camera.add(camera, 'distance')
 
       GUI.camera.add(this, 'introCameraTraveling')
+      // GUI.camera.add(this, 'cameraCloseUp').name('close up')
+      // GUI.camera.add(this, 'cameraDefault').name('default')
+
+      const cameraParams = {
+        current: 'default'
+      }
+      GUI.camera
+        .add(cameraParams, 'current', ['default', 'close up'])
+        .name('pov')
+        .onChange(() => {
+          let config
+          switch (cameraParams.current) {
+            case 'close up':
+              config = LEVEL01_CONFIG.cameras.close_up
+              break
+            case 'default':
+              config = LEVEL01_CONFIG.cameras.default
+              break
+            default:
+              break
+          }
+          this.cameraAnimation(config)
+        })
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

@@ -8,6 +8,8 @@ import mouse from '@/plugins/mouse'
 import useRAF from '@/hooks/use-raf'
 import useGUI from '@/hooks/use-gui'
 
+import LEVEL01_CONFIG from '@/config/level01'
+
 let camera
 
 // TODO : camera shake
@@ -26,8 +28,8 @@ class Camera {
       100000
     )
 
-    this._normalizedAngle = new THREE.Vector3(1.1, 6, 6).normalize()
-    this._distance = 7
+    this._normalizedAngle = LEVEL01_CONFIG.cameras.default.normalized_angle.clone()
+    this._distance = LEVEL01_CONFIG.cameras.default.distance
 
     this._position = new THREE.Vector3()
 
@@ -72,10 +74,10 @@ class Camera {
   }
 
   shake() {
-    CustomWiggle.create('myWiggle', { wiggles: 6, type: 'easeOut' })
+    CustomWiggle.create('myWiggle', { wiggles: 8, type: 'easeOut' })
     gsap.to(this._shake, {
       duration: 0.8,
-      x: 0.25,
+      x: 0.2,
       ease: 'myWiggle'
     })
   }
@@ -92,6 +94,7 @@ class Camera {
 
     GUI.camera
       .add(this, '_distance')
+      .name('distance')
       .min(1)
       .max(10)
 
