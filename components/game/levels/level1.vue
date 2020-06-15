@@ -1,7 +1,7 @@
 <template>
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal class="gameLevel01__terminal" />
+    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
     <solutions class="gameLevel01__solutions" />
     <mission-report class="gameLevel01__missionReport" />
   </div>
@@ -307,6 +307,7 @@ export default {
             .clone()
             .sub(camera._angle)
             .sub(camera._shake)
+            .add(new THREE.Vector3(0, 0.5, 0))
         )
         // camera.position.copy(nextPosition.clone())
       }

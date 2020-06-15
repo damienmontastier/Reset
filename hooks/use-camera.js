@@ -4,7 +4,9 @@
 import gsap from 'gsap'
 import viewport from '@/plugins/viewport'
 import mouse from '@/plugins/mouse'
+
 import useRAF from '@/hooks/use-raf'
+import useGUI from '@/hooks/use-gui'
 
 let camera
 
@@ -41,6 +43,8 @@ class Camera {
 
     const RAF = useRAF()
     RAF.add('camera', this.loop.bind(this))
+
+    this.initGUI()
   }
 
   onMouseMove() {
@@ -74,6 +78,24 @@ class Camera {
       x: 0.25,
       ease: 'myWiggle'
     })
+  }
+
+  initGUI() {
+    const GUI = useGUI()
+    GUI.camera
+      .add(this.camera, 'fov')
+      .min(10)
+      .max(100)
+      .onChange(() => {
+        this.onWindowResize()
+      })
+
+    GUI.camera
+      .add(this, '_distance')
+      .min(1)
+      .max(10)
+
+    GUI.camera.addVector('normalized angle', this._normalizedAngle)
   }
 
   onWindowResize() {
