@@ -31,6 +31,7 @@ export default class Composer {
   }
 
   async init() {
+    this.quality = 'high'
     await this.initComposer()
     this.initGUI()
   }
@@ -38,6 +39,7 @@ export default class Composer {
   async initComposer() {
     // composer
     this.composer = new EffectComposer(this.renderer)
+    this.composer.autoRenderToScreen = false
 
     // effects
     // this.bloomEffect = new SelectiveBloomEffect(this.scene, this.camera, {
@@ -63,11 +65,15 @@ export default class Composer {
 
     // passes
     this.bloomPass = new EffectPass(this.camera, this.bloomEffect)
+    this.bloomPass.name = 'BloomPass'
+    this.bloomPass.renderToScreen = true
+
     this.AAPass = new EffectPass(
       this.camera,
       this.AAEffect.smaaEffect,
       this.noiseEffect
     )
+    this.AAPass.name = 'AAPass'
 
     // addPasses
     this.composer.addPass(new RenderPass(this.scene, this.camera))
@@ -100,7 +106,36 @@ export default class Composer {
   setQuality(quality) {
     this.quality = quality
 
-    console.log(this.quality)
+    switch (this.quality) {
+      case 'low':
+        this.disabled = true
+        break
+      case 'medium':
+        this.disabled = false
+
+        if (this.composer.passes.some((pass) => pass.name === 'BloomPass')) {
+          this.composer.removePass(this.bloomPass)
+
+          const lastIndex = this.composer.passes.length - 1
+          this.composer.passes[lastIndex].renderToScreen = true
+        }
+
+        break
+      case 'high':
+        this.disabled = false
+
+        if (!this.composer.passes.some((pass) => pass.name === 'BloomPass')) {
+          const lastIndex = this.composer.passes.length - 1
+          this.composer.passes[lastIndex].renderToScreen = false
+
+          this.composer.addPass(this.bloomPass)
+          this.bloomPass.renderToScreen = true
+        }
+
+        break
+      default:
+        break
+    }
   }
 
   initGUI() {
@@ -115,6 +150,18 @@ export default class Composer {
     if (this.noiseEffect) {
       this.initNoiseGUI()
     }
+
+    this.initQualityGUI()
+  }
+
+  initQualityGUI() {
+    const GUI = useGUI()
+
+    GUI.rendering
+      .add(this, 'quality', ['low', 'medium', 'high'])
+      .onChange(() => {
+        this.setQuality(this.quality)
+      })
   }
 
   initSobelGUI() {
