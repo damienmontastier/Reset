@@ -1,7 +1,7 @@
 <template>
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <terminal class="gameLevel01__terminal" />
     <solutions class="gameLevel01__solutions" />
     <mission-report class="gameLevel01__missionReport" />
   </div>

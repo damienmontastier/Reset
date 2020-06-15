@@ -9,19 +9,19 @@ export default {
       rootMargin: params.rootMargin || '0px',
       threshold: params.threshold || 0
     }
-    const observer = new IntersectionObserver((entries) => {
-      console.log(entries)
-      // entries.forEach((entry) => {
-      //   if (entry.isIntersecting) {
-      //     if (params.triggerOnce) {
-      //       observer.unobserve(el)
-      //     }
-      //   }
 
-      //   if (params.onChange) {
-      //     params.onChange(entry.isIntersecting, entry)
-      //   }
-      // })
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          if (params.triggerOnce) {
+            observer.unobserve(el)
+          }
+        }
+
+        if (params.onChange) {
+          params.onChange(entry.isIntersecting, entry)
+        }
+      })
     }, options)
 
     binding.value.observer = observer
