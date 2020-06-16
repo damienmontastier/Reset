@@ -170,7 +170,7 @@ export default class Player extends THREE.Object3D {
 
   fall() {
     const audioManager = useAudio()
-    audioManager.play('fall_01').volume(1)
+    audioManager.play('fall_01')
 
     this.isFalling = true
     if (this.positionTween) {
@@ -197,7 +197,7 @@ export default class Player extends THREE.Object3D {
     const audioManager = useAudio()
     const dashs = ['dash_01', 'dash_02', 'dash_03', 'dash_04']
     const dashSound = dashs[Math.floor(Math.random() * dashs.length)]
-    audioManager.play(dashSound).volume(0.75)
+    audioManager.play(dashSound)
 
     const d = this.position
       .clone()

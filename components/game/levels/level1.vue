@@ -2,7 +2,7 @@
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
     <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
-    <solutions class="gameLevel01__solutions" />
+    <!-- <solutions class="gameLevel01__solutions" /> -->
     <mission-report class="gameLevel01__missionReport" />
   </div>
 </template>
@@ -31,7 +31,7 @@ export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
     gameNotifications: () => import('@/components/elements/game-notifications'),
-    Solutions: () => import('@/components/game/solutions/solutions'),
+    // Solutions: () => import('@/components/game/solutions/solutions'),
     MissionReport: () =>
       import('@/components/game/mission-report/mission-report')
   },

@@ -45,6 +45,10 @@ export default {
   overflow-y: auto;
 }
 
+#__layout {
+  width: 100vw;
+}
+
 #appNoise {
   height: 100%;
   height: calc(var(--vh, 1vh) * 100);

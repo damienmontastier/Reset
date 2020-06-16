@@ -1,54 +1,50 @@
 <template>
   <section class="solutions">
-    <header class="solutions__header">
-      <h2 class="solutions__title">hard drive</h2>
-    </header>
-    <p class="solutions__intro">
-      The data you obtained can be found in the
-      <i>Hard Drive</i>.<br /><br />Check it out and discover efficient ways to
-      free yourself from the Smartphone grasp.
-    </p>
-    <div class="solutions__list">
+    <aside class="solutions__aside">
+      <h2 class="solutions__title">
+        <hard-drive-svg />
+      </h2>
+      <div class="solutions__modal">
+        <div class="solutions__modal__close">
+          <cross-svg />
+        </div>
+        <h3 class="solutions__modal__title">
+          The Hard Drive compiles all the precious data you collected.
+        </h3>
+        <p class="solutions__modal__subtitle">
+          Discover efficient ways to free yourself from the Smartphone grasp.
+        </p>
+        <div class="solutions__modal__progress">
+          <div class="solutions__modal__progress__fill"></div>
+        </div>
+        <p class="solutions__modal__stats">
+          You unlocked <span>02/09</span> data.
+        </p>
+      </div>
+    </aside>
+    <div class="solutions__main">
       <solution
-        v-for="(solution, index) in solutions"
+        v-for="(solution, i) in solutions"
+        :key="i"
         :solution="solution"
-        :unlocked="time < solution.required_time"
-        :key="index"
+        :unlocked="190 < solution.required_score"
+        class="solutions__solution"
       />
-    </div>
-    <div class="solutions__buttons">
-      <ui-button
-        style="--color: var(--color-grey-lighten);
-          --bg-color: var(--color-black);
-          --border-color: var(--color-grey-lighten);"
-      >
-        hard drive
-      </ui-button>
-      <ui-button
-        style="--color: var(--color-black);
-          --bg-color: var(--color-green);
-          --border-color: var(--color-green);"
-      >
-        continue
-      </ui-button>
     </div>
   </section>
 </template>
 
 <script>
+import Solution from './solution'
 export default {
   components: {
-    Solution: () => import('./solution'),
-    UiButton: () => import('@/components/components/ui-button')
+    Solution,
+    HardDriveSvg: () => import('@/components/svg/hard-drive'),
+    CrossSvg: () => import('@/components/svg/cross')
   },
-  data() {
-    return {
-      time: 110,
-      solutions: [
-        { id: 12, title: 'iOS Screen Time', required_time: 180 },
-        { id: 26, title: 'Facebook Timer', required_time: 120 },
-        { id: 42, title: 'Screen color', required_time: 100 }
-      ]
+  computed: {
+    solutions() {
+      return this.$store.state.solutions.list
     }
   }
 }
@@ -56,56 +52,91 @@ export default {
 
 <style lang="scss">
 .solutions {
-  background-color: var(--color-grey);
-  border: 1px solid var(--color-grey-light);
-  padding-bottom: 24px;
-  width: 480px;
+  display: flex;
+  height: 100vh;
+  pointer-events: all;
+  width: 100vw;
 
-  &__header {
-    background-color: var(--color-green);
+  &__solution {
+    height: 240px;
+    margin-bottom: 24px;
+    width: 280px;
+  }
+
+  &__aside {
     display: flex;
-    padding: 24px 0;
+    flex-direction: column;
+    height: 100%;
+    justify-content: center;
   }
 
   &__title {
-    color: var(--color-black);
-    font-family: var(--font-cindie-c);
-    margin: auto;
-    text-transform: uppercase;
+    margin-bottom: 64px;
   }
 
-  &__intro {
-    border-bottom: 1px solid var(--color-grey-light);
-    border-top: 1px solid var(--color-grey-light);
-    color: var(--color-grey-lighten);
-    font-family: var(--font-violet);
-    line-height: 21px;
-    padding: 32px;
+  &__modal {
+    background-color: var(--color-black);
+    padding: 24px;
+    position: relative;
+    width: 315px;
 
-    i {
-      color: var(--color-green);
+    &__close {
+      align-items: center;
+      background-color: var(--color-grey);
+      cursor: pointer;
+      display: flex;
+      height: 34px;
+      justify-content: center;
+      position: absolute;
+      right: 17px;
+      top: -17px;
+      width: 34px;
     }
-  }
 
-  &__list {
-    display: flex;
-    justify-content: space-between;
-    left: -10px;
-    padding: 40px 0;
-    position: relative;
-    width: calc(100% + 20px);
-  }
+    &__title {
+      color: var(--color-grey-lighten);
+      font-family: var(--font-violet);
+      font-size: 18px;
+      line-height: 22px;
+      margin-bottom: 16px;
+    }
 
-  &__buttons {
-    left: -10px;
-    position: relative;
-    width: calc(100% + 20px);
+    &__title,
+    &__subtitle,
+    &__progress {
+      margin-bottom: 16px;
+    }
 
-    > * {
-      margin-bottom: 8px;
+    &__subtitle,
+    &__stats {
+      color: var(--color-grey-light);
+      font-family: var(--font-violet);
+      font-size: 14px;
+      line-height: 17px;
 
-      &:last-child {
-        margin-bottom: 0;
+      span {
+        color: var(--color-grey-lighten);
+      }
+    }
+
+    &__progress {
+      border: 2px solid var(--color-green);
+      height: 24px;
+      position: relative;
+
+      &__fill {
+        // prettier-ignore
+        background: repeating-linear-gradient(-55deg,
+        var(--color-green),
+        var(--color-green) 1px,
+        var(--color-transparent) 1px,
+        var(--color-transparent) 4px);
+        border-right: 1px solid var(--color-green);
+        height: 100%;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 33%;
       }
     }
   }
