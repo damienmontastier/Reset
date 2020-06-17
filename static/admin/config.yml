@@ -73,6 +73,7 @@ collections:
     name: 'solutions'
     format: 'json'
     folder: 'assets/content/solutions'
+    create: true
     slug: '{{day}}-{{hour}}-{{minute}}-{{slug}}'
     editor:
       preview: true
