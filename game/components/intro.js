@@ -104,7 +104,6 @@ export default class Introduction extends THREE.Object3D {
       INTRODUCTION_CONFIG.lights.color,
       INTRODUCTION_CONFIG.lights.intensity
     )
-    // this.directionalLight.position.set(0, 512, 0)
     this.directionalLight.position.copy(INTRODUCTION_CONFIG.lights.position)
     this.directionalLight.lookAt(scene.position)
     scene.add(this.directionalLight)

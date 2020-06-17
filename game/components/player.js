@@ -10,8 +10,8 @@ import useAudio from '@/hooks/use-audio'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-// import PlayerStandardMaterial from '@/webgl/materials/m-player/standard'
 import PlayerBasicMaterial from '@/webgl/materials/m-player/basic'
+import PlayerStandardMaterial from '@/webgl/materials/m-player/standard'
 
 let SkeletonUtils
 
@@ -86,13 +86,7 @@ export default class Player extends THREE.Object3D {
     GUI.addMaterial('modelSkinMaterial', this.modelSkinMaterial)
     GUI.addMaterial('modelSkinMaterial2', this.modelSkinMaterial2)
 
-    const playerStandardMaterial = new PlayerBasicMaterial({
-      diffuse: 0xff0000
-    })
-
-    // GUI.addMaterial('PlayerStandardMaterial', PlayerStandardMaterial)
-
-    this.model.getObjectByName('black').material = playerStandardMaterial
+    this.model.getObjectByName('black').material = this.modelSkinMaterial
     this.model.getObjectByName('green').material = this.modelSkinMaterial2
   }
 
@@ -121,7 +115,7 @@ export default class Player extends THREE.Object3D {
     // this.innerGroup.position.copy(this.cellCenter)
     this.add(this.innerGroup)
 
-    this.innerGroup.add(this.model)
+    // this.innerGroup.add(this.model)
 
     this.pathfinder = new THREE.Group()
     this.innerGroup.add(this.pathfinder)
@@ -162,6 +156,7 @@ export default class Player extends THREE.Object3D {
 
     // this.initAnimations()
     this.initModel()
+    this.initSkeleton()
     this.initHitbox()
 
     // this.setInitialState()
@@ -202,24 +197,42 @@ export default class Player extends THREE.Object3D {
     })
   }
 
-  addSkeleton() {
-    const trail = SkeletonUtils.clone(this.model)
-    // const material = trailMaterial.clone()
+  initSkeleton() {
+    const gui = useGUI()
 
-    const playerMaterial = new PlayerMaterial({
-      wireframe: true,
+    const skeleton = SkeletonUtils.clone(this.model)
+
+    const playerWireframeMaterial = new PlayerBasicMaterial({
       color: 0x00ff00,
-      diffuse: 0x00ff00
+      wireframe: true
     })
 
-    trail.getObjectByName('black').material = playerMaterial
-    trail.getObjectByName('green').material = playerMaterial
+    const playerStandardMaterial = new PlayerStandardMaterial({
+      emissive: 0x00000,
+      flatShading: true
+    })
 
-    trail.position.copy(this.position)
+    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+    const material = playerWireframeMaterial.clone()
+    const cube = new THREE.Mesh(geometry, material)
+    cube.position.copy(this.position)
+    cube.position.y += 1
+    this.innerGroup.add(cube)
 
-    // const { scene } = useGame()
+    const geometryCubeFill = geometry.clone()
+    const materialCubeFill = playerStandardMaterial.clone()
+    const cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
+    cubeFill.position.copy(this.position)
+    cubeFill.position.y += 1
+    this.innerGroup.add(cubeFill)
+    gui.addMesh('standard_material', cubeFill)
 
-    // scene.add(trail)
+    skeleton.getObjectByName('black').material = playerWireframeMaterial
+    skeleton.getObjectByName('green').material = playerWireframeMaterial
+
+    skeleton.position.copy(this.position)
+
+    // this.innerGroup.add(skeleton)
   }
 
   moveTo(position) {

@@ -7,7 +7,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       vertexShader,
       fragmentShader,
       uniforms: {
-        uThreshold: { value: 0.5 },
+        uThreshold: { value: 0.0 },
         uColor: { value: new THREE.Color(color) }
       },
       side: THREE.DoubleSide,
