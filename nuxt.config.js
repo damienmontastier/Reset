@@ -8,7 +8,7 @@ export default {
    ** Headers of the page
    */
   generate: {
-    routes: ['level1'],
+    routes: [''],
     fallback: ''
   },
   head: {
