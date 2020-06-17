@@ -11,6 +11,12 @@ export const mutations = {
   }
 }
 
+export const getters = {
+  getStageBySlug: (state) => (slug) => {
+    return Object.values(state.list).find((stage) => stage._slug === slug)
+  }
+}
+
 export const actions = {
   async fetch({ commit }) {
     const files = await require.context(
