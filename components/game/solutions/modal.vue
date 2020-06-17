@@ -42,8 +42,10 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.$refs.scroller.onWindowResize()
-    }, 100)
+      if (this.$refs) {
+        this.$refs.scroller.onWindowResize()
+      }
+    }, 1000)
   }
 }
 </script>
