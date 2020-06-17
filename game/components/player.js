@@ -214,18 +214,18 @@ export default class Player extends THREE.Object3D {
 
     const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
     const material = playerWireframeMaterial.clone()
-    const cube = new THREE.Mesh(geometry, material)
-    cube.position.copy(this.position)
-    cube.position.y += 1
-    this.innerGroup.add(cube)
+    this.cubeWireframe = new THREE.Mesh(geometry, material)
+    this.cubeWireframe.position.copy(this.position)
+    this.cubeWireframe.position.y += 1
+    this.innerGroup.add(this.cubeWireframe)
 
     const geometryCubeFill = geometry.clone()
     const materialCubeFill = playerStandardMaterial.clone()
-    const cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
-    cubeFill.position.copy(this.position)
-    cubeFill.position.y += 1
-    this.innerGroup.add(cubeFill)
-    gui.addMesh('standard_material', cubeFill)
+    this.cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
+    this.cubeFill.position.copy(this.position)
+    this.cubeFill.position.y += 1
+    this.innerGroup.add(this.cubeFill)
+    gui.addMesh('standard_material', this.cubeFill)
 
     skeleton.getObjectByName('black').material = playerWireframeMaterial
     skeleton.getObjectByName('green').material = playerWireframeMaterial
@@ -233,6 +233,26 @@ export default class Player extends THREE.Object3D {
     skeleton.position.copy(this.position)
 
     // this.innerGroup.add(skeleton)
+  }
+
+  startPlayerDisplay() {
+    this.cubeFill.material.uniforms.uThreshold.value = 1.1
+    this.cubeWireframe.material.uniforms.uThreshold.value = 1.1
+
+    const tl = gsap.timeline()
+    tl.to(this.cubeWireframe.material.uniforms.uThreshold, {
+      value: -0.1,
+      duration: 2,
+      delay: 0.5
+    })
+    tl.to(
+      this.cubeFill.material.uniforms.uThreshold,
+      {
+        value: -0.1,
+        duration: 2
+      },
+      1
+    )
   }
 
   moveTo(position) {

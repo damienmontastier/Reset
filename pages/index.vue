@@ -80,6 +80,7 @@ export default {
       this.player.modelSkinMaterial2.emissive = new THREE.Color(0x00ff00)
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
+      this.player.startPlayerDisplay()
 
       this.$controller.events.on('keyup', this.onKeydown)
 
