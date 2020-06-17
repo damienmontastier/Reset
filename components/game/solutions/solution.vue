@@ -5,6 +5,8 @@
       <component :is="unlocked ? 'folder-svg' : 'lock-svg'" />
     </div>
     <div class="solution__caption">
+      <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
+
       <template v-if="unlocked">
         <h4 class="solution__caption__subtitle">Tips #{{ solution.id }}</h4>
         <h3 class="solution__caption__title">{{ solution.title }}</h3>
@@ -38,9 +40,6 @@ export default {
       type: Boolean,
       required: true
     }
-  },
-  mounted() {
-    console.log(this.unlocked)
   }
 }
 </script>
@@ -55,9 +54,7 @@ export default {
   display: flex;
   flex-direction: column;
   font-family: var(--font-violet);
-  // height: 150px;
-  // width: 150px;
-  transition: border 0.4s ease-out;
+  transition: border 0.4s _ease('quint', 'out');
 
   &:hover {
     --b-color: var(--color);
@@ -65,10 +62,6 @@ export default {
 
   &--unlocked {
     --color: var(--color-green);
-
-    // &:hover {
-    //   --b-color: var(--color-green);
-    // }
   }
 
   &__icon {
@@ -83,20 +76,45 @@ export default {
     }
   }
 
+  &__new {
+    background-color: var(--color-green);
+    color: var(--color-black);
+    font-size: 14px;
+    line-height: 17px;
+    padding: 4px;
+    position: absolute;
+    right: 0;
+    text-transform: uppercase;
+    top: 0;
+    transform: translate(25%, -50%);
+  }
+
   &__caption {
     background-color: var(--color-black);
-    // border-top: 1px solid var(--color);
+    border-top: 1px solid var(--b-color);
     padding: 17px;
+    position: relative;
+    transition: border 0.4s _ease('quint', 'out');
 
     &__subtitle {
-      font-size: 14px;
-      line-height: 17px;
+      font-size: 11px;
+      line-height: 14px;
       margin-bottom: 4px;
+
+      @media screen and (min-width: 1200px) {
+        font-size: 14px;
+        line-height: 17px;
+      }
     }
 
     &__title {
-      font-size: 18px;
-      line-height: 22px;
+      font-size: 15px;
+      line-height: 19px;
+
+      @media screen and (min-width: 1200px) {
+        font-size: 18px;
+        line-height: 22px;
+      }
 
       span {
         color: var(--color-grey-lighten);
