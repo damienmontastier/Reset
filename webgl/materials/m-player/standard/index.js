@@ -1,5 +1,3 @@
-import useGUI from '@/hooks/use-gui'
-
 const vertexDeclaration = `
 #define STANDARD
 varying vec3 vPosition;
@@ -22,7 +20,7 @@ varying vec3 vPosition;
 `
 
 const fragMain = `
-float alpha = step(uThreshold, vNormalizedPosition.x);
+float alpha = step(uThreshold, vNormalizedPosition.y);
 gl_FragColor = vec4( outgoingLight, alpha );
 `
 
@@ -36,8 +34,6 @@ fragmentShader = fragmentShader.replace(
   fragMain
 )
 
-console.log(fragmentShader)
-
 export default class PlayerMaterial extends THREE.ShaderMaterial {
   constructor({
     wireframe = false,
@@ -48,7 +44,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib.standard.uniforms,
         {
-          uThreshold: { value: 0 },
+          uThreshold: { value: 0.9 },
           diffuse: { value: new THREE.Color(diffuse) }
         }
       ]),
@@ -60,11 +56,5 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       wireframe,
       flatShading
     })
-
-    console.log(THREE.ShaderLib.standard.uniforms)
-
-    const GUI = useGUI()
-
-    GUI.add(this.uniforms.uThreshold, 'value')
   }
 }

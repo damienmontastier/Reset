@@ -18,6 +18,9 @@ import DotsPlane from '@/webgl/components/dots-plane'
 
 import INTRODUCTION_CONFIG from '@/config/introduction'
 
+// import PlayerBasicMaterial from '@/webgl/materials/m-player/basic'
+import PlayerStandardMaterial from '@/webgl/materials/m-player/standard'
+
 export default {
   components: {
     Introduction: () => import('@/components/elements/introduction')
@@ -62,8 +65,8 @@ export default {
         document.querySelector('#__nuxt')
       )
       cameraControls.enableKeys = false
-      camera.position.set(2.64, 3.189, 13.647)
-      camera.rotation.set(0, 70.6, 0)
+      camera.position.set(0, 3.145, 16.475)
+      camera.rotation.set(0, 0, 0)
 
       this.introGroup = new THREE.Group()
       scene.add(this.introGroup)
@@ -79,8 +82,23 @@ export default {
       this.spawnPoint = this.map.spawnPoint.clone()
       this.player.modelSkinMaterial2.emissive = new THREE.Color(0x00ff00)
       this.player.position.copy(this.spawnPoint)
-      this.player.addSkeleton()
-      this.introGroup.add(this.player)
+      // this.player.addSkeleton()
+      // this.introGroup.add(this.player)
+
+      // const playerBasicMaterial = new PlayerBasicMaterial({
+      //   color: 0xff0000
+      // })
+
+      const playerStandardMaterial = new PlayerStandardMaterial({
+        diffuse: 0xff0000
+      })
+
+      const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+      const material = playerStandardMaterial.clone()
+      const cube = new THREE.Mesh(geometry, material)
+      cube.position.copy(this.spawnPoint)
+      cube.position.y += 1
+      this.introGroup.add(cube)
 
       this.$controller.events.on('keyup', this.onKeydown)
 

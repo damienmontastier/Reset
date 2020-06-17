@@ -10,7 +10,8 @@ import useAudio from '@/hooks/use-audio'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
-import PlayerMaterial from '@/webgl/materials/mPlayer/standard'
+// import PlayerStandardMaterial from '@/webgl/materials/m-player/standard'
+import PlayerBasicMaterial from '@/webgl/materials/m-player/basic'
 
 let SkeletonUtils
 
@@ -33,7 +34,7 @@ export default class Player extends THREE.Object3D {
       .SkeletonUtils
   }
   loop({ deltaTime }) {
-    this.animationMixer.update(deltaTime)
+    // this.animationMixer.update(deltaTime)
   }
 
   async load() {
@@ -55,7 +56,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose.glb'
+          path: 'obj/character/character_04_static.glb'
         }
       ]
     })
@@ -82,21 +83,17 @@ export default class Player extends THREE.Object3D {
       flatShading: true
     })
 
-    console.log(this.modelSkinMaterial2)
-
     GUI.addMaterial('modelSkinMaterial', this.modelSkinMaterial)
     GUI.addMaterial('modelSkinMaterial2', this.modelSkinMaterial2)
 
-    const playerMaterial = new PlayerMaterial({
-      flatShading: true,
+    const playerStandardMaterial = new PlayerBasicMaterial({
       diffuse: 0xff0000
     })
-    // const playerMaterialClone = playerMaterial.clone()
 
-    GUI.addMaterial('playerMaterial', playerMaterial)
+    // GUI.addMaterial('PlayerStandardMaterial', PlayerStandardMaterial)
 
-    this.model.getObjectByName('black').material = playerMaterial
-    this.model.getObjectByName('green').material = playerMaterial
+    this.model.getObjectByName('black').material = playerStandardMaterial
+    this.model.getObjectByName('green').material = this.modelSkinMaterial2
   }
 
   initAnimations() {
@@ -163,11 +160,11 @@ export default class Player extends THREE.Object3D {
 
     this.trails = []
 
-    this.initAnimations()
+    // this.initAnimations()
     this.initModel()
     this.initHitbox()
 
-    this.setInitialState()
+    // this.setInitialState()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
