@@ -1,6 +1,6 @@
 backend:
   name: git-gateway
-  branch: master
+  branch: develop
 
 media_folder: static/img
 public_folder: /img
@@ -66,4 +66,29 @@ collections:
           name: 'social_network',
           widget: 'select',
           options: ['Facebook', 'Twitter', 'Instagram', 'Snapchat'],
+        }
+
+  - label: 'Solutions'
+    name: 'solutions'
+    format: 'json'
+    folder: 'assets/content/solutions'
+    slug: '{{day}}-{{hour}}-{{minute}}-{{slug}}'
+    editor:
+      preview: true
+    fields:
+      - { label: 'ID', name: 'id', widget: 'string' }
+      - { label: 'Title', name: 'id', widget: 'string' }
+      - {
+          label: 'Required score',
+          name: 'required_score',
+          widget: 'number',
+          valueType: 'int',
+          min: 0,
+        }
+      - {
+          label: 'Stage',
+          name: 'stage',
+          widget: 'number',
+          valueType: 'int',
+          min: 0,
         }
