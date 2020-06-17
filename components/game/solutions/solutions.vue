@@ -117,6 +117,11 @@ export default {
         })
       }
     }
+  },
+  mounted() {
+    console.log(this.$store.state.solutions._list)
+
+    console.log(this.$store.state.stages.list)
   }
 }
 </script>

@@ -6,7 +6,7 @@ media_folder: static/img
 public_folder: /img
 
 collections:
-  - label: 'Level 1'
+  - label: 'Stage 1'
     name: 'level1'
     format: 'json'
     files:
@@ -15,13 +15,8 @@ collections:
         file: 'assets/content/levels/level1.json'
         fields:
           - { label: Title, name: title, widget: string }
-          - { label: Intro, name: intro, widget: markdown }
-          - label: Team
-            name: team
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
-  - label: 'Level 2'
+          - { label: Nickname, name: nickname, widget: string }
+  - label: 'Stage 2'
     name: 'level2'
     format: 'json'
     files:
@@ -30,12 +25,7 @@ collections:
         file: 'assets/content/levels/level2.json'
         fields:
           - { label: Title, name: title, widget: string }
-          - { label: Intro, name: intro, widget: markdown }
-          - label: Team
-            name: team
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
+          - { label: Nickname, name: nickname, widget: string }
 
   - name: 'about'
     label: 'A propos'
