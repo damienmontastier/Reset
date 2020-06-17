@@ -1,10 +1,12 @@
 {
-  "title": "Level 1 title",
+  "title": "stage 1",
   "intro": "Level 1 intro",
   "team": [
     {
       "name": "Level 1 Team"
     }
   ],
-  "slug": "infinite-scrolling"
+  "slug": "infinite-scrolling",
+  "_slug": "infinite-scroll",
+  "available": false
 }
