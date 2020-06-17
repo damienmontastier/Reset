@@ -15,7 +15,7 @@ collections:
         file: 'assets/content/levels/level1.json'
         fields:
           - { label: Title, name: title, widget: string }
-          - { label: Nickname, name: nickname, widget: string }
+          - { label: Slug, name: slug, widget: string }
   - label: 'Stage 2'
     name: 'level2'
     format: 'json'
@@ -25,7 +25,7 @@ collections:
         file: 'assets/content/levels/level2.json'
         fields:
           - { label: Title, name: title, widget: string }
-          - { label: Nickname, name: nickname, widget: string }
+          - { label: Slug, name: slug, widget: string }
 
   - name: 'about'
     label: 'A propos'
