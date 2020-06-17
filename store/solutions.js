@@ -78,7 +78,9 @@ export const state = () => ({
 
 export const mutations = {
   setSolutionOpened(state, { solution, opened }) {
-    state.list.find((a) => a.id === solution.id).opened = opened
+    const s = Object.values(state.list).find((a) => a.slug === solution.slug)
+    console.log(s)
+    s.opened = opened
   },
   setList(state, list) {
     state.list = list
@@ -97,6 +99,8 @@ export const actions = {
       const res = files(key)
       res.slug = key.slice(2, -5)
       list[res.slug] = res
+
+      res.opened = false
     })
 
     commit('setList', list)

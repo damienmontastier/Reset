@@ -3,9 +3,6 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setSolutionOpened(state, { solution, opened }) {
-    state.list.find((a) => a.id === solution.id).opened = opened
-  },
   setList(state, list) {
     state.list = list
   },
