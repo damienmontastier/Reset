@@ -94,3 +94,4 @@ collections:
           valueType: 'int',
           min: 0,
         }
+      - { label: 'Content', name: 'content', widget: 'markdown' }
