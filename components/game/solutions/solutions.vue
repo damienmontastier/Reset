@@ -74,13 +74,19 @@ export default {
     }
   },
   computed: {
+    stages() {
+      return this.$store.state.stages.list
+    },
     solutions() {
-      return this.$store.state.solutions.list
+      return Object.values(this.$store.state.solutions.list)
     },
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          solution.unlocked = eval(solution.required_score + '>190')
+          // solution.unlocked = eval(solution.required_score + '>170')
+
+          const stage = this.stages[solution.stage]
+          solution.unlocked = solution.required_score > stage.score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)
@@ -117,11 +123,6 @@ export default {
         })
       }
     }
-  },
-  mounted() {
-    console.log(this.$store.state.solutions._list)
-
-    console.log(this.$store.state.stages.list)
   }
 }
 </script>

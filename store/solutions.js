@@ -1,5 +1,5 @@
 export const state = () => ({
-  list: [
+  _list: [
     {
       id: '01',
       title: 'iOS Screen Time',
@@ -73,7 +73,7 @@ export const state = () => ({
       opened: false
     }
   ],
-  _list: []
+  list: []
 })
 
 export const mutations = {
@@ -81,7 +81,7 @@ export const mutations = {
     state.list.find((a) => a.id === solution.id).opened = opened
   },
   setList(state, list) {
-    state._list = list
+    state.list = list
   }
 }
 

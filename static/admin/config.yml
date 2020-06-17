@@ -14,6 +14,7 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level1.json'
         fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
           - { label: 'Slug', name: '_slug', widget: 'string' }
           - {
               label: 'Available',
@@ -29,6 +30,7 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level2.json'
         fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
           - { label: Slug, name: _slug, widget: string }
           - {
               label: 'Available',

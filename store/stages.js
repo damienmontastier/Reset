@@ -8,6 +8,9 @@ export const mutations = {
   },
   setList(state, list) {
     state.list = list
+  },
+  setScore(state, { stage, score }) {
+    state.list[stage].score = score
   }
 }
 
@@ -29,6 +32,7 @@ export const actions = {
       const res = files(key)
       res.slug = key.slice(2, -5)
       list[res.slug] = res
+      res.score = undefined
     })
 
     commit('setList', list)

@@ -10,60 +10,13 @@
       </div>
     </header>
     <div class="solutionModal__content">
-      <scroller>
+      <scroller ref="scroller">
         <div class="solutionModal__content__inner">
           <h4 class="solutionModal__title">{{ solution.title }}</h4>
-          <div class="solutionModal__content__injected">
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <h5>Turn on Screen Time</h5>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-            <p>
-              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Deleniti
-              nam mollitia pariatur, nulla, voluptas illo commodi nostrum quas
-              nemo porro ex ut eaque amet distinctio esse beatae! Ipsa, deserunt
-              totam?
-            </p>
-          </div>
+          <div
+            class="solutionModal__content__injected"
+            v-html="$md.render(solution.content)"
+          />
         </div>
       </scroller>
     </div>
@@ -86,6 +39,11 @@ export default {
       type: Object,
       required: true
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.$refs.scroller.onWindowResize()
+    }, 100)
   }
 }
 </script>
@@ -151,13 +109,20 @@ export default {
       padding: 24px 48px;
     }
 
-    p {
+    &__injected {
       color: var(--color-grey-light);
       font-size: 16px;
       line-height: 22px;
-    }
 
-    &__injected {
+      p,
+      ul {
+        margin-bottom: 16px;
+      }
+
+      ul {
+        list-style: inside;
+      }
+
       h2,
       h3,
       h4,
@@ -167,6 +132,17 @@ export default {
         font-size: 24px;
         line-height: 29px;
         margin-bottom: 16px;
+      }
+
+      img {
+        padding: 16px 0;
+        width: 100%;
+      }
+
+      > * {
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
