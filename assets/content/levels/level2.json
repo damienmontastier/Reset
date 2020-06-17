@@ -1,10 +1,12 @@
 {
-  "title": "Level 2 title",
+  "title": "stage 2",
   "intro": "Level 2 Intro",
   "team": [
     {
       "name": "Level 2 Team"
     }
   ],
-  "slug": "notifications"
+  "slug": "notifications",
+  "available": false,
+  "_slug": "notifications"
 }
