@@ -14,8 +14,13 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level1.json'
         fields:
-          - { label: Title, name: title, widget: string }
-          - { label: Slug, name: slug, widget: string }
+          - { label: 'Slug', name: 'slug', widget: 'string' }
+          - {
+              label: 'Available',
+              name: 'available',
+              widget: 'boolean',
+              default: true,
+            }
   - label: 'Stage 2'
     name: 'level2'
     format: 'json'
@@ -24,8 +29,13 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level2.json'
         fields:
-          - { label: Title, name: title, widget: string }
           - { label: Slug, name: slug, widget: string }
+          - {
+              label: 'Available',
+              name: 'available',
+              widget: 'boolean',
+              default: true,
+            }
 
   - name: 'about'
     label: 'A propos'
