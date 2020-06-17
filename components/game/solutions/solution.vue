@@ -8,7 +8,7 @@
       <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
 
       <template v-if="unlocked">
-        <h4 class="solution__caption__subtitle">Tips #{{ solution.id }}</h4>
+        <h4 class="solution__caption__subtitle">Tip #{{ solution.id }}</h4>
         <h3 class="solution__caption__title">{{ solution.title }}</h3>
       </template>
 

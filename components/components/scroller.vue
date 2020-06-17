@@ -109,6 +109,7 @@ export default {
 
 <style lang="scss">
 .scroller {
+  height: 100%;
   overflow: hidden;
 
   &--native {

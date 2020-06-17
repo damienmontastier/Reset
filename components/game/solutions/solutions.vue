@@ -31,17 +31,26 @@
         </div>
       </aside>
       <div class="solutions__main">
-        <scroller>
-          <div class="solutions__main__grid">
-            <solution
-              v-for="(solution, i) in orderedSolutions"
-              :key="i"
-              :solution="solution"
-              :unlocked="solution.unlocked"
-              class="solutions__solution"
-            />
-          </div>
-        </scroller>
+        <div class="solutions__list">
+          <scroller :scrollable="!modalOpened" :draggable="!modalOpened">
+            <div class="solutions__main__grid">
+              <solution
+                @click.native="selectSolution(solution)"
+                v-for="(solution, i) in orderedSolutions"
+                :key="i"
+                :solution="solution"
+                :unlocked="solution.unlocked"
+                :class="{ 'solutions__solution--unlocked': solution.unlocked }"
+                class="solutions__solution"
+              />
+            </div>
+          </scroller>
+        </div>
+        <modal
+          v-if="modalOpened"
+          :solution="selectedSolution"
+          @close="modalOpened = false"
+        />
       </div>
     </div>
   </section>
@@ -49,12 +58,20 @@
 
 <script>
 import Solution from './solution'
+import Modal from './modal'
 export default {
   components: {
+    Modal,
     Solution,
     HardDriveSvg: () => import('@/components/svg/hard-drive'),
     CrossSvg: () => import('@/components/svg/cross'),
     Scroller: () => import('@/components/components/scroller')
+  },
+  data() {
+    return {
+      modalOpened: false,
+      selectedSolution: undefined
+    }
   },
   computed: {
     solutions() {
@@ -87,6 +104,19 @@ export default {
     progress() {
       return this.unlockedSolutions.length / this.solutions.length
     }
+  },
+  methods: {
+    selectSolution(solution) {
+      if (solution.unlocked) {
+        this.selectedSolution = solution
+        this.modalOpened = true
+
+        this.$store.commit('solutions/setSolutionOpened', {
+          solution,
+          opened: true
+        })
+      }
+    }
   }
 }
 </script>
@@ -107,12 +137,17 @@ export default {
     width: calc(100% - 160px);
   }
 
+  &__list {
+    height: 100%;
+  }
+
   &__main {
     height: 100%;
     overflow: hidden;
+    position: relative;
 
     @media screen and(max-width: 1600px) {
-      padding-right: 84px;
+      margin-right: 84px;
     }
 
     &__grid {
@@ -121,6 +156,7 @@ export default {
       grid-template-columns: repeat(2, 1fr);
       // padding-bottom: calc(120px + 48px);
       padding-bottom: 48px;
+      padding-left: 16px;
       padding-right: 16px;
       padding-top: 48px;
       row-gap: 24px;
@@ -128,8 +164,13 @@ export default {
   }
 
   &__solution {
+    cursor: not-allowed;
     height: 200px;
     width: 240px;
+
+    &--unlocked {
+      cursor: pointer;
+    }
 
     @media screen and(min-width: 1200px) {
       height: 240px;
