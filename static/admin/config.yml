@@ -1,12 +1,12 @@
 backend:
   name: git-gateway
-  branch: master
+  branch: develop
 
 media_folder: static/img
 public_folder: /img
 
 collections:
-  - label: 'Level 1'
+  - label: 'Stage 1'
     name: 'level1'
     format: 'json'
     files:
@@ -14,14 +14,15 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level1.json'
         fields:
-          - { label: Title, name: title, widget: string }
-          - { label: Intro, name: intro, widget: markdown }
-          - label: Team
-            name: team
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
-  - label: 'Level 2'
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: 'Slug', name: '_slug', widget: 'string' }
+          - {
+              label: 'Available',
+              name: 'available',
+              widget: 'boolean',
+              default: true,
+            }
+  - label: 'Stage 2'
     name: 'level2'
     format: 'json'
     files:
@@ -29,13 +30,14 @@ collections:
         name: 'content'
         file: 'assets/content/levels/level2.json'
         fields:
-          - { label: Title, name: title, widget: string }
-          - { label: Intro, name: intro, widget: markdown }
-          - label: Team
-            name: team
-            widget: list
-            fields:
-              - { label: Name, name: name, widget: string }
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: Slug, name: _slug, widget: string }
+          - {
+              label: 'Available',
+              name: 'available',
+              widget: 'boolean',
+              default: true,
+            }
 
   - name: 'about'
     label: 'A propos'
@@ -49,6 +51,7 @@ collections:
     fields:
       - { label: 'Title', name: 'title', widget: 'string' }
       - { label: 'Description', name: 'description', widget: 'text' }
+
   - name: 'posts'
     label: 'Posts'
     format: 'json'
@@ -67,3 +70,29 @@ collections:
           widget: 'select',
           options: ['Facebook', 'Twitter', 'Instagram', 'Snapchat'],
         }
+
+  - label: 'Solutions'
+    name: 'solutions'
+    format: 'json'
+    folder: 'assets/content/solutions'
+    create: true
+    slug: '{{day}}-{{hour}}-{{minute}}-{{slug}}'
+    editor:
+      preview: true
+    fields:
+      - { label: 'ID', name: 'id', widget: 'string' }
+      - { label: 'Title', name: 'title', widget: 'string' }
+      - {
+          label: 'Required score',
+          name: 'required_score',
+          widget: 'number',
+          valueType: 'int',
+          min: 0,
+        }
+      - {
+          label: 'Stage',
+          name: 'stage',
+          widget: 'select',
+          options: ['level1', 'level2', 'level3'],
+        }
+      - { label: 'Content', name: 'content', widget: 'markdown' }

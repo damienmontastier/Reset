@@ -99,10 +99,14 @@ export default {
    */
   modules: [
     '@nuxtjs/style-resources',
+    '@nuxtjs/markdownit',
     'nuxt-helmet',
     'nuxt-ssr-cache',
     'nuxt-compress'
   ],
+  markdownit: {
+    injected: true
+  },
   'nuxt-compress': {
     gzip: {
       cache: true

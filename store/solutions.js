@@ -1,5 +1,5 @@
 export const state = () => ({
-  list: [
+  _list: [
     {
       id: '01',
       title: 'iOS Screen Time',
@@ -72,11 +72,33 @@ export const state = () => ({
       locked_wording: 'or less in STAGE 3',
       opened: false
     }
-  ]
+  ],
+  list: []
 })
 
 export const mutations = {
   setSolutionOpened(state, { solution, opened }) {
     state.list.find((a) => a.id === solution.id).opened = opened
+  },
+  setList(state, list) {
+    state.list = list
+  }
+}
+
+export const actions = {
+  async fetch({ commit }) {
+    const files = await require.context(
+      '~/assets/content/solutions/',
+      false,
+      /\.json$/
+    )
+    const list = {}
+    files.keys().forEach((key) => {
+      const res = files(key)
+      res.slug = key.slice(2, -5)
+      list[res.slug] = res
+    })
+
+    commit('setList', list)
   }
 }

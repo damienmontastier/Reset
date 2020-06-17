@@ -35,6 +35,25 @@ export default {
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
+  },
+
+  mounted() {
+    const GUI = useGUI()
+    const params = {
+      level1: 300
+    }
+    const stagesGUI = GUI.addFolder('Stages')
+    stagesGUI
+      .add(params, 'level1')
+      .min(0)
+      .max(300)
+      .step(1)
+      .onChange(() => {
+        this.$store.commit('stages/setScore', {
+          stage: 'level1',
+          score: params.level1
+        })
+      })
   }
 }
 </script>
