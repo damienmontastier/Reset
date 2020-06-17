@@ -90,8 +90,7 @@ collections:
       - {
           label: 'Stage',
           name: 'stage',
-          widget: 'number',
-          valueType: 'int',
-          min: 0,
+          widget: 'select',
+          options: ['level1', 'level2', 'level3'],
         }
       - { label: 'Content', name: 'content', widget: 'markdown' }
