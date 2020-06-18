@@ -40,7 +40,8 @@ export default {
   mounted() {
     const GUI = useGUI()
     const params = {
-      level1: 300
+      level1: 300,
+      level2: 300
     }
     const stagesGUI = GUI.addFolder('Stages')
     stagesGUI
@@ -52,6 +53,18 @@ export default {
         this.$store.commit('stages/setScore', {
           stage: 'level1',
           score: params.level1
+        })
+      })
+
+    stagesGUI
+      .add(params, 'level2')
+      .min(0)
+      .max(300)
+      .step(1)
+      .onChange(() => {
+        this.$store.commit('stages/setScore', {
+          stage: 'level2',
+          score: params.level2
         })
       })
   }

@@ -15,8 +15,13 @@
       <template v-else>
         <h4 class="solution__caption__subtitle">Unlocked at :</h4>
         <h3 class="solution__caption__title">
-          <span>{{ solution.required_score }}</span>
-          {{ solution.locked_wording }}
+          <span class="solution__caption__title__score">
+            {{ solution.required_score }}
+          </span>
+          or less in
+          <span class="solution__caption__title__stage">
+            {{ solution.stage.title }}
+          </span>
         </h3>
       </template>
     </div>
@@ -116,8 +121,12 @@ export default {
         line-height: 22px;
       }
 
-      span {
+      &__score {
         color: var(--color-grey-lighten);
+      }
+
+      &__stage {
+        text-transform: uppercase;
       }
     }
   }
