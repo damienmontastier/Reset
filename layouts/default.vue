@@ -38,6 +38,8 @@ export default {
   },
 
   mounted() {
+    console.log(this.$store.state.solutions.list)
+
     const GUI = useGUI()
     const params = {
       level1: 300,
