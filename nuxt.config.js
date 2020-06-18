@@ -8,7 +8,7 @@ export default {
    ** Headers of the page
    */
   generate: {
-    routes: ['/infinite-scroll'],
+    routes: ['infinite-scroll'],
     fallback: ''
   },
   head: {

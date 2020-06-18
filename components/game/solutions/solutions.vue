@@ -85,8 +85,9 @@ export default {
         .map((solution) => {
           // solution.unlocked = eval(solution.required_score + '>170')
 
-          const stage = this.stages[solution.stage]
-          solution.unlocked = solution.required_score > stage.score
+          // const stage = this.stages[solution.stage]
+          // solution.stage = { ...stage }
+          solution.unlocked = solution.required_score > solution.stage.score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)
@@ -123,6 +124,9 @@ export default {
         })
       }
     }
+  },
+  mounted() {
+    console.log(this.orderedSolutions)
   }
 }
 </script>

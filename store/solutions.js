@@ -78,9 +78,9 @@ export const state = () => ({
 
 export const mutations = {
   setSolutionOpened(state, { solution, opened }) {
-    const s = Object.values(state.list).find((a) => a.slug === solution.slug)
-    console.log(s)
-    s.opened = opened
+    Object.values(state.list).find(
+      (a) => a.slug === solution.slug
+    ).opened = opened
   },
   setList(state, list) {
     state.list = list
@@ -88,7 +88,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetch({ commit }) {
+  async fetch({ commit, rootState }) {
     const files = await require.context(
       '~/assets/content/solutions/',
       false,
@@ -101,6 +101,7 @@ export const actions = {
       list[res.slug] = res
 
       res.opened = false
+      res.stage = rootState.stages.list[res.stage]
     })
 
     commit('setList', list)
