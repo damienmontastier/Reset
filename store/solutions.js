@@ -98,10 +98,10 @@ export const actions = {
     files.keys().forEach((key) => {
       const res = files(key)
       res.slug = key.slice(2, -5)
-      list[res.slug] = res
-
       res.opened = false
       res.stage = rootState.stages.list[res.stage]
+
+      list[res.slug] = res
 
       console.log(res.stage)
     })
