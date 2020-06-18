@@ -3,11 +3,11 @@
     <div class="solutions__inner">
       <aside class="solutions__aside">
         <h2 class="solutions__title">
-          <hard-drive-svg />
+          <!-- <hard-drive-svg /> -->
         </h2>
         <div class="solutions__modal">
           <div class="solutions__modal__close">
-            <cross-svg />
+            <!-- <cross-svg /> -->
           </div>
           <h3 class="solutions__modal__title">
             The Hard Drive compiles all the precious data you collected.
@@ -34,7 +34,7 @@
         <div class="solutions__list">
           <scroller :scrollable="!modalOpened" :draggable="!modalOpened">
             <div class="solutions__main__grid">
-              <solution
+              <!-- <solution
                 @click.native="selectSolution(solution)"
                 v-for="(solution, i) in orderedSolutions"
                 :key="i"
@@ -42,7 +42,7 @@
                 :unlocked="solution.unlocked"
                 :class="{ 'solutions__solution--unlocked': solution.unlocked }"
                 class="solutions__solution"
-              />
+              /> -->
             </div>
           </scroller>
         </div>
@@ -57,14 +57,14 @@
 </template>
 
 <script>
-import Solution from './solution'
+// import Solution from './solution'
 // import Modal from './modal'
 export default {
   components: {
     // Modal,
-    Solution,
-    HardDriveSvg: () => import('@/components/svg/hard-drive'),
-    CrossSvg: () => import('@/components/svg/cross'),
+    // Solution,
+    // HardDriveSvg: () => import('@/components/svg/hard-drive'),
+    // CrossSvg: () => import('@/components/svg/cross'),
     Scroller: () => import('@/components/components/scroller')
   },
   data() {
