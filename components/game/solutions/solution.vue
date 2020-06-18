@@ -2,10 +2,10 @@
   <div :class="{ 'solution--unlocked': unlocked }" class="solution">
     <div class="solution__icon">
       <!-- eslint-disable-next-line vue/require-component-is -->
-      <!-- <component :is="unlocked ? 'folder-svg' : 'lock-svg'" /> -->
+      <component :is="unlocked ? 'folder-svg' : 'lock-svg'" />
     </div>
     <div class="solution__caption">
-      <!-- <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
+      <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
 
       <template v-if="unlocked">
         <h4 class="solution__caption__subtitle">Tip #{{ solution.id }}</h4>
@@ -23,7 +23,7 @@
             {{ solution.stage.title }}
           </span>
         </h3>
-      </template> -->
+      </template>
     </div>
   </div>
 </template>
