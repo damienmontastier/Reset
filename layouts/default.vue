@@ -38,6 +38,7 @@ export default {
   },
 
   mounted() {
+    console.log(this.$store.state.stages.list)
     console.log(this.$store.state.solutions.list)
 
     const GUI = useGUI()
