@@ -1,6 +1,6 @@
 <template>
   <section class="solutions">
-    <div class="solutions__inner">
+    <!-- <div class="solutions__inner">
       <aside class="solutions__aside">
         <h2 class="solutions__title">
           <hard-drive-svg />
@@ -52,20 +52,20 @@
           @close="modalOpened = false"
         />
       </div>
-    </div>
+    </div> -->
   </section>
 </template>
 
 <script>
-import Solution from './solution'
-import Modal from './modal'
+// import Solution from './solution'
+// import Modal from './modal'
 export default {
   components: {
-    Modal,
-    Solution,
-    HardDriveSvg: () => import('@/components/svg/hard-drive'),
-    CrossSvg: () => import('@/components/svg/cross'),
-    Scroller: () => import('@/components/components/scroller')
+    // Modal,
+    // Solution,
+    // HardDriveSvg: () => import('@/components/svg/hard-drive'),
+    // CrossSvg: () => import('@/components/svg/cross'),
+    // Scroller: () => import('@/components/components/scroller')
   },
   data() {
     return {
