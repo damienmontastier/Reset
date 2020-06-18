@@ -102,6 +102,8 @@ export const actions = {
 
       res.opened = false
       res.stage = rootState.stages.list[res.stage]
+
+      console.log(res.stage)
     })
 
     commit('setList', list)
