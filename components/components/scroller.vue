@@ -54,7 +54,7 @@ export default {
     native() {
       if (this.native) {
         this.scroller.enabled = false
-        this.scroller.enabled = false
+        this.dragger.enabled = false
       } else {
         this.scroller.enabled = this.scrollable
         this.dragger.enabled = this.draggable
