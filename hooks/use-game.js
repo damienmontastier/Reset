@@ -1,7 +1,9 @@
 import useWebGL from '@/hooks/use-webgl'
-// import useCamera from '@/hooks/use-camera'
+import useCamera from '@/hooks/use-camera'
 import useRAF from '@/hooks/use-raf'
 // import useGUI from '@/hooks/use-gui'
+
+import UIGrid from '@/webgl/components/ui-grid'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -14,6 +16,8 @@ class Game {
     const { scene } = useWebGL()
     scene.add(this.scene)
 
+    // scene.background = new THREE.Color(0xffffff)
+
     this.intersections = new INTERSECTIONS.World()
     // scene.add(this.intersections)
 
@@ -21,7 +25,14 @@ class Game {
   }
 
   init() {
-    this.initCamera()
+    // this.initCamera()
+
+    const { camera } = useCamera()
+
+    this.scene.add(camera)
+
+    this.UIGrid = new UIGrid()
+    camera.add(this.UIGrid)
 
     const RAF = useRAF()
     RAF.add('use-game', this.loop.bind(this), 1)
@@ -46,8 +57,8 @@ class Game {
   }
 
   loop() {
-    const { clock } = useWebGL()
-    clock.getDelta()
+    // const { clock } = useWebGL()
+    // clock.getDelta()
 
     // const time = clock.getElapsedTime()
 

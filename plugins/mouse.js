@@ -55,7 +55,15 @@ const mouse = new Vue({
         duration: !this.hasMoved ? 0 : 2,
         x,
         y,
-        ease: 'power4.out'
+        ease: 'power4.out',
+        onUpdate: () => {
+          this.events.emit('mousemove-lerped', {
+            ...this.$data,
+            normalized: this.normalized,
+            lerpedNormalized: this.lerpedNormalized,
+            originalEvent: e
+          })
+        }
       })
 
       this.events.emit('mousemove', {
