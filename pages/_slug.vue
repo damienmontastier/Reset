@@ -9,9 +9,9 @@
 /* eslint-disable vue/no-unused-components */
 
 export default {
-  validate({ params, store }) {
-    return store.getters['stages/getStageBySlug'](params.slug)
-  },
+  // validate({ params, store }) {
+  //   return store.getters['stages/getStageBySlug'](params.slug)
+  // },
 
   components: {
     level1: () => import('@/components/game/levels/level1.vue'),
