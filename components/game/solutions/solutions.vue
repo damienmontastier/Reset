@@ -83,10 +83,6 @@ export default {
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          // solution.unlocked = eval(solution.required_score + '>170')
-
-          // const stage = this.stages[solution.stage]
-          // solution.stage = { ...stage }
           solution.unlocked = solution.required_score > solution.stage.score
           return solution
         })
@@ -124,9 +120,6 @@ export default {
         })
       }
     }
-  },
-  mounted() {
-    console.log(this.orderedSolutions)
   }
 }
 </script>

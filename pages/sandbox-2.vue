@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <quality-selection /> -->
-    <!-- <solutions /> -->
+    <solutions />
   </div>
 </template>
 
@@ -9,7 +9,7 @@
 export default {
   components: {
     // QualitySelection: () => import('@/components/game/quality-selection')
-    // Solutions: () => import('@/components/game/solutions/solutions')
+    Solutions: () => import('@/components/game/solutions/solutions')
   }
 }
 </script>

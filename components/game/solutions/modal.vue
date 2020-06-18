@@ -14,8 +14,8 @@
         <div class="solutionModal__content__inner">
           <h4 class="solutionModal__title">{{ solution.title }}</h4>
           <div
-            class="solutionModal__content__injected"
             v-html="$md.render(solution.content)"
+            class="solutionModal__content__injected"
           />
         </div>
       </scroller>
