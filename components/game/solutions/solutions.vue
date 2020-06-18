@@ -43,9 +43,6 @@
                 :class="{ 'solutions__solution--unlocked': solution.unlocked }"
                 class="solutions__solution"
               /> -->
-              <div v-for="(solution, i) in orderedSolutions" :key="i">
-                {{ solution }}
-              </div>
             </div>
           </scroller>
         </div>
@@ -123,6 +120,9 @@ export default {
         })
       }
     }
+  },
+  mounted() {
+    console.log(this.orderedSolutions)
   }
 }
 </script>
