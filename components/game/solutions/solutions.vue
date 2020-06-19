@@ -83,7 +83,8 @@ export default {
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          solution.unlocked = solution.required_score > solution.stage.score
+          solution._stage = this.stages[solution.stage]
+          solution.unlocked = solution.required_score > solution._stage.score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)

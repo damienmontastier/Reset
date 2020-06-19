@@ -99,7 +99,7 @@ export const actions = {
       const res = files(key)
       res.slug = key.slice(2, -5)
       res.opened = false
-      res.stage = rootState.stages.list[res.stage]
+      // res.stage = rootState.stages.list[res.stage]
 
       list[res.slug] = res
 
