@@ -34,7 +34,7 @@
         <div class="solutions__list">
           <scroller :scrollable="!modalOpened" :draggable="!modalOpened">
             <div class="solutions__main__grid">
-              <!-- <solution
+              <solution
                 @click.native="selectSolution(solution)"
                 v-for="(solution, i) in orderedSolutions"
                 :key="i"
@@ -42,7 +42,7 @@
                 :unlocked="solution.unlocked"
                 :class="{ 'solutions__solution--unlocked': solution.unlocked }"
                 class="solutions__solution"
-              /> -->
+              />
             </div>
           </scroller>
         </div>
@@ -57,12 +57,12 @@
 </template>
 
 <script>
-// import Solution from './solution'
+import Solution from './solution'
 // import Modal from './modal'
 export default {
   components: {
     // Modal,
-    // Solution,
+    Solution,
     HardDriveSvg: () => import('@/components/svg/hard-drive'),
     CrossSvg: () => import('@/components/svg/cross'),
     Scroller: () => import('@/components/components/scroller')
@@ -78,13 +78,15 @@ export default {
       return this.$store.state.stages.list
     },
     solutions() {
-      // return Object.values(this.$store.state.solutions.list)
+      return Object.values(this.$store.state.solutions.list)
 
-      return this.$store.getters['solutions/getSolutions']
+      // return this.$store.getters['solutions/getSolutions']
     },
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
+          // solution.unlocked = solution.required_score > solution.stage.score
+          solution.stage = this.stages[solution.stage_id]
           solution.unlocked = solution.required_score > solution.stage.score
           return solution
         })
