@@ -16,15 +16,15 @@
             Discover efficient ways to free yourself from the Smartphone grasp.
           </p>
           <div class="solutions__modal__progress">
-            <!-- <div
+            <div
               :style="`width:${progress * 100}%`"
               class="solutions__modal__progress__fill"
-            /> -->
+            />
           </div>
           <p class="solutions__modal__stats">
             You unlocked
             <span>
-              <!-- {{ stats }} -->
+              {{ stats }}
             </span>
             data.
           </p>
@@ -46,11 +46,11 @@
             </div>
           </scroller>
         </div>
-        <!-- <modal
+        <modal
           v-if="modalOpened"
           :solution="selectedSolution"
           @close="modalOpened = false"
-        /> -->
+        />
       </div>
     </div>
   </section>
@@ -58,10 +58,10 @@
 
 <script>
 import Solution from './solution'
-// import Modal from './modal'
+import Modal from './modal'
 export default {
   components: {
-    // Modal,
+    Modal,
     Solution,
     HardDriveSvg: () => import('@/components/svg/hard-drive'),
     CrossSvg: () => import('@/components/svg/cross'),
