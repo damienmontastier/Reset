@@ -10,7 +10,6 @@ export default {
     }
 
     function onMouseMove() {
-      console.log('onMousemove')
       gsap.to(el, {
         duration: 1,
         ease: 'power4.out',
