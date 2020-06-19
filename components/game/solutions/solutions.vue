@@ -6,22 +6,67 @@
           <hard-drive-svg />
         </h2>
         <div class="solutions__modal">
-          <div class="solutions__modal__close">
+          <div
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            class="solutions__modal__background"
+          />
+          <div
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.1s` }"
+            class="solutions__modal__close"
+          >
             <cross-svg />
           </div>
-          <h3 class="solutions__modal__title">
+          <h3
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.2s` }"
+            class="solutions__modal__title"
+          >
             The Hard Drive compiles all the precious data you collected.
           </h3>
-          <p class="solutions__modal__subtitle">
+          <p
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.3s` }"
+            class="solutions__modal__subtitle"
+          >
             Discover efficient ways to free yourself from the Smartphone grasp.
           </p>
-          <div class="solutions__modal__progress">
+          <div
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.4s` }"
+            class="solutions__modal__progress"
+          >
             <div
-              :style="`width:${progress * 100}%`"
+              :style="{
+                width: `${mounted ? progress * 100 : 0}%`,
+                'transition-delay': `0.4s`
+              }"
               class="solutions__modal__progress__fill"
             />
           </div>
-          <p class="solutions__modal__stats">
+          <p
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.5s` }"
+            class="solutions__modal__stats"
+          >
             You unlocked
             <span>
               {{ stats }}
@@ -69,12 +114,14 @@
 <script>
 import Solution from './solution'
 import Modal from './modal'
+import CrossSvg from '@/components/svg/cross'
+
 export default {
   components: {
     Modal,
     Solution,
     HardDriveSvg: () => import('@/components/svg/hard-drive'),
-    CrossSvg: () => import('@/components/svg/cross'),
+    CrossSvg,
     Scroller: () => import('@/components/components/scroller')
   },
   data() {
@@ -169,10 +216,6 @@ export default {
     overflow: hidden;
     position: relative;
 
-    @media screen and(max-width: 1600px) {
-      margin-right: 84px;
-    }
-
     &__grid {
       column-gap: 24px;
       display: grid;
@@ -190,6 +233,10 @@ export default {
           top: calc(120px + 12px);
         }
       }
+    }
+
+    @media screen and(max-width: 1600px) {
+      margin-right: 84px;
     }
   }
 
@@ -220,10 +267,19 @@ export default {
   }
 
   &__modal {
-    background-color: var(--color-black);
     padding: 24px;
     position: relative;
     width: 315px;
+
+    &__background {
+      background-color: var(--color-black);
+      height: 100%;
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: 100%;
+      z-index: -1;
+    }
 
     &__close {
       align-items: center;
@@ -283,7 +339,7 @@ export default {
         left: 0;
         position: absolute;
         top: 0;
-        width: 33%;
+        transition: width 1s _ease('quint', 'out');
       }
     }
   }
