@@ -33,17 +33,13 @@
 </template>
 
 <script>
-/* eslint-disable vue/no-unused-components */
-
 import lottie from 'lottie-web'
 import folderLottieData from '@/assets/lottie/folder.json'
 import lockLottieData from '@/assets/lottie/lock.json'
 
+import useGame from '@/hooks/use-game'
+
 export default {
-  components: {
-    // FolderSvg: () => import('@/components/svg/folder'),
-    // LockSvg: () => import('@/components/svg/lock')
-  },
   filters: {
     minutesAndSeconds(time) {
       let minutes = Math.floor(time / 60)
@@ -68,6 +64,9 @@ export default {
     }
   },
   mounted() {
+    const { UIGrid } = useGame()
+    UIGrid.visible = true
+
     this.iconAnimation = lottie.loadAnimation({
       container: this.$refs['lottie-icon'],
       renderer: 'svg',
@@ -75,8 +74,6 @@ export default {
       autoplay: false,
       animationData: this.unlocked ? folderLottieData : lockLottieData
     })
-
-    // this.iconAnimation.play()
   },
 
   methods: {

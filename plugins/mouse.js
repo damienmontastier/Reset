@@ -68,6 +68,7 @@ const mouse = new Vue({
 
       this.events.emit('mousemove', {
         ...this.$data,
+        normalized: this.normalized,
         originalEvent: e
       })
 

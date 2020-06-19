@@ -126,7 +126,7 @@ export default {
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
-        { path: '/sounds.old/factory_ambiance.mp3', id: 'factory_ambiance' }
+        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' }
       ])
     },
     async init() {

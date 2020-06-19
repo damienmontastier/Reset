@@ -14,6 +14,7 @@
         <div class="solutionModal__content__inner">
           <h4 class="solutionModal__title">{{ solution.title }}</h4>
           <div
+            ref="injected"
             v-html="$md.render(solution.content)"
             class="solutionModal__content__injected"
           />
@@ -24,9 +25,11 @@
 </template>
 
 <script>
+import imgLoader from '@/assets/js/imgLoader'
+import Scroller from '@/components/components/scroller'
 export default {
   components: {
-    Scroller: () => import('@/components/components/scroller'),
+    Scroller,
     CrossSvg: () => import('@/components/svg/cross'),
     FolderSvg: () => import('@/components/svg/folder')
   },
@@ -42,10 +45,18 @@ export default {
   },
   mounted() {
     setTimeout(() => {
+      const imgs = this.$refs.injected.querySelectorAll('img')
+      imgLoader(imgs).then(() => {
+        this.onLoaded()
+      })
+    }, 0)
+  },
+  methods: {
+    onLoaded() {
       if (this.$refs.scroller) {
         this.$refs.scroller.onWindowResize()
       }
-    }, 1000)
+    }
   }
 }
 </script>

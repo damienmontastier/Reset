@@ -32,6 +32,7 @@ class Game {
     this.scene.add(camera)
 
     this.UIGrid = new UIGrid()
+    this.UIGrid.visible = false
     camera.add(this.UIGrid)
 
     const RAF = useRAF()

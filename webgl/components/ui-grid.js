@@ -1,3 +1,5 @@
+import gsap from 'gsap'
+
 import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 
@@ -22,7 +24,7 @@ export default class UIGrid extends THREE.Object3D {
         value: segments
       },
       uCursor: {
-        value: new THREE.Vector2(0, 0)
+        value: new THREE.Vector2(0.5, 0.5)
       }
     }
 
@@ -55,13 +57,18 @@ export default class UIGrid extends THREE.Object3D {
       .step(1)
 
     viewport.events.on('resize', this.onWindowResize.bind(this))
-    mouse.events.on('mousemove-lerped', this.onMouseMove.bind(this))
+    mouse.events.on('mousemove', this.onMouseMove.bind(this))
   }
 
   onMouseMove(e) {
-    const { x, y } = e.lerpedNormalized
-    this.uniforms.uCursor.value.x = x * 0.5 + 0.5
-    this.uniforms.uCursor.value.y = y * 0.5 + 0.5
+    const { x, y } = e.normalized
+
+    gsap.to(this.uniforms.uCursor.value, {
+      duration: 3,
+      ease: 'power4.out',
+      x: x * 0.5 + 0.5,
+      y: y * 0.5 + 0.5
+    })
   }
 
   onWindowResize() {

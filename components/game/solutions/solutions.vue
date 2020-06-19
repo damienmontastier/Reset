@@ -34,15 +34,25 @@
         <div class="solutions__list">
           <scroller :scrollable="!modalOpened" :draggable="!modalOpened">
             <div class="solutions__main__grid">
-              <solution
-                @click.native="selectSolution(solution)"
+              <div
                 v-for="(solution, i) in orderedSolutions"
                 :key="i"
-                :solution="solution"
-                :unlocked="solution.unlocked"
-                :class="{ 'solutions__solution--unlocked': solution.unlocked }"
-                class="solutions__solution"
-              />
+                :class="{
+                  transition__fadeIn: true,
+                  'transition--on': mounted
+                }"
+                :style="{ 'transition-delay': `${i * 0.1}s` }"
+              >
+                <solution
+                  @click.native="selectSolution(solution)"
+                  :solution="solution"
+                  :unlocked="solution.unlocked"
+                  :class="{
+                    'solutions__solution--unlocked': solution.unlocked
+                  }"
+                  class="solutions__solution"
+                />
+              </div>
             </div>
           </scroller>
         </div>
@@ -70,7 +80,8 @@ export default {
   data() {
     return {
       modalOpened: false,
-      selectedSolution: undefined
+      selectedSolution: undefined,
+      mounted: false
     }
   },
   computed: {
@@ -124,6 +135,11 @@ export default {
         })
       }
     }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
   }
 }
 </script>
@@ -167,6 +183,13 @@ export default {
       padding-right: 16px;
       padding-top: 48px;
       row-gap: 24px;
+
+      > * {
+        &:nth-child(2n) {
+          position: relative;
+          top: calc(120px + 12px);
+        }
+      }
     }
   }
 
@@ -182,11 +205,6 @@ export default {
     @media screen and(min-width: 1200px) {
       height: 240px;
       width: 280px;
-    }
-
-    &:nth-child(2n) {
-      position: relative;
-      top: calc(120px + 12px);
     }
   }
 
