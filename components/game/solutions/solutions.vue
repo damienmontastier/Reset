@@ -78,13 +78,14 @@ export default {
       return this.$store.state.stages.list
     },
     solutions() {
-      return Object.values(this.$store.state.solutions.list)
+      // return Object.values(this.$store.state.solutions.list)
+
+      return this.$store.getters['solutions/getSolutions']
     },
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          solution._stage = this.stages[solution.stage]
-          solution.unlocked = solution.required_score > solution._stage.score
+          solution.unlocked = solution.required_score > solution.stage.score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)
