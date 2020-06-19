@@ -76,15 +76,15 @@ export const state = () => ({
   list: {}
 })
 
-export const getters = {
-  getSolutions: (state, getters, rootState) => {
-    const _list = [...Object.values(state.list)]
-    _list.forEach((solution) => {
-      solution.stage = rootState.stages.list[solution.stage]
-    })
-    return _list
-  }
-}
+// export const getters = {
+//   getSolutions: (state, getters, rootState) => {
+//     const _list = [...Object.values(state.list)]
+//     _list.forEach((solution) => {
+//       solution.stage = rootState.stages.list[solution.stage]
+//     })
+//     return _list
+//   }
+// }
 
 export const mutations = {
   setSolutionOpened(state, { solution, opened }) {
