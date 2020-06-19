@@ -2,10 +2,10 @@
   <section class="solutions">
     <div class="solutions__inner">
       <aside class="solutions__aside">
-        <h2 class="solutions__title">
+        <h2 v-kinesis="{ depth: 2 }" class="solutions__title">
           <hard-drive-svg />
         </h2>
-        <div class="solutions__modal">
+        <div v-kinesis="{ depth: 4 }" class="solutions__modal">
           <div
             :class="{
               transition__fadeIn: true,
@@ -76,8 +76,12 @@
         </div>
       </aside>
       <div class="solutions__main">
-        <div class="solutions__list">
-          <scroller :scrollable="!modalOpened" :draggable="!modalOpened">
+        <div v-kinesis="{ depth: 2 }" class="solutions__list">
+          <scroller
+            :scrollable="!modalOpened"
+            :draggable="!modalOpened"
+            class="solutions__main__scroller"
+          >
             <div class="solutions__main__grid">
               <div
                 v-for="(solution, i) in orderedSolutions"
@@ -101,11 +105,16 @@
             </div>
           </scroller>
         </div>
-        <modal
-          v-if="modalOpened"
-          :solution="selectedSolution"
-          @close="modalOpened = false"
-        />
+        <div v-if="modalOpened" class="solutions__opened">
+          <modal
+            v-kinesis="{ depth: 8 }"
+            :solution="selectedSolution"
+            @close="
+              modalOpened = false
+              selectedSolution = false
+            "
+          />
+        </div>
       </div>
     </div>
   </section>
@@ -172,7 +181,7 @@ export default {
   },
   methods: {
     selectSolution(solution) {
-      if (solution.unlocked) {
+      if (solution.unlocked && !this.selectedSolution) {
         this.selectedSolution = solution
         this.modalOpened = true
 
@@ -222,8 +231,8 @@ export default {
       grid-template-columns: repeat(2, 1fr);
       // padding-bottom: calc(120px + 48px);
       padding-bottom: 48px;
-      padding-left: 16px;
-      padding-right: 16px;
+      padding-left: 32px;
+      padding-right: 32px;
       padding-top: 48px;
       row-gap: 24px;
 
@@ -342,6 +351,15 @@ export default {
         transition: width 1s _ease('quint', 'out');
       }
     }
+  }
+
+  &__opened {
+    height: 80vh;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% - 32px);
   }
 
   @keyframes progress {

@@ -1,21 +1,57 @@
 <template>
   <section class="solutionModal">
     <header class="solutionModal__header">
-      <folder-svg class="solutionModal__header__icon" />
-      <h4 class="solutionModal__header__title">
+      <folder-svg
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        :style="{ 'transition-delay': `0.1s` }"
+        class="solutionModal__header__icon"
+      />
+      <h4
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        :style="{ 'transition-delay': `0.2s` }"
+        class="solutionModal__header__title"
+      >
         Tip #{{ solution.id }} / {{ solution.title }}
       </h4>
-      <div @click="$emit('close')" class="solutionModal__close">
+      <div
+        @click="$emit('close')"
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        :style="{ 'transition-delay': `0.3s` }"
+        class="solutionModal__close"
+      >
         <cross-svg />
       </div>
     </header>
     <div class="solutionModal__content">
       <scroller ref="scroller">
         <div class="solutionModal__content__inner">
-          <h4 class="solutionModal__title">{{ solution.title }}</h4>
+          <h4
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.4s` }"
+            class="solutionModal__title"
+          >
+            {{ solution.title }}
+          </h4>
           <div
             ref="injected"
             v-html="$md.render(solution.content)"
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.5s` }"
             class="solutionModal__content__injected"
           />
         </div>
@@ -27,11 +63,14 @@
 <script>
 import imgLoader from '@/assets/js/imgLoader'
 import Scroller from '@/components/components/scroller'
+import CrossSvg from '@/components/svg/cross'
+import FolderSvg from '@/components/svg/folder'
+
 export default {
   components: {
     Scroller,
-    CrossSvg: () => import('@/components/svg/cross'),
-    FolderSvg: () => import('@/components/svg/folder')
+    CrossSvg,
+    FolderSvg
   },
   props: {
     opened: {
@@ -43,8 +82,15 @@ export default {
       required: true
     }
   },
+  data() {
+    return {
+      mounted: false
+    }
+  },
   mounted() {
     setTimeout(() => {
+      this.mounted = true
+
       const imgs = this.$refs.injected.querySelectorAll('img')
       imgLoader(imgs).then(() => {
         this.onLoaded()
@@ -67,12 +113,7 @@ export default {
   background-color: var(--color-black);
   border: 1px solid var(--color-green);
   font-family: var(--font-violet);
-  height: 80vh;
-  left: 0;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 100%;
+  height: 100%;
 
   &__title {
     color: var(--color-grey-lighten);
