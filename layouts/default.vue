@@ -32,20 +32,30 @@ export default {
     })
   },
 
+  fetch() {
+    this.$store.commit('stages/setScore', {
+      stage: 'level1',
+      score: 150
+    })
+
+    this.$store.commit('stages/setScore', {
+      stage: 'level2',
+      score: 300
+    })
+  },
+
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
   },
 
   mounted() {
-    console.log(this.$store.state.stages.list)
-    console.log(this.$store.state.solutions.list)
-
     const GUI = useGUI()
     const params = {
-      level1: 300,
+      level1: 150,
       level2: 300
     }
+
     const stagesGUI = GUI.addFolder('Stages')
     stagesGUI
       .add(params, 'level1')

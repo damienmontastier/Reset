@@ -1,8 +1,12 @@
 <template>
-  <div :class="{ 'solution--unlocked': unlocked }" class="solution">
+  <div
+    @mouseenter="onMouseEnter"
+    @mouseleave="onMouseLeave"
+    :class="{ 'solution--unlocked': unlocked }"
+    class="solution"
+  >
     <div class="solution__icon">
-      <!-- eslint-disable-next-line vue/require-component-is -->
-      <component :is="unlocked ? 'folder-svg' : 'lock-svg'" />
+      <div ref="lottie-icon"></div>
     </div>
     <div class="solution__caption">
       <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
@@ -16,7 +20,7 @@
         <h4 class="solution__caption__subtitle">Unlocked at :</h4>
         <h3 class="solution__caption__title">
           <span class="solution__caption__title__score">
-            {{ solution.required_score }}
+            {{ solution.required_score | minutesAndSeconds }}
           </span>
           or less in
           <span class="solution__caption__title__stage">
@@ -31,10 +35,27 @@
 <script>
 /* eslint-disable vue/no-unused-components */
 
+import lottie from 'lottie-web'
+import folderLottieData from '@/assets/lottie/folder.json'
+import lockLottieData from '@/assets/lottie/lock.json'
+
 export default {
   components: {
-    FolderSvg: () => import('@/components/svg/folder'),
-    LockSvg: () => import('@/components/svg/lock')
+    // FolderSvg: () => import('@/components/svg/folder'),
+    // LockSvg: () => import('@/components/svg/lock')
+  },
+  filters: {
+    minutesAndSeconds(time) {
+      let minutes = Math.floor(time / 60)
+      if (minutes < 10) {
+        minutes = '0' + minutes
+      }
+      let seconds = time - minutes * 60
+      if (seconds < 10) {
+        seconds = '0' + seconds
+      }
+      return minutes + ':' + seconds
+    }
   },
   props: {
     solution: {
@@ -44,6 +65,30 @@ export default {
     unlocked: {
       type: Boolean,
       required: true
+    }
+  },
+  mounted() {
+    this.iconAnimation = lottie.loadAnimation({
+      container: this.$refs['lottie-icon'],
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: this.unlocked ? folderLottieData : lockLottieData
+    })
+
+    // this.iconAnimation.play()
+  },
+
+  methods: {
+    onMouseEnter() {
+      this.iconAnimation.setDirection(1)
+      this.iconAnimation.stop()
+      this.iconAnimation.play()
+    },
+
+    onMouseLeave() {
+      this.iconAnimation.setDirection(-1)
+      this.iconAnimation.play()
     }
   }
 }
