@@ -33,7 +33,9 @@ export default class UIGrid extends THREE.Object3D {
       transparent: true,
       extensions: {
         derivatives: true
-      }
+      },
+      depthWrite: false,
+      depthTest: false
     })
     this.mesh = new THREE.Mesh(this.geometry, this.material)
 
