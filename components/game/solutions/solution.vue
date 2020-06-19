@@ -9,7 +9,11 @@
       <div ref="lottie-icon"></div>
     </div>
     <div class="solution__caption">
-      <div v-if="unlocked && !solution.opened" class="solution__new">new !</div>
+      <div v-if="unlocked && !solution.opened" class="solution__new">
+        <div v-kinesis="{ depth: 2 }">
+          new !
+        </div>
+      </div>
 
       <template v-if="unlocked">
         <h4 class="solution__caption__subtitle">Tip #{{ solution.id }}</h4>
@@ -124,16 +128,20 @@ export default {
   }
 
   &__new {
-    background-color: var(--color-green);
     color: var(--color-black);
     font-size: 14px;
     line-height: 17px;
-    padding: 4px;
+
     position: absolute;
     right: 0;
     text-transform: uppercase;
     top: 0;
     transform: translate(25%, -50%);
+
+    > * {
+      background-color: var(--color-green);
+      padding: 4px;
+    }
   }
 
   &__caption {

@@ -11,6 +11,7 @@
               transition__fadeIn: true,
               'transition--on': mounted
             }"
+            v-kinesis="{ depth: 2 }"
             class="solutions__modal__background"
           />
           <div
@@ -19,6 +20,7 @@
               'transition--on': mounted
             }"
             :style="{ 'transition-delay': `0.1s` }"
+            v-kinesis="{ depth: 4 }"
             class="solutions__modal__close"
           >
             <cross-svg />
