@@ -36,6 +36,7 @@
     "postprocessing": "^6.13.0",
     "raw-loader": "^4.0.1",
     "simplex-noise": "^2.4.0",
+    "splitting": "^1.0.6",
     "stats.js": "^0.17.0",
     "three": "^0.117.1",
     "three-dat.gui": "^2.0.6",

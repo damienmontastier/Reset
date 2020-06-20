@@ -95,6 +95,9 @@ export default {
       }
     }
   },
+  fetch({ store }) {
+    store.commit('loading/setToLoad', 5)
+  },
   mounted() {
     this.init()
 
@@ -114,20 +117,37 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     async load() {
+      console.log('20%')
+
+      this.$store.commit('loading/incrementLoaded')
+
       this.map = new MapLevel01()
       await this.map.load()
+
+      this.$store.commit('loading/incrementLoaded')
+
+      console.log('40%')
 
       this.player = new Player()
       await this.player.init()
 
+      this.$store.commit('loading/incrementLoaded')
+      console.log('60%')
+
       this.introRail = await new Spline().load('obj/splines/level01_01.obj')
       this.map.add(this.introRail)
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('80%')
 
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
         { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' }
       ])
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('100%')
     },
     async init() {
       await this.load()

@@ -1,10 +1,11 @@
 <template>
   <div id="app">
+    <game-loader id="gameLoader" />
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
-    <div id="appOverlay" v-if="overlayOpened"></div>
+    <div id="appOverlay" v-if="overlayOpened" />
   </div>
 </template>
 
@@ -16,7 +17,8 @@ export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
-    appHeader: () => import('@/components/elements/header')
+    appHeader: () => import('@/components/elements/header'),
+    gameLoader: () => import('@/components/game/game-loader')
   },
   data() {
     return {
@@ -94,15 +96,13 @@ export default {
   width: 100vw;
 }
 
-#appNoise {
+#gameLoader {
   height: 100%;
-  height: calc(var(--vh, 1vh) * 100);
   left: 0;
-  pointer-events: none;
-  position: fixed;
+  position: absolute;
   top: 0;
-  width: 100vw;
-  z-index: 10;
+  width: 100%;
+  z-index: 20;
 }
 
 #app {
