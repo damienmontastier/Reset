@@ -119,25 +119,25 @@ export default {
     async load() {
       console.log('20%')
 
-      this.$store.commit('loading/incrementLoaded')
+      await this.$store.commit('loading/incrementLoaded')
 
       this.map = new MapLevel01()
       await this.map.load()
 
-      this.$store.commit('loading/incrementLoaded')
+      await this.$store.commit('loading/incrementLoaded')
 
       console.log('40%')
 
       this.player = new Player()
       await this.player.init()
 
-      this.$store.commit('loading/incrementLoaded')
+      await this.$store.commit('loading/incrementLoaded')
       console.log('60%')
 
       this.introRail = await new Spline().load('obj/splines/level01_01.obj')
       this.map.add(this.introRail)
 
-      this.$store.commit('loading/incrementLoaded')
+      await this.$store.commit('loading/incrementLoaded')
       console.log('80%')
 
       const audioManager = useAudio()

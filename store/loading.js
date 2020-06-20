@@ -6,6 +6,7 @@ export const state = () => ({
 export const mutations = {
   incrementLoaded(state) {
     state.loaded++
+    console.log('incremented')
   },
   setToLoad(state, value) {
     state.toLoad = value
