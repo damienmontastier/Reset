@@ -15,12 +15,15 @@
             class="solutions__modal__background"
           />
           <div
+            v-kinesis="{ depth: 4 }"
+            v-sounds="{
+              click: '/sounds/RESET_CLIC.mp3'
+            }"
             :class="{
               transition__fadeIn: true,
               'transition--on': mounted
             }"
             :style="{ 'transition-delay': `0.1s` }"
-            v-kinesis="{ depth: 4 }"
             class="solutions__modal__close"
           >
             <cross-svg />
@@ -78,7 +81,11 @@
         </div>
       </aside>
       <div class="solutions__main">
-        <div v-kinesis="{ depth: 2 }" class="solutions__list">
+        <div
+          v-kinesis="{ depth: 2 }"
+          :style="{ 'pointer-events': modalOpened ? 'none' : 'auto' }"
+          class="solutions__list"
+        >
           <scroller
             :scrollable="!modalOpened"
             :draggable="!modalOpened"
@@ -95,6 +102,10 @@
                 :style="{ 'transition-delay': `${i * 0.1}s` }"
               >
                 <solution
+                  v-sounds="{
+                    mouseenter: '/sounds/RESET_HOVER.mp3',
+                    click: '/sounds/RESET_CLIC.mp3'
+                  }"
                   @click.native="selectSolution(solution)"
                   :solution="solution"
                   :unlocked="solution.unlocked"

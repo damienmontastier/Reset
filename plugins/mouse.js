@@ -32,6 +32,7 @@ const mouse = new Vue({
     if (!process.client) return
 
     this.events = new Events()
+    this.events.setMaxListeners(Infinity)
 
     window.addEventListener('touchstart', this.onMouseMove, false)
     window.addEventListener('touchmove', this.onMouseMove, false)

@@ -18,11 +18,11 @@ export default {
       })
     }
 
-    binding.onMouseMove = onMouseMove.bind(this)
+    el.vKinesis = onMouseMove.bind(this)
 
-    mouse.events.on('mousemove', binding.onMouseMove)
+    mouse.events.on('mousemove', el.vKinesis)
   },
   unbind(el, binding, { context }) {
-    mouse.events.off('mousemove', binding.onMouseMove)
+    mouse.events.off('mousemove', el.vKinesis)
   }
 }

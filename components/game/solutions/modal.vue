@@ -20,6 +20,9 @@
         Tip #{{ solution.id }} / {{ solution.title }}
       </h4>
       <div
+        v-sounds="{
+          click: '/sounds/RESET_CLIC.mp3'
+        }"
         @click="$emit('close')"
         :class="{
           transition__fadeIn: true,

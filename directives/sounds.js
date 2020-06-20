@@ -6,20 +6,22 @@ export default {
 
     const audioManager = useAudio()
 
-    binding.listeners = {}
+    el.vSoundsListeners = {}
     Object.entries(params).forEach(([eventName, path]) => {
       audioManager.add([{ path, id: path }])
       const listener = () => {
         audioManager.play(path)
       }
       el.addEventListener(eventName, listener)
-      binding.listeners[eventName] = listener
+      el.vSoundsListeners[eventName] = listener
     })
   },
 
   unbind(el, binding) {
-    Object.entries(binding.listeners).forEach(([eventName, listener]) => {
-      el.removeEventListener(eventName, listener)
-    })
+    setTimeout(() => {
+      Object.entries(el.vSoundsListeners).forEach(([eventName, listener]) => {
+        el.removeEventListener(eventName, listener)
+      })
+    }, 0)
   }
 }
