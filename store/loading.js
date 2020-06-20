@@ -9,6 +9,7 @@ export const mutations = {
     console.log('incremented')
   },
   setToLoad(state, value) {
+    console.log('toload', value)
     state.toLoad = value
   }
 }

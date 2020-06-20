@@ -20,9 +20,6 @@
         class="gameLoader__ascii"
       />
     </div>
-    <!-- <button @click="$store.commit('loading/incrementLoaded')">
-      {{ progress }}
-    </button> -->
   </section>
 </template>
 

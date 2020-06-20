@@ -95,9 +95,9 @@ export default {
       }
     }
   },
-  fetch({ store }) {
-    store.commit('loading/setToLoad', 5)
-  },
+  // fetch({ store }) {
+  //   store.commit('loading/setToLoad', 5)
+  // },
   mounted() {
     this.init()
 
@@ -117,27 +117,29 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     async load() {
+      this.$store.commit('loading/setToLoad', 5)
+
       console.log('20%')
 
-      await this.$store.commit('loading/incrementLoaded')
+      this.$store.commit('loading/incrementLoaded')
 
       this.map = new MapLevel01()
       await this.map.load()
 
-      await this.$store.commit('loading/incrementLoaded')
+      this.$store.commit('loading/incrementLoaded')
 
       console.log('40%')
 
       this.player = new Player()
       await this.player.init()
 
-      await this.$store.commit('loading/incrementLoaded')
+      this.$store.commit('loading/incrementLoaded')
       console.log('60%')
 
       this.introRail = await new Spline().load('obj/splines/level01_01.obj')
       this.map.add(this.introRail)
 
-      await this.$store.commit('loading/incrementLoaded')
+      this.$store.commit('loading/incrementLoaded')
       console.log('80%')
 
       const audioManager = useAudio()
