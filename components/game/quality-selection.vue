@@ -29,7 +29,8 @@ export default {
 
 <style lang="scss">
 .qualitySelection {
-  background-color: #f2f2f2;
+  // background-color: #f2f2f2;
+  background-color: var(--color-black);
   display: flex;
   height: 100vh;
   height: calc(100 * var(--vh, 1vh));
@@ -49,6 +50,7 @@ export default {
   }
 
   &__title {
+    color: var(--color-grey-light);
     font-family: var(--font-violet);
     font-size: 16px;
     left: -18px;
@@ -79,9 +81,13 @@ export default {
   }
 
   &__item {
+    opacity: 0.4;
     position: relative;
+    transition: opacity 0.4s _ease('quint', 'out');
 
     @include hover {
+      opacity: 1;
+
       &::after {
         transform: scaleX(1);
         transform-origin: center left;
@@ -98,7 +104,7 @@ export default {
       position: absolute;
       transform: scaleX(0);
       transform-origin: center right;
-      transition: transform 300ms ease-in-out;
+      transition: transform 0.4s _ease('quint', 'out');
       width: 100%;
     }
   }

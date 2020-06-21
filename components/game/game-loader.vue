@@ -113,12 +113,8 @@ export default {
 
 <style lang="scss">
 .gameLoader {
-  background-color: var(--color-grey-lighten);
-  // background-color: var(--color-black);
-  // color: var(--color-green);
-  color: var(--color-black);
-  //   height: 100%;
-  //   width: 100%;
+  background-color: var(--color-black);
+  color: var(--color-green);
   font-family: monospace;
   font-size: 16px;
   line-height: 19px;
@@ -126,6 +122,7 @@ export default {
   // -webkit-text-stroke: 1px #747474;
   // text-shadow: 0 0 5px rgba(100, 100, 100, 0.5);
   // text-shadow: 0 0 1px var(--color-green);
+  text-shadow: 0 0 20px, 0 0 40px, 0 0 80px, 0 0 100px;
 
   text-transform: uppercase;
 

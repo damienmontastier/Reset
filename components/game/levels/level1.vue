@@ -95,9 +95,6 @@ export default {
       }
     }
   },
-  // fetch({ store }) {
-  //   store.commit('loading/setToLoad', 5)
-  // },
   mounted() {
     this.init()
 
@@ -117,8 +114,8 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     async load() {
-      this.$store.commit('loading/setToLoad', 5)
       this.$store.commit('loading/setVisible', true)
+      this.$store.commit('loading/setToLoad', 5)
 
       console.log('20%')
 
