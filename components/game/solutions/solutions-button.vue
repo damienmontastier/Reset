@@ -23,7 +23,13 @@ export default {
 
 <style lang="scss">
 .solutionsButton {
+  background-color: var(--color-black);
+  display: flex;
   height: 60px;
   width: 60px;
+
+  > * {
+    margin: auto;
+  }
 }
 </style>

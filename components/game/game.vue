@@ -70,6 +70,7 @@ export default {
   &__button {
     bottom: 40px;
     left: 40px;
+    pointer-events: all;
     position: absolute;
   }
 

@@ -82,7 +82,10 @@ export default {
         delay: 1,
         duration: 2.5,
         ease: 'none',
-        maskProgress: 1
+        maskProgress: 1,
+        onComplete: () => {
+          this.$store.commit('loading/setVisible', false)
+        }
       })
       let t = 0
       this.interval = setInterval(() => {

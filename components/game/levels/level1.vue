@@ -118,6 +118,7 @@ export default {
     }),
     async load() {
       this.$store.commit('loading/setToLoad', 5)
+      this.$store.commit('loading/setVisible', true)
 
       console.log('20%')
 

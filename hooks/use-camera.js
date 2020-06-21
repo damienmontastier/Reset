@@ -51,7 +51,7 @@ class Camera {
 
   onMouseMove() {
     gsap.to(this._mouse, {
-      duration: 2,
+      duration: 4,
       ease: 'power4.out',
       x: mouse.normalized.x * 0.2,
       y: mouse.normalized.y * 0.4
