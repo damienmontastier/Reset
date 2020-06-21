@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <game-loader id="gameLoader" />
+    <!-- <game-loader id="gameLoader" /> -->
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
@@ -17,8 +17,8 @@ export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
-    appHeader: () => import('@/components/elements/header'),
-    gameLoader: () => import('@/components/game/game-loader')
+    appHeader: () => import('@/components/elements/header')
+    // gameLoader: () => import('@/components/game/game-loader')
   },
   data() {
     return {
