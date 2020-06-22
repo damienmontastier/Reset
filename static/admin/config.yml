@@ -59,11 +59,20 @@ collections:
     editor:
       preview: false
     fields:
-      - { label: 'Titre', name: 'title', widget: 'string' }
+      - { label: 'Titre', name: 'title', widget: 'text' }
+      - { label: 'Contenu', name: 'content', widget: 'markdown' }
       - { label: 'Image', name: 'picture', widget: 'image', required: false }
       - {
           label: 'Réseaux social',
           name: 'social_network',
           widget: 'select',
-          options: ['Facebook', 'Twitter', 'Instagram', 'Snapchat'],
+          options:
+            [
+              'Facebook',
+              'Twitter',
+              'Instagram',
+              'Snapchat',
+              'WhatsApp',
+              'YouTube',
+            ],
         }
