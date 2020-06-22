@@ -192,6 +192,11 @@ export default {
       return this.unlockedSolutions.length / this.solutions.length
     }
   },
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
+  },
   methods: {
     selectSolution(solution) {
       if (solution.unlocked && !this.selectedSolution) {
@@ -204,11 +209,6 @@ export default {
         })
       }
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.mounted = true
-    }, 0)
   }
 }
 </script>

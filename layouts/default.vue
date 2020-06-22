@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <game-loader v-if="$store.state.loading.visible" id="gameLoader" />
+    <game-loader id="gameLoader" v-if="$store.state.loading.visible" />
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />

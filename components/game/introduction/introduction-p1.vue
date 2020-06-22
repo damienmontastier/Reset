@@ -22,14 +22,16 @@ export default {
 
 <style lang="scss">
 .introductionP1 {
+  position: relative;
   width: 23vw;
 
   &__logo {
-    display: inline-block;
-    overflow: hidden;
     position: relative;
-    vertical-align: middle;
-    width: 100%;
+
+    svg {
+      height: auto;
+      width: 100%;
+    }
   }
 
   &__intro {

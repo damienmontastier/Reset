@@ -49,21 +49,11 @@ export default {
     async init() {
       const { scene } = useGame()
       const { scene: webglScene } = useWebGL()
-      const { camera } = useCamera()
+      const camera = useCamera()
 
       webglScene.background = new THREE.Color(0xffffff)
 
-      const {
-        OrbitControls
-      } = require('three/examples/jsm/controls/OrbitControls.js')
-
-      const cameraControls = new OrbitControls(
-        camera,
-        document.querySelector('#__nuxt')
-      )
-      cameraControls.enableKeys = false
-      camera.position.set(0, 3.145, 16.475)
-      camera.rotation.set(0, 0, 0)
+      camera._position.set(0, 3.145, 16.475)
 
       this.introGroup = new THREE.Group()
       scene.add(this.introGroup)
@@ -77,7 +67,6 @@ export default {
       this.player = new Player()
       await this.player.init()
       this.spawnPoint = this.map.spawnPoint.clone()
-      this.player.modelSkinMaterial2.emissive = new THREE.Color(0x00ff00)
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
       this.player.startPlayerDisplay()

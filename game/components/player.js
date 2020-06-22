@@ -25,6 +25,16 @@ const trailMaterial = new THREE.MeshBasicMaterial({
   depthTest: true
 })
 
+// const playerWireframeMaterial = new PlayerBasicMaterial({
+//   color: 0x00ff00,
+//   wireframe: true
+// })
+
+const playerStandardMaterial = new PlayerStandardMaterial({
+  emissive: 0x00000,
+  flatShading: true
+})
+
 // const JUMP_DURATION = 0.1
 
 export default class Player extends THREE.Object3D {
@@ -34,7 +44,7 @@ export default class Player extends THREE.Object3D {
       .SkeletonUtils
   }
   loop({ deltaTime }) {
-    // this.animationMixer.update(deltaTime)
+    this.animationMixer.update(deltaTime)
   }
 
   async load() {
@@ -56,7 +66,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character_04_static.glb'
+          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose.glb'
         }
       ]
     })
@@ -72,22 +82,12 @@ export default class Player extends THREE.Object3D {
 
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
 
-    this.modelSkinMaterial = new THREE.MeshStandardMaterial({
-      skinning: true,
-      flatShading: true
-    })
+    const materialBlack = playerStandardMaterial.clone()
+    const materialGreen = playerStandardMaterial.clone()
+    materialGreen.uniforms.emissive.value = new THREE.Color(0x2ff000)
 
-    this.modelSkinMaterial2 = new THREE.MeshStandardMaterial({
-      skinning: true,
-      emissive: 0xffffff,
-      flatShading: true
-    })
-
-    GUI.addMaterial('modelSkinMaterial', this.modelSkinMaterial)
-    GUI.addMaterial('modelSkinMaterial2', this.modelSkinMaterial2)
-
-    this.model.getObjectByName('black').material = this.modelSkinMaterial
-    this.model.getObjectByName('green').material = this.modelSkinMaterial2
+    this.model.getObjectByName('black').material = materialBlack
+    this.model.getObjectByName('green').material = materialGreen
   }
 
   initAnimations() {
@@ -115,7 +115,7 @@ export default class Player extends THREE.Object3D {
     // this.innerGroup.position.copy(this.cellCenter)
     this.add(this.innerGroup)
 
-    // this.innerGroup.add(this.model)
+    this.innerGroup.add(this.model)
 
     this.pathfinder = new THREE.Group()
     this.innerGroup.add(this.pathfinder)
@@ -154,12 +154,12 @@ export default class Player extends THREE.Object3D {
 
     this.trails = []
 
-    // this.initAnimations()
+    this.initAnimations()
     this.initModel()
     this.initSkeleton()
     this.initHitbox()
 
-    // this.setInitialState()
+    this.setInitialState()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
@@ -198,34 +198,12 @@ export default class Player extends THREE.Object3D {
   }
 
   initSkeleton() {
-    const gui = useGUI()
-
     const skeleton = SkeletonUtils.clone(this.model)
 
     const playerWireframeMaterial = new PlayerBasicMaterial({
       color: 0x00ff00,
       wireframe: true
     })
-
-    const playerStandardMaterial = new PlayerStandardMaterial({
-      emissive: 0x00000,
-      flatShading: true
-    })
-
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    const material = playerWireframeMaterial.clone()
-    this.cubeWireframe = new THREE.Mesh(geometry, material)
-    this.cubeWireframe.position.copy(this.position)
-    this.cubeWireframe.position.y += 1
-    this.innerGroup.add(this.cubeWireframe)
-
-    const geometryCubeFill = geometry.clone()
-    const materialCubeFill = playerStandardMaterial.clone()
-    this.cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
-    this.cubeFill.position.copy(this.position)
-    this.cubeFill.position.y += 1
-    this.innerGroup.add(this.cubeFill)
-    gui.addMesh('standard_material', this.cubeFill)
 
     skeleton.getObjectByName('black').material = playerWireframeMaterial
     skeleton.getObjectByName('green').material = playerWireframeMaterial
@@ -236,23 +214,14 @@ export default class Player extends THREE.Object3D {
   }
 
   startPlayerDisplay() {
-    this.cubeFill.material.uniforms.uThreshold.value = 1.1
-    this.cubeWireframe.material.uniforms.uThreshold.value = 1.1
+    this.model.getObjectByName('black').material.uniforms.uThreshold.value = 2
+    this.model.getObjectByName('green').material.uniforms.uThreshold.value = 2
 
-    const tl = gsap.timeline()
-    tl.to(this.cubeWireframe.material.uniforms.uThreshold, {
-      value: -0.1,
-      duration: 2,
-      delay: 0.5
+    gsap.to(this.model.getObjectByName('black').material.uniforms.uThreshold, {
+      value: 0,
+      duration: 10,
+      delay: 1
     })
-    tl.to(
-      this.cubeFill.material.uniforms.uThreshold,
-      {
-        value: -0.1,
-        duration: 2
-      },
-      1
-    )
   }
 
   moveTo(position) {
