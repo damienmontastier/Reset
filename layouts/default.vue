@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <game-loader v-if="$store.state.loading.visible" id="gameLoader" />
-    <app-header id="appHeader" />
+    <transition name="fade">
+      <game-loader v-if="$store.state.loading.visible" id="gameLoader" />
+    </transition>
+    <app-header id="appHeader" v-if="!$store.state.solutions.opened" />
+    <solutions id="solutions" v-if="$store.state.solutions.opened" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
@@ -13,12 +16,15 @@
 import { mapState } from 'vuex'
 import useGUI from '@/hooks/use-gui'
 
+import Solutions from '@/components/game/solutions/solutions'
+
 export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
     appHeader: () => import('@/components/elements/header'),
-    gameLoader: () => import('@/components/game/game-loader')
+    gameLoader: () => import('@/components/game/game-loader'),
+    Solutions
   },
   data() {
     return {
@@ -105,6 +111,15 @@ export default {
   z-index: 20;
 }
 
+#solutions {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 11;
+}
+
 #app {
   min-height: 100vh;
 }
@@ -133,42 +148,12 @@ export default {
   z-index: 10;
 }
 
-.intro,
-.endgame {
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 5;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.gameplay {
-  background-image: url('/img/gameplay.png');
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  width: 100%;
-  z-index: 5;
-}
-
-.tuto {
-  background-image: url('/img/consigne.png');
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  width: 100%;
-  z-index: 5;
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

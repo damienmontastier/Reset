@@ -1,5 +1,6 @@
 export const state = () => ({
-  list: {}
+  list: {},
+  opened: false
 })
 
 export const mutations = {
@@ -10,6 +11,9 @@ export const mutations = {
   },
   setList(state, list) {
     state.list = list
+  },
+  toggleOpened(state) {
+    state.opened = !state.opened
   }
 }
 

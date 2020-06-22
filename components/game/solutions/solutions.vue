@@ -138,6 +138,8 @@ import Solution from './solution'
 import Modal from './modal'
 import CrossSvg from '@/components/svg/cross'
 
+import useGame from '@/hooks/use-game'
+
 export default {
   components: {
     Modal,
@@ -205,7 +207,13 @@ export default {
       }
     }
   },
+  beforeDestroy() {
+    const { UIGrid } = useGame()
+    UIGrid.visible = false
+  },
   mounted() {
+    const { UIGrid } = useGame()
+    UIGrid.visible = true
     setTimeout(() => {
       this.mounted = true
     }, 0)

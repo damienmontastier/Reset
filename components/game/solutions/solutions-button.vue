@@ -1,5 +1,5 @@
 <template>
-  <div class="solutionsButton">
+  <div @click="$store.commit('solutions/toggleOpened')" class="solutionsButton">
     <div ref="icon" />
   </div>
 </template>
@@ -24,12 +24,14 @@ export default {
 <style lang="scss">
 .solutionsButton {
   background-color: var(--color-black);
+  cursor: pointer;
   display: flex;
   height: 60px;
   width: 60px;
 
   > * {
     margin: auto;
+    padding: 8px;
   }
 }
 </style>

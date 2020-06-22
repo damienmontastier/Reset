@@ -16,8 +16,12 @@ void main() {
 
   float alpha = 1.-distance(vUv * uRatio,uCursor * uRatio);
 
-  // Just visualize the grid lines directly
-  gl_FragColor = vec4(uColor, (1.0 - min(line, 1.0)) * alpha);
+  float isGrid = (1.0 - min(line, 1.0));
 
-// gl_FragColor = vec4()
+  vec3 color = vec3(0.);
+  if(isGrid > 0.01) {
+    color = uColor * alpha;
+  }
+  
+  gl_FragColor = vec4(color,  1.);
 }
