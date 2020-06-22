@@ -25,18 +25,22 @@ import { mapMutations } from 'vuex'
 
 /* eslint-disable vue/no-unused-components */
 
-// import TerminalP1 from '@/components/game/terminal/terminal-p1'
-// import TerminalP2 from '@/components/game/terminal/terminal-p2'
-// import TerminalP3 from '@/components/game/terminal/terminal-p3'
-// import TerminalP4 from '@/components/game/terminal/terminal-p4'
+import TerminalP1 from '@/components/game/terminal/terminal-p1'
+import TerminalP2 from '@/components/game/terminal/terminal-p2'
+import TerminalP3 from '@/components/game/terminal/terminal-p3'
+import TerminalP4 from '@/components/game/terminal/terminal-p4'
 
 export default {
   components: {
     TerminalTitle: () => import('@/components/game/terminal/terminal-title'),
-    TerminalP1: () => import('@/components/game/terminal/terminal-p1'),
-    TerminalP2: () => import('@/components/game/terminal/terminal-p2'),
-    TerminalP3: () => import('@/components/game/terminal/terminal-p3'),
-    TerminalP4: () => import('@/components/game/terminal/terminal-p4')
+    TerminalP1,
+    TerminalP2,
+    TerminalP3,
+    TerminalP4
+    // TerminalP1: () => import('@/components/game/terminal/terminal-p1'),
+    // TerminalP2: () => import('@/components/game/terminal/terminal-p2'),
+    // TerminalP3: () => import('@/components/game/terminal/terminal-p3'),
+    // TerminalP4: () => import('@/components/game/terminal/terminal-p4')
   },
   data() {
     return {

@@ -1,7 +1,7 @@
 <template>
   <div class="gameLevel">
     <!-- eslint-disable-next-line vue/require-component-is -->
-    <component :is="currentLevel.slug" />
+    <component :is="stage.slug" />
   </div>
 </template>
 
@@ -10,7 +10,7 @@
 
 export default {
   validate({ params, store }) {
-    return store.state.levels.find((level) => level.slug === params.slug)
+    return store.getters['stages/getStageBySlug'](params.slug)
   },
 
   components: {
@@ -18,11 +18,7 @@ export default {
     level2: () => import('@/components/game/levels/level2.vue')
   },
   asyncData({ store, params }) {
-    const index = store.state.levels.findIndex(
-      (level) => level.slug === params.slug
-    )
-    return { currentLevel: store.state.levels[index], currentIndex: index }
-  },
-  mounted() {}
+    return { stage: store.getters['stages/getStageBySlug'](params.slug) }
+  }
 }
 </script>

@@ -77,3 +77,33 @@ button {
 .u-uppercase {
   text-transform: uppercase;
 }
+
+.transition {
+  &__fadeIn {
+    opacity: 0;
+    transition-duration: 1s;
+    transition-property: opacity;
+    transition-timing-function: _ease('quint', 'out');
+  }
+
+  &__fadeInUp {
+    opacity: 0;
+    transform: translate(0, 100px);
+    transition-duration: 1s;
+    transition-property: opacity, transform;
+    transition-timing-function: _ease('quint', 'in'), _ease('quint', 'out');
+  }
+
+  &--on {
+    &.transition {
+      &__fadeIn {
+        opacity: 1;
+      }
+
+      &__fadeInUp {
+        opacity: 1;
+        transform: translate(0, 0);
+      }
+    }
+  }
+}

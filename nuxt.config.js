@@ -1,12 +1,5 @@
 import webpack from 'webpack'
-
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
-}
+import uuidv4 from './assets/js/uuidv4'
 
 export default {
   version: uuidv4(),
@@ -15,7 +8,7 @@ export default {
    ** Headers of the page
    */
   generate: {
-    routes: ['level1'],
+    routes: ['infinite-scroll'],
     fallback: ''
   },
   head: {
@@ -105,12 +98,15 @@ export default {
    ** Nuxt.js modules
    */
   modules: [
-    '@nuxtjs/pwa',
     '@nuxtjs/style-resources',
+    '@nuxtjs/markdownit',
     'nuxt-helmet',
     'nuxt-ssr-cache',
     'nuxt-compress'
   ],
+  markdownit: {
+    injected: true
+  },
   'nuxt-compress': {
     gzip: {
       cache: true

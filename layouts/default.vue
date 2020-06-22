@@ -1,10 +1,11 @@
 <template>
   <div id="app">
+    <game-loader v-if="$store.state.loading.visible" id="gameLoader" />
     <app-header id="appHeader" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
-    <div id="appOverlay" v-if="overlayOpened"></div>
+    <div id="appOverlay" v-if="overlayOpened" />
   </div>
 </template>
 
@@ -16,7 +17,8 @@ export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
-    appHeader: () => import('@/components/elements/header')
+    appHeader: () => import('@/components/elements/header'),
+    gameLoader: () => import('@/components/game/game-loader')
   },
   data() {
     return {
@@ -33,9 +35,54 @@ export default {
     })
   },
 
+  fetch() {
+    this.$store.commit('stages/setScore', {
+      stage: 'level1',
+      score: 150
+    })
+
+    this.$store.commit('stages/setScore', {
+      stage: 'level2',
+      score: 300
+    })
+  },
+
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
+  },
+
+  mounted() {
+    const GUI = useGUI()
+    const params = {
+      level1: 150,
+      level2: 300
+    }
+
+    const stagesGUI = GUI.addFolder('Stages')
+    stagesGUI
+      .add(params, 'level1')
+      .min(0)
+      .max(300)
+      .step(1)
+      .onChange(() => {
+        this.$store.commit('stages/setScore', {
+          stage: 'level1',
+          score: params.level1
+        })
+      })
+
+    stagesGUI
+      .add(params, 'level2')
+      .min(0)
+      .max(300)
+      .step(1)
+      .onChange(() => {
+        this.$store.commit('stages/setScore', {
+          stage: 'level2',
+          score: params.level2
+        })
+      })
   }
 }
 </script>
@@ -46,15 +93,17 @@ export default {
   overflow-y: auto;
 }
 
-#appNoise {
-  height: 100%;
-  height: calc(var(--vh, 1vh) * 100);
-  left: 0;
-  pointer-events: none;
-  position: fixed;
-  top: 0;
+#__layout {
   width: 100vw;
-  z-index: 10;
+}
+
+#gameLoader {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 20;
 }
 
 #app {
@@ -67,7 +116,7 @@ export default {
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 6;
+  z-index: 12;
 }
 
 #appOverlay {

@@ -1,5 +1,11 @@
 <template>
-  <div class="btn">
+  <div
+    v-sounds="{
+      mouseenter: '/sounds/RESET_HOVER.mp3',
+      click: '/sounds/RESET_CLIC.mp3'
+    }"
+    class="btn"
+  >
     <div class="btn__inner">
       <slot />
       <div class="btn__arrows">

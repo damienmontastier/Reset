@@ -34,10 +34,10 @@ export default class Spline extends THREE.Object3D {
     // this.curvedPath.closed = true
     this.curvedPath.curveType = 'chordal'
 
-    const geometry = new THREE.SphereBufferGeometry(1, 1, 1)
-    const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
-    const sphere = new THREE.Mesh(geometry, material)
-    sphere.scale.setScalar(1)
+    // const geometry = new THREE.SphereBufferGeometry(1, 1, 1)
+    // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })
+    // const sphere = new THREE.Mesh(geometry, material)
+    // sphere.scale.setScalar(1)
 
     // this.vectors.forEach((vector) => {
     //   const s = sphere.clone()

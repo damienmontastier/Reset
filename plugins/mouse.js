@@ -1,4 +1,5 @@
 import Events from 'events'
+import gsap from 'gsap'
 import Vue from 'vue'
 import viewport from '@/plugins/viewport'
 
@@ -8,7 +9,8 @@ import viewport from '@/plugins/viewport'
 const mouse = new Vue({
   data() {
     return {
-      hasMove: false,
+      hasMoved: false,
+      lerped: new THREE.Vector2(-1000, -1000),
       position: new THREE.Vector2(-1000, -1000)
     }
   },
@@ -18,12 +20,19 @@ const mouse = new Vue({
         (this.position.x / viewport.width) * 2 - 1,
         -(this.position.y / viewport.height) * 2 + 1
       )
+    },
+    lerpedNormalized() {
+      return new THREE.Vector2(
+        (this.lerped.x / viewport.width) * 2 - 1,
+        -(this.lerped.y / viewport.height) * 2 + 1
+      )
     }
   },
   created() {
     if (!process.client) return
 
     this.events = new Events()
+    this.events.setMaxListeners(Infinity)
 
     window.addEventListener('touchstart', this.onMouseMove, false)
     window.addEventListener('touchmove', this.onMouseMove, false)
@@ -37,19 +46,34 @@ const mouse = new Vue({
     window.removeEventListener('mousemove', this.onMouseMove, false)
   },
   methods: {
-    onMouseMove(e) {
-      const event = e
+    onMouseMove(event) {
+      const e = event.targetTouches ? event.targetTouches[0] : event
+      const { x, y } = e
 
-      this.hasMove = true
+      this.position.set(x, y)
 
-      const evt = e.targetTouches ? e.targetTouches[0] : e
-
-      this.position.set(evt.x, evt.y)
+      gsap.to(this.lerped, {
+        duration: !this.hasMoved ? 0 : 2,
+        x,
+        y,
+        ease: 'power4.out',
+        onUpdate: () => {
+          this.events.emit('mousemove-lerped', {
+            ...this.$data,
+            normalized: this.normalized,
+            lerpedNormalized: this.lerpedNormalized,
+            originalEvent: e
+          })
+        }
+      })
 
       this.events.emit('mousemove', {
         ...this.$data,
-        event
+        normalized: this.normalized,
+        originalEvent: e
       })
+
+      this.hasMoved = true
     }
   }
 })

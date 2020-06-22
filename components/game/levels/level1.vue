@@ -2,7 +2,7 @@
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
     <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
-    <solutions class="gameLevel01__solutions" />
+    <!-- <solutions class="gameLevel01__solutions" /> -->
     <mission-report class="gameLevel01__missionReport" />
   </div>
 </template>
@@ -25,12 +25,13 @@ import GridTerrain from '@/game/features/grid-terrain'
 import Spline from '@/webgl/components/spline'
 
 import treadmillConfig from '@/config/treadmills'
+import LEVEL01_CONFIG from '@/config/level01'
 
 export default {
   components: {
     Terminal: () => import('@/components/game/terminal/terminal'),
     gameNotifications: () => import('@/components/elements/game-notifications'),
-    Solutions: () => import('@/components/game/solutions/solutions'),
+    // Solutions: () => import('@/components/game/solutions/solutions'),
     MissionReport: () =>
       import('@/components/game/mission-report/mission-report')
   },
@@ -113,20 +114,40 @@ export default {
       setTerminalOpened: 'setTerminalOpened'
     }),
     async load() {
+      this.$store.commit('loading/setVisible', true)
+      this.$store.commit('loading/setToLoad', 5)
+
+      console.log('20%')
+
+      this.$store.commit('loading/incrementLoaded')
+
       this.map = new MapLevel01()
       await this.map.load()
+
+      this.$store.commit('loading/incrementLoaded')
+
+      console.log('40%')
 
       this.player = new Player()
       await this.player.init()
 
+      this.$store.commit('loading/incrementLoaded')
+      console.log('60%')
+
       this.introRail = await new Spline().load('obj/splines/level01_01.obj')
       this.map.add(this.introRail)
 
+      this.$store.commit('loading/incrementLoaded')
+      console.log('80%')
+
       const audioManager = useAudio()
       await audioManager.add([
-        { path: '/sounds/level01.mp3', id: 'level01' },
-        { path: '/sounds/factory_ambiance.mp3', id: 'factory_ambiance' }
+        { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
+        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' }
       ])
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('100%')
     },
     async init() {
       await this.load()
@@ -171,6 +192,19 @@ export default {
       this.player.position.copy(this.spawnPoint)
 
       this.levelGroup.add(this.player)
+
+      const camera = useCamera()
+      camera._position.copy(
+        this.player.worldPosition.clone().add(camera._angle)
+      )
+
+      camera.camera.lookAt(
+        camera._position
+          .clone()
+          .sub(camera._angle)
+          .sub(camera._shake)
+          .add(new THREE.Vector3(0, 0.75, 0))
+      )
 
       this.$controller.events.on('keyup', this.onKeydown)
 
@@ -290,11 +324,11 @@ export default {
       this.map.update(clock)
 
       if (this.cameraPosition === 'follow player') {
-        const { camera } = useCamera()
+        const camera = useCamera()
         const nextPosition = this.player.worldPosition
           .clone()
-          .add(camera.originPosition.clone().multiplyScalar(camera.distance))
-        gsap.to(camera.position, {
+          .add(camera._angle)
+        gsap.to(camera._position, {
           x: nextPosition.x,
           y: nextPosition.y,
           z: nextPosition.z,
@@ -302,6 +336,13 @@ export default {
           ease: 'power2.out'
         })
 
+        camera.camera.lookAt(
+          camera._position
+            .clone()
+            .sub(camera._angle)
+            .sub(camera._shake)
+            .add(new THREE.Vector3(0, 0.75, 0))
+        )
         // camera.position.copy(nextPosition.clone())
       }
     },
@@ -383,10 +424,40 @@ export default {
       this.doRespawn()
     },
 
+    cameraAnimation(config) {
+      const camera = useCamera()
+
+      const { x, y, z } = config.normalized_angle
+      const distance = config.distance
+
+      const tl = new gsap.timeline()
+      tl.to(
+        camera._normalizedAngle,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          x,
+          y,
+          z
+        },
+        0
+      )
+
+      tl.to(
+        camera,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          _distance: distance
+        },
+        0
+      )
+    },
+
     introCameraTraveling() {
       this.cameraPosition = 'intro travelling'
 
-      const { camera } = useCamera()
+      const camera = useCamera()
 
       this.progress = 0
       gsap.to(this, {
@@ -395,12 +466,11 @@ export default {
         progress: 1,
         onUpdate: () => {
           const postion = this.introRail.curvedPath.getPoint(this.progress)
-          camera.lookAt(this.player.position)
-          camera.position.copy(postion)
+          camera.camera.lookAt(this.player.position)
+          camera._position.copy(postion)
         },
         onComplete: () => {
           this.cameraPosition = 'follow player'
-          camera.lookAt(this.player.position)
         }
       })
     },
@@ -408,19 +478,42 @@ export default {
     initGUI() {
       const GUI = useGUI()
 
-      const { camera } = useCamera()
+      // const { camera } = useCamera()
 
-      const params = {
-        lookAtPlayer: () => {
-          camera.lookAt(this.player.position)
-        }
-      }
+      // const params = {
+      //   lookAtPlayer: () => {
+      //     camera.lookAt(this.player.position)
+      //   }
+      // }
 
-      GUI.camera.addVector('origin position', camera.originPosition)
-      GUI.camera.add(params, 'lookAtPlayer')
-      GUI.camera.add(camera, 'distance')
+      // GUI.camera.addVector('origin position', camera.originPosition)
+      // GUI.camera.add(params, 'lookAtPlayer')
+      // GUI.camera.add(camera, 'distance')
 
       GUI.camera.add(this, 'introCameraTraveling')
+      // GUI.camera.add(this, 'cameraCloseUp').name('close up')
+      // GUI.camera.add(this, 'cameraDefault').name('default')
+
+      const cameraParams = {
+        current: 'default'
+      }
+      GUI.camera
+        .add(cameraParams, 'current', ['default', 'close up'])
+        .name('pov')
+        .onChange(() => {
+          let config
+          switch (cameraParams.current) {
+            case 'close up':
+              config = LEVEL01_CONFIG.cameras.close_up
+              break
+            case 'default':
+              config = LEVEL01_CONFIG.cameras.default
+              break
+            default:
+              break
+          }
+          this.cameraAnimation(config)
+        })
 
       const treadmillGUI = GUI.addFolder('treadmills config')
       const zoneAGUI = treadmillGUI.addFolder('a')

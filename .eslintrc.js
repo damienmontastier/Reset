@@ -20,6 +20,7 @@ module.exports = {
     'no-console': 0,
     'no-undef': 0,
     'new-cap': 0,
+    'no-eval': 0,
     'unicorn/number-literal-case': 0,
     'prettier/prettier': [
       'error',

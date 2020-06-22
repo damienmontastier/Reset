@@ -34,7 +34,7 @@ export const mutations = {
 export const getters = {}
 
 export const actions = {
-  async nuxtServerInit({ commit }) {
+  async nuxtServerInit({ commit, dispatch }) {
     const levelsFiles = await require.context(
       '~/assets/content/levels',
       false,
@@ -58,5 +58,8 @@ export const actions = {
       return res
     })
     await commit('setPosts', posts)
+
+    await dispatch('stages/fetch')
+    await dispatch('solutions/fetch')
   }
 }
