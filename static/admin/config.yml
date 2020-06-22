@@ -39,6 +39,23 @@ collections:
               default: true,
             }
 
+  - label: 'Stage 3'
+    name: 'level3'
+    format: 'json'
+    files:
+      - label: 'Content'
+        name: 'content'
+        file: 'assets/content/levels/level3.json'
+        fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+          - { label: Slug, name: _slug, widget: string }
+          - {
+              label: 'Available',
+              name: 'available',
+              widget: 'boolean',
+              default: true,
+            }
+
   - name: 'about'
     label: 'A propos'
     format: 'json'
