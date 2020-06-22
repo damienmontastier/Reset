@@ -25,6 +25,8 @@
 
 <script>
 import gsap from 'gsap'
+import ResetAscii from '@/components/elements/reset-ascii'
+
 function randomWord(length) {
   let result = ''
   const characters = `ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-%$#&`
@@ -37,7 +39,7 @@ function randomWord(length) {
 
 export default {
   components: {
-    ResetAscii: () => import('@/components/elements/reset-ascii')
+    ResetAscii
   },
   data() {
     return {
@@ -122,7 +124,7 @@ export default {
   // -webkit-text-stroke: 1px #747474;
   // text-shadow: 0 0 5px rgba(100, 100, 100, 0.5);
   // text-shadow: 0 0 1px var(--color-green);
-  text-shadow: 0 0 20px, 0 0 40px, 0 0 80px, 0 0 100px;
+  text-shadow: 0 0 10px;
 
   text-transform: uppercase;
 
