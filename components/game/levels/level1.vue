@@ -278,6 +278,10 @@ export default {
 
         this.currentZones = intersectZones
 
+        if (this.currentZones.includes('zone_objectif')) {
+          console.log('objectif')
+        }
+
         // if (intersectZones.includes('zone_tuto')) {
         //   this.$events.emit('tuto')
         // }

@@ -14,6 +14,9 @@ export const mutations = {
   },
   toggleOpened(state) {
     state.opened = !state.opened
+  },
+  setOpened(state, value) {
+    state.opened = value
   }
 }
 
