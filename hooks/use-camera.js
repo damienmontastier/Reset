@@ -84,6 +84,7 @@ class Camera {
 
   initGUI() {
     const GUI = useGUI()
+
     GUI.camera
       .add(this.camera, 'fov')
       .min(10)

@@ -49,7 +49,7 @@ export default {
   computed: {
     ...mapState({
       terminalOpened: (state) => state.terminalOpened,
-      posts: (state) => state.posts
+      posts: (state) => state.notifications.posts
     })
   },
   watch: {
@@ -380,7 +380,10 @@ export default {
       )
 
       if (parcelPostsIntersections.length > 0) {
-        this.onPlayerIntersectsWithParcelPost()
+        const socialNetwork =
+          parcelPostsIntersections[0].target.mesh.parent._type
+        console.log()
+        this.onPlayerIntersectsWithParcelPost(socialNetwork)
       }
 
       // treadmills edges
@@ -396,9 +399,13 @@ export default {
       }
     },
 
-    async onPlayerIntersectsWithParcelPost() {
+    async onPlayerIntersectsWithParcelPost(type) {
+      const posts = this.posts.filter((post) => {
+        return post.social_network.toLowerCase() === type
+      })
+
       this.$refs.notifications.addNotification(
-        this.posts[Math.floor(Math.random() * this.posts.length)]
+        posts[Math.floor(Math.random() * posts.length)]
       )
 
       const clock = useClock()

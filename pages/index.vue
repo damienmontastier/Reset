@@ -3,13 +3,14 @@
 </template>
 
 <script>
-// import gsap from 'gsap'
+import gsap from 'gsap'
 
 import useGame from '@/hooks/use-game'
 import useCamera from '@/hooks/use-camera'
 import useClock from '@/hooks/use-clock'
 import useWebGL from '@/hooks/use-webgl'
 import useRAF from '@/hooks/use-raf'
+import useGUI from '@/hooks/use-gui'
 
 import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
@@ -50,10 +51,11 @@ export default {
       const { scene } = useGame()
       const { scene: webglScene } = useWebGL()
       const camera = useCamera()
+      const GUI = useGUI()
+
+      this.cameraPosition = 'follow player'
 
       webglScene.background = new THREE.Color(0xffffff)
-
-      camera._position.set(0, 3.145, 16.475)
 
       this.introGroup = new THREE.Group()
       scene.add(this.introGroup)
@@ -71,6 +73,16 @@ export default {
       this.introGroup.add(this.player)
       this.player.startPlayerDisplay()
 
+      camera.camera.lookAt(
+        camera._position
+          .clone()
+          .sub(camera._angle)
+          .sub(camera._shake)
+          .add(new THREE.Vector3(0, 0.75, 0))
+      )
+
+      GUI.camera.addVector('origin position', camera._position)
+
       this.$controller.events.on('keyup', this.onKeydown)
 
       this.dotsPlane = new DotsPlane(INTRODUCTION_CONFIG.dots)
@@ -85,6 +97,29 @@ export default {
     },
 
     loop(clock) {
+      if (this.cameraPosition === 'follow player') {
+        const camera = useCamera()
+        const nextPosition = this.player.worldPosition
+          .clone()
+          .add(camera._angle)
+
+        gsap.to(camera._position, {
+          x: nextPosition.x,
+          y: nextPosition.y,
+          z: nextPosition.z,
+          duration: 1,
+          ease: 'power2.out'
+        })
+
+        camera.camera.lookAt(
+          camera._position
+            .clone()
+            .sub(camera._angle)
+            .sub(camera._shake)
+            .add(new THREE.Vector3(0, 0.75, 0))
+        )
+      }
+
       this.dotsPlane.update(clock)
     },
 

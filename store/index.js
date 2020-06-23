@@ -2,7 +2,6 @@ export const strict = false
 
 export const state = () => ({
   levels: [],
-  posts: [],
   terminalOpened: false,
   overlayOpened: false,
   appearHeader: false
@@ -11,10 +10,6 @@ export const state = () => ({
 export const mutations = {
   setLevelsContent(state, levels) {
     state.levels = levels
-  },
-
-  setPosts(state, posts) {
-    state.posts = posts
   },
 
   setTerminalOpened(state, value) {
@@ -47,18 +42,7 @@ export const actions = {
     })
     await commit('setLevelsContent', levels)
 
-    const postsFiles = await require.context(
-      '~/assets/content/posts',
-      false,
-      /\.json$/
-    )
-    const posts = postsFiles.keys().map((key) => {
-      const res = postsFiles(key)
-      res.slug = key.slice(2, -5)
-      return res
-    })
-    await commit('setPosts', posts)
-
+    await dispatch('notifications/fetch')
     await dispatch('stages/fetch')
     await dispatch('solutions/fetch')
   }

@@ -2,11 +2,16 @@ const vertexDeclaration = `
 #define STANDARD
 varying vec3 vPosition;
 varying vec3 vNormalizedPosition;
+
+float map(float value, float min1, float max1, float min2, float max2) {
+  return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
+}
 `
 const vertexMain = `
 void main() {
   vPosition = position;
   vNormalizedPosition = normalize(position) + 0.5;
+  vNormalizedPosition.y = map(vNormalizedPosition.y, 0.5, 1.3, 0., 1.);
 `
 let vertexShader = THREE.ShaderLib.standard.vertexShader
 vertexShader = vertexShader.replace('#define STANDARD', vertexDeclaration)
@@ -20,7 +25,7 @@ varying vec3 vPosition;
 `
 
 const fragMain = `
-float alpha = step(uThreshold, vNormalizedPosition.y);
+float alpha = step(uThreshold, vPosition.y);
 gl_FragColor = vec4( outgoingLight, alpha );
 `
 

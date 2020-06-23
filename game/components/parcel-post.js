@@ -10,6 +10,8 @@ export default class ParcelPost extends THREE.Object3D {
 
     let model
 
+    this._type = type
+
     switch (type) {
       case 'youtube':
         model = PostsInstances.youtube.clone()
