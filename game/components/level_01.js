@@ -92,16 +92,16 @@ export default class Level01 extends THREE.Object3D {
       base: '/',
       files: [
         {
-          name: 'objectif',
+          name: 'goal',
           path: 'obj/level_01/usb.glb'
         },
         {
           name: 'solid',
-          path: 'obj/level_01/level01_17.glb'
+          path: 'obj/level_01/level01_20.glb'
         },
         {
           name: 'wireframe',
-          path: 'obj/level_01/level01_07_wireframe.obj'
+          path: 'obj/level_01/level01_wireframe_09.obj'
         },
         {
           name: 'debug_solid',
@@ -156,30 +156,36 @@ export default class Level01 extends THREE.Object3D {
     const geometry = new THREE.BoxBufferGeometry(1, 1)
     const material = new THREE.MeshNormalMaterial()
 
-    this.objectifZone = new THREE.Mesh(geometry, material)
-    this.objectifZone.name = 'zone_objectif'
-    this.zones.add(this.objectifZone)
+    this.goalZone = new THREE.Mesh(geometry, material)
+    this.goalZone.name = 'zone_goal'
+    this.zones.add(this.goalZone)
 
-    this.objectifZone.position.set(0, 0.5, 11.5)
+    this.goalZone.position.set(0, 0.5, 11.5)
 
     const usbStandardMaterial = new THREE.MeshStandardMaterial({
       emissive: 0x157300,
       roughness: 1,
       metalness: 0
+      // wireframe: true,
+      // transparent: true
     })
-    this.usb = this.files.objectif.scene
+    this.usb = this.files.goal.scene
     this.usb.getObjectByName('model_usb_green').material = usbStandardMaterial
 
     this.usb.getObjectByName(
       'model_usb_white'
-    ).material = new THREE.MeshBasicMaterial({ color: 0xffffff })
+    ).material = new THREE.MeshBasicMaterial({
+      color: 0xffffff
+      // wireframe: true,
+      // transparent: true
+    })
 
     this.usb.position.set(-0.5, 1, 11.5)
     this.usbPosition = new THREE.Vector3(-0.5, 1, 11.5)
     this.solid.add(this.usb)
 
     const GUI = useGUI()
-    GUI.addObject3D('objectif', this.objectifZone)
+    GUI.addObject3D('goal', this.goalZone)
     GUI.addObject3D('usb', this.usb)
     GUI.addMaterial('usb-standard', usbStandardMaterial)
 
@@ -231,7 +237,9 @@ export default class Level01 extends THREE.Object3D {
 
       if (child.name.includes('zone_chekpoint')) {
         child.visible = true
-        child.position.y += -0.035
+        // child.position.y += -0.035
+
+        child.position.y += 0.5
 
         child.scale.setScalar(0.95)
 
@@ -240,6 +248,13 @@ export default class Level01 extends THREE.Object3D {
         child.component = new Checkpoint()
 
         child.add(child.component)
+
+        // const geometry = new THREE.BoxBufferGeometry(1, 1)
+        // const material = new THREE.MeshNormalMaterial()
+
+        // const mesh = new THREE.Mesh(geometry, material)
+
+        // child.add(mesh)
       }
     })
 

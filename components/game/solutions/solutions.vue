@@ -167,13 +167,10 @@ export default {
     },
     solutions() {
       return Object.values(this.$store.state.solutions.list)
-
-      // return this.$store.getters['solutions/getSolutions']
     },
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          // solution.unlocked = solution.required_score > solution.stage.score
           solution.stage = this.stages[solution.stage_id]
           solution.unlocked = solution.required_score > solution.stage.score
           return solution
@@ -200,19 +197,6 @@ export default {
       return this.unlockedSolutions.length / this.solutions.length
     }
   },
-  methods: {
-    selectSolution(solution) {
-      if (solution.unlocked && !this.selectedSolution) {
-        this.selectedSolution = solution
-        this.modalOpened = true
-
-        this.$store.commit('solutions/setSolutionOpened', {
-          solution,
-          opened: true
-        })
-      }
-    }
-  },
   beforeDestroy() {
     const { UIGrid } = useGame()
     UIGrid.visible = false
@@ -232,6 +216,19 @@ export default {
     setTimeout(() => {
       this.mounted = true
     }, 0)
+  },
+  methods: {
+    selectSolution(solution) {
+      if (solution.unlocked && !this.selectedSolution) {
+        this.selectedSolution = solution
+        this.modalOpened = true
+
+        this.$store.commit('solutions/setSolutionOpened', {
+          solution,
+          opened: true
+        })
+      }
+    }
   }
 }
 </script>

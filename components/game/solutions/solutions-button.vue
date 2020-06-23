@@ -17,6 +17,33 @@ export default {
       autoplay: false,
       animationData: hardDriveLottieData
     })
+  },
+  computed: {
+    stages() {
+      return this.$store.state.stages.list
+    },
+    solutions() {
+      return Object.values(this.$store.state.solutions.list)
+    },
+    isUnopenedSolutions() {
+      return this.solutions
+        .map((solution) => {
+          solution.stage = this.stages[solution.stage_id]
+          solution.unlocked = solution.required_score > solution.stage.score
+          return solution
+        })
+        .filter((solution) => solution.unlocked)
+        .some((solution) => !solution.opened)
+    }
+  },
+  watch: {
+    isUnopenedSolutions() {
+      // console.log(this.isUnopenedSolutions)
+
+      if (this.isUnopenedSolutions) {
+        this.iconAnimation.play()
+      }
+    }
   }
 }
 </script>

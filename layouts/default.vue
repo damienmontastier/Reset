@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <transition name="fade">
-      <game-loader v-if="$store.state.loading.visible" id="gameLoader" />
+      <game-loader id="gameLoader" v-if="$store.state.loading.visible" />
     </transition>
     <app-header id="appHeader" v-if="!$store.state.solutions.opened" />
     <solutions id="solutions" v-if="$store.state.solutions.opened" />
@@ -41,15 +41,14 @@ export default {
   },
 
   fetch() {
-    this.$store.commit('stages/setScore', {
-      stage: 'level1',
-      score: 150
-    })
-
-    this.$store.commit('stages/setScore', {
-      stage: 'level2',
-      score: 300
-    })
+    // this.$store.commit('stages/setScore', {
+    //   stage: 'level1',
+    //   score: 150
+    // })
+    // this.$store.commit('stages/setScore', {
+    //   stage: 'level2',
+    //   score: 300
+    // })
   },
 
   beforeDestroy() {
@@ -58,36 +57,34 @@ export default {
   },
 
   mounted() {
-    const GUI = useGUI()
-    const params = {
-      level1: 150,
-      level2: 300
-    }
-
-    const stagesGUI = GUI.addFolder('Stages')
-    stagesGUI
-      .add(params, 'level1')
-      .min(0)
-      .max(300)
-      .step(1)
-      .onChange(() => {
-        this.$store.commit('stages/setScore', {
-          stage: 'level1',
-          score: params.level1
-        })
-      })
-
-    stagesGUI
-      .add(params, 'level2')
-      .min(0)
-      .max(300)
-      .step(1)
-      .onChange(() => {
-        this.$store.commit('stages/setScore', {
-          stage: 'level2',
-          score: params.level2
-        })
-      })
+    // const GUI = useGUI()
+    // const params = {
+    //   level1: 300,
+    //   level2: 300
+    // }
+    // const stagesGUI = GUI.addFolder('Stages')
+    // stagesGUI
+    //   .add(params, 'level1')
+    //   .min(0)
+    //   .max(300)
+    //   .step(1)
+    //   .onChange(() => {
+    //     this.$store.commit('stages/setScore', {
+    //       stage: 'level1',
+    //       score: params.level1
+    //     })
+    //   })
+    // stagesGUI
+    //   .add(params, 'level2')
+    //   .min(0)
+    //   .max(300)
+    //   .step(1)
+    //   .onChange(() => {
+    //     this.$store.commit('stages/setScore', {
+    //       stage: 'level2',
+    //       score: params.level2
+    //     })
+    //   })
   }
 }
 </script>

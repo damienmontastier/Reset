@@ -7,7 +7,7 @@
       <svgWifi />
     </div>
     <div class="header__middle">
-      <span>{{ sec2time(timeLeft) }}</span>
+      <span v-if="score">{{ sec2time(score.value) }}</span>
     </div>
     <div class="header__right">
       <div :class="{ active: appearReduceTime }" class="right__penalty">
@@ -27,6 +27,7 @@
 // TODO METTRE UN ONLOAD ?
 
 import useClock from '@/hooks/use-clock'
+import score from '@/hooks/use-score'
 
 export default {
   components: {
@@ -41,19 +42,23 @@ export default {
       clock: undefined,
       time: 0,
       virtualTime: 0,
-      timeLeft: 0,
+      // timeLeft: 0,
       additionalTime: 0,
-      appearReduceTime: false
+      appearReduceTime: false,
+      score: undefined
     }
   },
   watch: {
-    'clock.countdown'(val) {
-      this.timeLeft = val
+    // 'score.value'() {
+    //   console.log(score.value)
+    // },
+    // 'clock.countdown'(val) {
+    //   this.timeLeft = val
 
-      if (val === this.clock.timeCountdown) {
-        console.log('countdown finish, game over')
-      }
-    },
+    //   if (val === this.clock.timeCountdown) {
+    //     console.log('countdown finish, game over')
+    //   }
+    // },
     'clock.time'(val) {
       this.time = val
     },
@@ -74,8 +79,9 @@ export default {
   },
   mounted() {
     this.clock = useClock()
+    this.score = score
 
-    this.clock.startCountdown(300)
+    // this.clock.startCountdown(300)
 
     this.appearReduceTime = false
   },
@@ -85,7 +91,7 @@ export default {
         return ('000' + num).slice(size * -1)
       }
 
-      const time = parseFloat(timeInSeconds).toFixed(3)
+      const time = parseFloat(Math.max(0, timeInSeconds)).toFixed(3)
       const minutes = Math.floor(time / 60) % 60
       const seconds = Math.floor(time - minutes * 60)
       const milliseconds = time.slice(-3)
