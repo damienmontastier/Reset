@@ -11,15 +11,15 @@ class Clock {
     this.events = new Events()
 
     this.elapsedTime = 0
-    this.elapsedTimeCountdown = 0
+    // this.elapsedTimeCountdown = 0
     this.additionalTime = 0
-    this.countdownDisabled = true
+    // this.countdownDisabled = true
     this.startTime = Date.now()
     this.date = new Date()
 
-    this.events.on('clock:toggleCountdown', (val) => {
-      this.countdownDisabled = val
-    })
+    // this.events.on('clock:toggleCountdown', (val) => {
+    //   this.countdownDisabled = val
+    // })
 
     this.getTime()
 
@@ -50,14 +50,14 @@ class Clock {
     return { h, m }
   }
 
-  get countdown() {
-    return Math.min(this.timeCountdown, this.elapsedTimeCountdown)
-  }
+  // get countdown() {
+  //   return Math.min(this.timeCountdown, this.elapsedTimeCountdown)
+  // }
 
-  startCountdown(val) {
-    this.timeCountdown = val
-    this.elapsedTimeCountdown = 0
-  }
+  // startCountdown(val) {
+  //   this.timeCountdown = val
+  //   this.elapsedTimeCountdown = 0
+  // }
 
   loop(clock) {
     if (!this.paused) {

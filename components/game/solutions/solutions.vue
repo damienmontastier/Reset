@@ -3,7 +3,8 @@
     <div class="solutions__inner">
       <aside class="solutions__aside">
         <h2 v-kinesis="{ depth: 2 }" class="solutions__title">
-          <hard-drive-svg />
+          <!-- <hard-drive-svg /> -->
+          <div ref="title" />
         </h2>
         <div v-kinesis="{ depth: 4 }" class="solutions__modal">
           <div
@@ -15,6 +16,7 @@
             class="solutions__modal__background"
           />
           <div
+            @click="$store.commit('solutions/setOpened', false)"
             v-kinesis="{ depth: 4 }"
             v-sounds="{
               click: '/sounds/RESET_CLIC.mp3'
@@ -134,15 +136,21 @@
 </template>
 
 <script>
+import lottie from 'lottie-web'
+
 import Solution from './solution'
 import Modal from './modal'
 import CrossSvg from '@/components/svg/cross'
+
+import useGame from '@/hooks/use-game'
+
+import titleLottieData from '@/assets/lottie/hard-drive-title.json'
 
 export default {
   components: {
     Modal,
     Solution,
-    HardDriveSvg: () => import('@/components/svg/hard-drive'),
+    // HardDriveSvg: () => import('@/components/svg/hard-drive'),
     CrossSvg,
     Scroller: () => import('@/components/components/scroller')
   },
@@ -159,13 +167,10 @@ export default {
     },
     solutions() {
       return Object.values(this.$store.state.solutions.list)
-
-      // return this.$store.getters['solutions/getSolutions']
     },
     orderedSolutions() {
       return this.solutions
         .map((solution) => {
-          // solution.unlocked = solution.required_score > solution.stage.score
           solution.stage = this.stages[solution.stage_id]
           solution.unlocked = solution.required_score > solution.stage.score
           return solution
@@ -192,6 +197,26 @@ export default {
       return this.unlockedSolutions.length / this.solutions.length
     }
   },
+  beforeDestroy() {
+    const { UIGrid } = useGame()
+    UIGrid.visible = false
+  },
+  mounted() {
+    this.titleAnimation = lottie.loadAnimation({
+      container: this.$refs.title,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      animationData: titleLottieData
+    })
+
+    const { UIGrid } = useGame()
+    UIGrid.visible = true
+
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
+  },
   methods: {
     selectSolution(solution) {
       if (solution.unlocked && !this.selectedSolution) {
@@ -204,11 +229,6 @@ export default {
         })
       }
     }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.mounted = true
-    }, 0)
   }
 }
 </script>
