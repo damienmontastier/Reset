@@ -1,7 +1,10 @@
 <template>
   <div id="app">
-    <game-loader id="gameLoader" v-if="$store.state.loading.visible" />
-    <app-header id="appHeader" />
+    <transition name="fade">
+      <game-loader id="gameLoader" v-if="$store.state.loading.visible" />
+    </transition>
+    <app-header id="appHeader" v-if="!$store.state.solutions.opened" />
+    <solutions id="solutions" v-if="$store.state.solutions.opened" />
     <nuxt id="appView" />
     <app-scene id="appScene" />
     <app-game id="appGame" />
@@ -13,12 +16,15 @@
 import { mapState } from 'vuex'
 import useGUI from '@/hooks/use-gui'
 
+import Solutions from '@/components/game/solutions/solutions'
+
 export default {
   components: {
     appScene: () => import('@/components/webgl/scene'),
     appGame: () => import('@/components/game/game'),
     appHeader: () => import('@/components/elements/header'),
-    gameLoader: () => import('@/components/game/game-loader')
+    gameLoader: () => import('@/components/game/game-loader'),
+    Solutions
   },
   data() {
     return {
@@ -36,15 +42,14 @@ export default {
   },
 
   fetch() {
-    this.$store.commit('stages/setScore', {
-      stage: 'level1',
-      score: 150
-    })
-
-    this.$store.commit('stages/setScore', {
-      stage: 'level2',
-      score: 300
-    })
+    // this.$store.commit('stages/setScore', {
+    //   stage: 'level1',
+    //   score: 150
+    // })
+    // this.$store.commit('stages/setScore', {
+    //   stage: 'level2',
+    //   score: 300
+    // })
   },
 
   beforeDestroy() {
@@ -53,36 +58,34 @@ export default {
   },
 
   mounted() {
-    const GUI = useGUI()
-    const params = {
-      level1: 150,
-      level2: 300
-    }
-
-    const stagesGUI = GUI.addFolder('Stages')
-    stagesGUI
-      .add(params, 'level1')
-      .min(0)
-      .max(300)
-      .step(1)
-      .onChange(() => {
-        this.$store.commit('stages/setScore', {
-          stage: 'level1',
-          score: params.level1
-        })
-      })
-
-    stagesGUI
-      .add(params, 'level2')
-      .min(0)
-      .max(300)
-      .step(1)
-      .onChange(() => {
-        this.$store.commit('stages/setScore', {
-          stage: 'level2',
-          score: params.level2
-        })
-      })
+    // const GUI = useGUI()
+    // const params = {
+    //   level1: 300,
+    //   level2: 300
+    // }
+    // const stagesGUI = GUI.addFolder('Stages')
+    // stagesGUI
+    //   .add(params, 'level1')
+    //   .min(0)
+    //   .max(300)
+    //   .step(1)
+    //   .onChange(() => {
+    //     this.$store.commit('stages/setScore', {
+    //       stage: 'level1',
+    //       score: params.level1
+    //     })
+    //   })
+    // stagesGUI
+    //   .add(params, 'level2')
+    //   .min(0)
+    //   .max(300)
+    //   .step(1)
+    //   .onChange(() => {
+    //     this.$store.commit('stages/setScore', {
+    //       stage: 'level2',
+    //       score: params.level2
+    //     })
+    //   })
   }
 }
 </script>
@@ -104,6 +107,15 @@ export default {
   top: 0;
   width: 100%;
   z-index: 20;
+}
+
+#solutions {
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 11;
 }
 
 #app {
@@ -134,42 +146,12 @@ export default {
   z-index: 10;
 }
 
-.intro,
-.endgame {
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 5;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.gameplay {
-  background-image: url('/img/gameplay.png');
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  width: 100%;
-  z-index: 5;
-}
-
-.tuto {
-  background-image: url('/img/consigne.png');
-  background-position: bottom;
-  background-repeat: no-repeat;
-  background-size: cover;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  object-fit: cover;
-  position: absolute;
-  width: 100%;
-  z-index: 5;
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

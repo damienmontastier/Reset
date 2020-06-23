@@ -70,6 +70,7 @@ export default {
       await this.player.init()
       this.spawnPoint = this.map.spawnPoint.clone()
       this.player.position.copy(this.spawnPoint)
+      console.log(this.spawnPoint)
       this.introGroup.add(this.player)
       this.player.startPlayerDisplay()
 

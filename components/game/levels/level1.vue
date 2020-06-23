@@ -17,12 +17,15 @@ import useGame from '@/hooks/use-game'
 import useClock from '@/hooks/use-clock'
 import useRAF from '@/hooks/use-raf'
 import useAudio from '@/hooks/use-audio'
+import score from '@/hooks/use-score'
 
 import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
 import Spline from '@/webgl/components/spline'
+
+import Countdown from '@/assets/js/countdown'
 
 import treadmillConfig from '@/config/treadmills'
 import LEVEL01_CONFIG from '@/config/level01'
@@ -99,15 +102,18 @@ export default {
     this.init()
 
     // TO DELETE
-    this.$events.on('teleportToTerminal', this.teleportToTerminal)
+    // this.$events.on('teleportToTerminal', this.teleportToTerminal)
     // TO DELETE
 
-    this.$events.on('level:restart', this.doRespawn.bind(this))
+    // this.$events.on('level:restart', this.doRespawn.bind(this))
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
 
     this.$controller.events.off('keyup', this.onKeydown)
+
+    const RAF = useRAF()
+    RAF.remove('level1', this.loop.bind(this))
   },
   methods: {
     ...mapMutations({
@@ -150,9 +156,13 @@ export default {
       console.log('100%')
     },
     async init() {
+      this.cameraPosition = 'follow player'
+      this.countdown = new Countdown(120)
+      score.type = 'countdown'
+
       await this.load()
 
-      this.cameraPosition = 'follow player'
+      this.countdown.paused = false
 
       const audioManager = useAudio()
       audioManager
@@ -231,11 +241,11 @@ export default {
     },
 
     onKeydown(e) {
-      const clock = useClock()
+      // const clock = useClock()
 
-      if (clock.countdownDisabled) {
-        clock.events.emit('clock:toggleCountdown', false)
-      }
+      // if (clock.countdownDisabled) {
+      //   clock.events.emit('clock:toggleCountdown', false)
+      // }
 
       const delta = new THREE.Vector3()
 
@@ -277,6 +287,17 @@ export default {
         )
 
         this.currentZones = intersectZones
+
+        if (this.currentZones.includes('zone_goal')) {
+          console.log('goal')
+          this.countdown.paused = true
+          this.$store.commit('stages/setScore', {
+            stage: 'level1',
+            score: this.countdown.time
+          })
+
+          console.log(this.countdown.time)
+        }
 
         // if (intersectZones.includes('zone_tuto')) {
         //   this.$events.emit('tuto')
@@ -321,6 +342,12 @@ export default {
     },
 
     loop(clock) {
+      if (this.countdown.time <= 0) {
+        console.log('loooose')
+      }
+
+      score.value = this.countdown.time
+
       this.map.update(clock)
 
       if (this.cameraPosition === 'follow player') {

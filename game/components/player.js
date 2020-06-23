@@ -30,6 +30,8 @@ const playerWireframeMaterial = new PlayerBasicMaterial({
   wireframe: true
 })
 
+console.log(playerWireframeMaterial)
+
 const playerStandardMaterial = new PlayerStandardMaterial({
   emissive: 0x00000,
   flatShading: true
@@ -145,7 +147,8 @@ export default class Player extends THREE.Object3D {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
     this.animations.run.stop()
     this.animations.fall.stop()
-    this.animations.idle.play()
+    this.animations.idle.stop()
+    this.animations.tPose.stop()
   }
 
   async init() {
@@ -198,40 +201,33 @@ export default class Player extends THREE.Object3D {
   }
 
   initSkeleton() {
-    this.skeletonAppearance = SkeletonUtils.clone(this.model)
+    const trail = SkeletonUtils.clone(this.model)
 
-    this.skeletonAppearance.getObjectByName(
-      'black'
-    ).material = playerWireframeMaterial.clone()
+    trail.applyMatrix4(this.model.matrixWorld)
 
-    this.skeletonAppearance.getObjectByName(
-      'green'
-    ).material = playerWireframeMaterial.clone()
+    trail.getObjectByName('black').material = playerWireframeMaterial
 
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    const material = playerWireframeMaterial.clone()
+    trail.getObjectByName('green').material = playerWireframeMaterial
 
-    this.cube = new THREE.Mesh(geometry, material)
-    this.cube.position.copy(this.position)
-    this.cube.position.y += 0.5
-    this.innerGroup.add(this.cube)
+    const geometry = new THREE.BoxGeometry(1, 1, 1)
+    const material = playerWireframeMaterial
+    const cube = new THREE.Mesh(geometry, material)
+    this.innerGroup.add(cube)
 
-    this.innerGroup.add(this.skeletonAppearance)
+    this.innerGroup.add(trail)
 
-    this.skeletonAppearance.position.copy(this.position)
+    const GUI = useGUI()
+    GUI.addObject3D('skeleton', trail)
   }
 
   startPlayerDisplay() {
+    this.animations.tPose.play()
+
     this.model.getObjectByName('black').material.uniforms.uThreshold.value = 1.5
     this.model.getObjectByName('green').material.uniforms.uThreshold.value = 1.5
-    this.cube.material.uniforms.uThreshold.value = 0.5
 
     const tl = gsap.timeline()
 
-    tl.to(this.cube.material.uniforms.uThreshold, {
-      value: -0.5,
-      duration: 2
-    })
     tl.to(
       [
         this.model.getObjectByName('black').material.uniforms.uThreshold,
@@ -244,11 +240,11 @@ export default class Player extends THREE.Object3D {
       '-=1'
     )
 
-    const GUI = useGUI()
-    GUI.add(this.cube.material.uniforms.uThreshold, 'value')
-      .min(-0.5)
-      .max(0.5)
-      .step(0.1)
+    // const GUI = useGUI()
+    // GUI.add(this.cube.material.uniforms.uThreshold, 'value')
+    //   .min(-0.5)
+    //   .max(0.5)
+    //   .step(0.1)
   }
 
   moveTo(position) {

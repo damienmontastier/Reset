@@ -41,8 +41,6 @@ import lottie from 'lottie-web'
 import folderLottieData from '@/assets/lottie/folder.json'
 import lockLottieData from '@/assets/lottie/lock.json'
 
-import useGame from '@/hooks/use-game'
-
 export default {
   filters: {
     minutesAndSeconds(time) {
@@ -68,9 +66,6 @@ export default {
     }
   },
   mounted() {
-    const { UIGrid } = useGame()
-    UIGrid.visible = true
-
     this.iconAnimation = lottie.loadAnimation({
       container: this.$refs['lottie-icon'],
       renderer: 'svg',

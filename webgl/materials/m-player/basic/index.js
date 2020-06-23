@@ -1,20 +1,22 @@
 import fragmentShader from './fragment.glsl'
 import vertexShader from './vertex.glsl'
 
-export default class PlayerMaterial extends THREE.ShaderMaterial {
-  constructor({ wireframe = false, color = 0xff0000 } = {}) {
-    super({
+export default class PlayerBasicMaterial {
+  constructor({ color, wireframe = false } = {}) {
+    return new THREE.ShaderMaterial({
+      color: 0x000000,
       vertexShader,
       fragmentShader,
       uniforms: {
-        uThreshold: { value: 1.0 },
-        uColor: { value: new THREE.Color(color) }
+        uColor: {
+          value: new THREE.Color(color)
+        }
       },
-      side: THREE.DoubleSide,
       transparent: true,
-      depthWrite: false,
+      depthWrite: true,
       depthTest: true,
-      wireframe
+      skinning: true,
+      wireframe: true
     })
   }
 }

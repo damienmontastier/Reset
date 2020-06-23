@@ -3,5 +3,5 @@
   "title": "iOS Screen Time",
   "required_score": 160,
   "stage_id": "level1",
-  "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+  "content": "<!--StartFragment-->\n\nWith Screen Time, you can access real-time reports about how much time you spend on your iPhone, iPad, or iPod touch. \\\n\\\nThis way, you can make more informed decisions about how you use your devices, and set limits if you'd like to. \\\n\\\n**How to turn on Screen Time** :\n\n* Go to Settings \n* Tap Turn On Screen Time.\n* Tap Continue. \n* Select This is My \\[device] \n\nYou can now get a report about how you use your device, apps, and websites, any time you want.\n\n![solution](/img/solution_02.png)\n\n<!--EndFragment-->"
 }
