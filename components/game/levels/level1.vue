@@ -1,20 +1,29 @@
 <template>
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <terminal
+      v-if="$store.state.ui.terminalVisible"
+      class="gameLevel01__terminal"
+    />
     <!-- <solutions class="gameLevel01__solutions" /> -->
-    <mission-report class="gameLevel01__missionReport" />
+    <mission-report
+      v-if="$store.state.ui.missionReportVisible"
+      class="gameLevel01__missionReport"
+    />
     <button
       @click="playerIsOnTerminal = !playerIsOnTerminal"
       class="gameLevel01__debug"
     >
       toggle Terminam
     </button>
+    <button @click="missionIsOver = !missionIsOver" class="gameLevel01__debug">
+      toggle report
+    </button>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
@@ -36,13 +45,15 @@ import Countdown from '@/assets/js/countdown'
 import treadmillConfig from '@/config/treadmills'
 import LEVEL01_CONFIG from '@/config/level01'
 
+import MissionReport from '@/components/game/mission-report/mission-report'
+import Terminal from '@/components/game/terminal/terminal'
+import GameNotifications from '@/components/elements/game-notifications'
+
 export default {
   components: {
-    Terminal: () => import('@/components/game/terminal/terminal'),
-    gameNotifications: () => import('@/components/elements/game-notifications'),
-    // Solutions: () => import('@/components/game/solutions/solutions'),
-    MissionReport: () =>
-      import('@/components/game/mission-report/mission-report')
+    Terminal,
+    MissionReport,
+    GameNotifications
   },
   data() {
     return {
@@ -51,13 +62,14 @@ export default {
       playerIsOnTerminal: undefined,
       playerIsOnTuto: undefined,
       playerIsOnTreadmill: undefined,
-      playerIsOnEndgame: undefined
+      playerIsOnEndgame: undefined,
+      missionIsOver: false
     }
   },
 
   computed: {
     ...mapState({
-      terminalOpened: (state) => state.terminalOpened,
+      // terminalOpened: (state) => state.terminalOpened,
       posts: (state) => state.posts
     })
   },
@@ -95,15 +107,22 @@ export default {
         console.log('TREADMILL LEAVE')
       }
     },
-    playerIsOnTerminal(newVal, oldVal) {
-      if (this.playerIsOnTerminal === true) {
-        this.cameraAnimation(LEVEL01_CONFIG.cameras.close_up)
-        this.setTerminalOpened(true)
-      } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
-        console.log('here')
-        this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
-        this.setTerminalOpened(false)
-      }
+    playerIsOnTerminal() {
+      // if (this.playerIsOnTerminal === true) {
+      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.close_up)
+      //   // this.setTerminalOpened(true)
+      // } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
+      //   console.log('here')
+      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
+      //   // this.setTerminalOpened(false)
+      // }
+
+      this.cameraAnimation(
+        this.playerIsOnTerminal
+          ? LEVEL01_CONFIG.cameras.close_up
+          : LEVEL01_CONFIG.cameras.default
+      )
+      this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
     }
   },
   mounted() {
@@ -124,9 +143,9 @@ export default {
     RAF.remove('level1', this.loop.bind(this))
   },
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
+    // ...mapMutations({
+    //   setTerminalOpened: 'setTerminalOpened'
+    // }),
     async load() {
       this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
@@ -307,7 +326,12 @@ export default {
             score: this.countdown.time
           })
 
-          const tl = new gsap.timeline()
+          const tl = new gsap.timeline({
+            onComplete: () => {
+              // this.missionIsOver = true
+              this.$store.commit('ui/setMissionReportVisible', true)
+            }
+          })
 
           tl.to(
             this.map.usb.scale,
@@ -700,16 +724,8 @@ export default {
     pointer-events: all;
   }
 
-  &__solutions {
-    display: none;
-    left: 64px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   &__missionReport {
-    display: none;
+    // display: none;
     left: 50%;
     position: absolute;
     top: 50%;
