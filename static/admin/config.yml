@@ -80,7 +80,12 @@ collections:
       preview: false
     fields:
       - { label: 'Titre', name: 'title', widget: 'text' }
-      - { label: 'Contenu', name: 'content', widget: 'markdown' }
+      - {
+          label: 'Contenu',
+          name: 'content',
+          widget: 'markdown',
+          required: false,
+        }
       - { label: 'Image', name: 'picture', widget: 'image', required: false }
       - {
           label: 'Réseaux social',

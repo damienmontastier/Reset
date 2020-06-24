@@ -5,9 +5,9 @@
         <span>{{ post.content.social_network }}</span>
         <span>{{ hour }}</span>
       </div>
-      <p>{{ post.content.title }}</p>
+      <p>{{ content }}</p>
       <picture v-if="post.content.picture">
-        <img :src="post.content.picture" alt="" />
+        <img :src="post.content.picture" alt />
       </picture>
     </div>
   </div>
@@ -32,6 +32,11 @@ export default {
     },
     hour() {
       return `${this.post.hour.h}:${this.post.hour.m}`
+    },
+    content() {
+      return this.post.content.title
+        ? this.post.content.title
+        : this.post.content.content
     }
   }
 }

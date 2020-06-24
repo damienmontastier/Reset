@@ -25,13 +25,6 @@ const trailMaterial = new THREE.MeshBasicMaterial({
   depthTest: true
 })
 
-const playerWireframeMaterial = new PlayerBasicMaterial({
-  color: 0xff0000,
-  wireframe: true
-})
-
-console.log(playerWireframeMaterial)
-
 const playerStandardMaterial = new PlayerStandardMaterial({
   emissive: 0x00000,
   flatShading: true
@@ -201,23 +194,27 @@ export default class Player extends THREE.Object3D {
   }
 
   initSkeleton() {
-    const trail = SkeletonUtils.clone(this.model)
+    const playerWireframeMaterial = new PlayerBasicMaterial({
+      color: 0xff0000,
+      wireframe: true
+    })
 
-    trail.applyMatrix4(this.model.matrixWorld)
+    this.skeletonVirtualization = SkeletonUtils.clone(this.model)
 
-    trail.getObjectByName('black').material = playerWireframeMaterial
+    this.skeletonVirtualization.applyMatrix4(this.model.matrixWorld)
 
-    trail.getObjectByName('green').material = playerWireframeMaterial
+    this.skeletonVirtualization.getObjectByName(
+      'black'
+    ).material = playerWireframeMaterial.clone()
 
-    const geometry = new THREE.BoxGeometry(1, 1, 1)
-    const material = playerWireframeMaterial
-    const cube = new THREE.Mesh(geometry, material)
-    this.innerGroup.add(cube)
+    this.skeletonVirtualization.getObjectByName(
+      'green'
+    ).material = playerWireframeMaterial.clone()
 
-    this.innerGroup.add(trail)
+    this.innerGroup.add(this.skeletonVirtualization)
 
     const GUI = useGUI()
-    GUI.addObject3D('skeleton', trail)
+    GUI.addObject3D('skeleton', this.skeletonVirtualization)
   }
 
   startPlayerDisplay() {
@@ -225,9 +222,27 @@ export default class Player extends THREE.Object3D {
 
     this.model.getObjectByName('black').material.uniforms.uThreshold.value = 1.5
     this.model.getObjectByName('green').material.uniforms.uThreshold.value = 1.5
+    this.skeletonVirtualization.getObjectByName(
+      'black'
+    ).material.uniforms.uThreshold.value = 1.5
+    this.skeletonVirtualization.getObjectByName(
+      'green'
+    ).material.uniforms.uThreshold.value = 1.5
 
     const tl = gsap.timeline()
 
+    tl.to(
+      [
+        this.skeletonVirtualization.getObjectByName('black').material.uniforms
+          .uThreshold,
+        this.skeletonVirtualization.getObjectByName('green').material.uniforms
+          .uThreshold
+      ],
+      {
+        value: 0,
+        duration: 2
+      }
+    )
     tl.to(
       [
         this.model.getObjectByName('black').material.uniforms.uThreshold,
@@ -241,9 +256,12 @@ export default class Player extends THREE.Object3D {
     )
 
     // const GUI = useGUI()
-    // GUI.add(this.cube.material.uniforms.uThreshold, 'value')
-    //   .min(-0.5)
-    //   .max(0.5)
+    // GUI.add(
+    //   this.model.getObjectByName('black').material.uniforms.uThreshold,
+    //   'value'
+    // )
+    //   .min(0)
+    //   .max(1.5)
     //   .step(0.1)
   }
 

@@ -74,8 +74,8 @@ export default class Introduction extends THREE.Object3D {
     const spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
 
     this.spawnPoint = new THREE.Vector3(
-      spawnPoint.x,
-      Math.abs(spawnPoint.y),
+      spawnPoint.x - 0.5,
+      spawnPoint.y,
       spawnPoint.z
     )
 

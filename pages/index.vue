@@ -70,7 +70,6 @@ export default {
       await this.player.init()
       this.spawnPoint = this.map.spawnPoint.clone()
       this.player.position.copy(this.spawnPoint)
-      console.log(this.spawnPoint)
       this.introGroup.add(this.player)
       this.player.startPlayerDisplay()
 
@@ -129,6 +128,13 @@ export default {
       console.log('appear player')
       console.log('show controls keys')
       console.log('enabled movement player')
+      gsap.to(this.player.animations.tPose, {
+        weight: 0,
+        duration: 0.5,
+        ease: 'power3.out'
+      })
+
+      this.player.animations.idle.play()
       this.movementEnabled = true
     },
 
