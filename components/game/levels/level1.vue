@@ -4,6 +4,12 @@
     <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
     <!-- <solutions class="gameLevel01__solutions" /> -->
     <mission-report class="gameLevel01__missionReport" />
+    <button
+      @click="playerIsOnTerminal = !playerIsOnTerminal"
+      class="gameLevel01__debug"
+    >
+      toggle Terminam
+    </button>
   </div>
 </template>
 
@@ -91,9 +97,11 @@ export default {
     },
     playerIsOnTerminal(newVal, oldVal) {
       if (this.playerIsOnTerminal === true) {
+        this.cameraAnimation(LEVEL01_CONFIG.cameras.close_up)
         this.setTerminalOpened(true)
       } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
         console.log('here')
+        this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
         this.setTerminalOpened(false)
       }
     }
@@ -160,6 +168,9 @@ export default {
       this.countdown = new Countdown(120)
       score.type = 'countdown'
 
+      const camera = useCamera()
+      // camera._distance = 25
+
       await this.load()
 
       this.countdown.paused = false
@@ -203,7 +214,6 @@ export default {
 
       this.levelGroup.add(this.player)
 
-      const camera = useCamera()
       camera._position.copy(
         this.player.worldPosition.clone().add(camera._angle)
       )
@@ -289,14 +299,59 @@ export default {
         this.currentZones = intersectZones
 
         if (this.currentZones.includes('zone_goal')) {
-          console.log('goal')
+          // GOAL REACH
+
           this.countdown.paused = true
           this.$store.commit('stages/setScore', {
             stage: 'level1',
             score: this.countdown.time
           })
 
-          console.log(this.countdown.time)
+          const tl = new gsap.timeline()
+
+          tl.to(
+            this.map.usb.scale,
+            {
+              duration: 2,
+              ease: 'expo.out',
+              x: 0.3,
+              y: 0.3,
+              z: 0.3
+            },
+            0
+          )
+
+          tl.to(
+            this.map.usb,
+            {
+              duration: 2,
+              ease: 'expo.out',
+              _deltaY: 1.5
+            },
+            0.5
+          )
+
+          tl.to(
+            this.map.usb.scale,
+            {
+              duration: 2,
+              ease: 'expo.out',
+              x: 1,
+              y: 1,
+              z: 1
+            },
+            1.5
+          )
+
+          tl.to(
+            [this.map.usbStandardMaterial, this.map.usbBasicMaterial],
+            {
+              duration: 2,
+              ease: 'expo.out',
+              opacity: 0
+            },
+            2
+          )
         }
 
         // if (intersectZones.includes('zone_tuto')) {
@@ -632,6 +687,12 @@ export default {
 .gameLevel01 {
   height: 100vh;
   width: 100vw;
+
+  &__debug {
+    pointer-events: all;
+    position: absolute;
+    top: 100px;
+  }
 
   &__solutions,
   &__terminal,

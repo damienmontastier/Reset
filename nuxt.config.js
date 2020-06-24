@@ -51,6 +51,55 @@ export default {
         rel: 'icon',
         type: 'image/x-icon',
         href: '/favicon.ico'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/VioletSans-Regular/VioletSans-Regular.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-A/CindieMono-A.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-B/CindieMono-B.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-C/CindieMono-C.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-D/CindieMono-D.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-E/CindieMono-E.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
+      },
+      {
+        rel: 'preload',
+        href: '/fonts/CindieMono-F/CindieMono-F.woff2',
+        as: 'font',
+        type: 'font/woff2',
+        crossorigin: 'anonymous'
       }
     ],
     script: [
