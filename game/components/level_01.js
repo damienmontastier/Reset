@@ -153,41 +153,7 @@ export default class Level01 extends THREE.Object3D {
     this.initBackground()
     this.initTreadmillsHitboxes()
 
-    const geometry = new THREE.BoxBufferGeometry(1, 1)
-    const material = new THREE.MeshNormalMaterial()
-
-    this.goalZone = new THREE.Mesh(geometry, material)
-    this.goalZone.name = 'zone_goal'
-    this.zones.add(this.goalZone)
-
-    this.goalZone.position.set(0, 0.5, 11.5)
-
-    const usbStandardMaterial = new THREE.MeshStandardMaterial({
-      emissive: 0x157300,
-      roughness: 1,
-      metalness: 0
-      // wireframe: true,
-      // transparent: true
-    })
-    this.usb = this.files.goal.scene
-    this.usb.getObjectByName('model_usb_green').material = usbStandardMaterial
-
-    this.usb.getObjectByName(
-      'model_usb_white'
-    ).material = new THREE.MeshBasicMaterial({
-      color: 0xffffff
-      // wireframe: true,
-      // transparent: true
-    })
-
-    this.usb.position.set(-0.5, 1, 11.5)
-    this.usbPosition = new THREE.Vector3(-0.5, 1, 11.5)
-    this.solid.add(this.usb)
-
-    const GUI = useGUI()
-    GUI.addObject3D('goal', this.goalZone)
-    GUI.addObject3D('usb', this.usb)
-    GUI.addMaterial('usb-standard', usbStandardMaterial)
+    this.initUSB()
 
     // const appearTl = this.appear()
     // appearTl.pause()
@@ -198,6 +164,47 @@ export default class Level01 extends THREE.Object3D {
 
     // const RAF = useRAF()
     // RAF.add('level_01', this.update.bind(this), 0)
+  }
+
+  initUSB() {
+    const geometry = new THREE.BoxBufferGeometry(1, 1)
+    const material = new THREE.MeshNormalMaterial()
+
+    this.goalZone = new THREE.Mesh(geometry, material)
+    this.goalZone.name = 'zone_goal'
+    this.zones.add(this.goalZone)
+
+    this.goalZone.position.set(0, 0.5, 11.5)
+
+    this.usbStandardMaterial = new THREE.MeshStandardMaterial({
+      emissive: 0x157300,
+      roughness: 1,
+      metalness: 0,
+      // wireframe: true,
+      transparent: true
+    })
+    this.usbBasicMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      // wireframe: true,
+      transparent: true
+    })
+
+    this.usb = this.files.goal.scene
+    this.usb.getObjectByName(
+      'model_usb_green'
+    ).material = this.usbStandardMaterial
+
+    this.usb.getObjectByName('model_usb_white').material = this.usbBasicMaterial
+
+    this.usb.position.set(-0.5, 1, 11.5)
+    this.usb._deltaY = 0
+    this.usbPosition = new THREE.Vector3(-0.5, 1, 11.5)
+    this.solid.add(this.usb)
+
+    const GUI = useGUI()
+    GUI.addObject3D('goal', this.goalZone)
+    GUI.addObject3D('usb', this.usb)
+    GUI.addMaterial('usb-standard', this.usbStandardMaterial)
   }
 
   applyMaterials() {
@@ -358,11 +365,11 @@ export default class Level01 extends THREE.Object3D {
       files: [
         {
           name: 'treadmill',
-          path: 'obj/treadmill/treadmill_06.glb'
+          path: 'obj/treadmill/treadmill_08.glb'
         },
         {
           name: 'wireframe',
-          path: 'obj/treadmill/treadmill_06_wireframe.obj'
+          path: 'obj/treadmill/treadmill_08_wireframe.obj'
         }
       ]
     })
@@ -422,10 +429,12 @@ export default class Level01 extends THREE.Object3D {
 
   update(clock) {
     this.usb.position.y =
-      this.usbPosition.y + Math.sin(clock.time * 5) / 20 + 0.25
+      this.usbPosition.y +
+      (Math.sin(clock.time * 2.5) / 20 + 0.25) +
+      (this.usb._deltaY || 0)
 
     this.usb.rotation.z = 0.4
-    this.usb.rotation.y += 0.01
+    this.usb.rotation.y += 0.008
 
     this.dotsPlane.update(clock)
     const { camera } = useCamera()

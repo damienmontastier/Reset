@@ -1,9 +1,24 @@
 <template>
   <section class="missionReport">
     <header class="missionReport__header">
-      <h2 class="missionReport__title">mission report</h2>
+      <h2
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        class="missionReport__title"
+      >
+        mission report
+      </h2>
     </header>
-    <div class="missionReport__head">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.1s` }"
+      class="missionReport__head"
+    >
       <div class="missionReport__head__left">
         <p>From : &#x3C;YouKnowWho&#x3E;</p>
         <p>To : &#x3C;Agent X&#x3E;</p>
@@ -13,14 +28,28 @@
         <p>Contrat #257468</p>
       </div>
     </div>
-    <div class="missionReport__body">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.2s` }"
+      class="missionReport__body"
+    >
       Congratulations, Agent X.<br /><br />
       You've made your way through the <i>infinite scroll</i>. Thanks to the
       crucial information you collected, we made the first step towards a
       brighter future.<br /><br />
       Good job !
     </div>
-    <div class="missionReport__stats">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.3s` }"
+      class="missionReport__stats"
+    >
       <div class="missionReport__stats__row">
         <p>Elapsed time</p>
         <div class="missionReport__stats__row__hr" />
@@ -38,6 +67,15 @@
       </div>
     </div>
     <ui-button
+      @click.native="
+        $store.commit('ui/setMissionReportVisible', false)
+        $store.commit('solutions/setOpened', true)
+      "
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.4s` }"
       class="missionReport__btn"
       style="--color: var(--color-black);
           --bg-color: var(--color-green);
@@ -49,9 +87,21 @@
 </template>
 
 <script>
+import UiButton from '@/components/components/ui-button'
+
 export default {
   components: {
-    UiButton: () => import('@/components/components/ui-button')
+    UiButton
+  },
+  data() {
+    return {
+      mounted: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
   }
 }
 </script>

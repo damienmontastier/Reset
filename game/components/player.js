@@ -34,7 +34,7 @@ export default class Player extends THREE.Object3D {
       .SkeletonUtils
   }
   loop({ deltaTime }) {
-    // this.animationMixer.update(deltaTime)
+    this.animationMixer.update(deltaTime)
   }
 
   async load() {
@@ -56,7 +56,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character_04_static.glb'
+          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose.glb'
         }
       ]
     })
@@ -107,6 +107,8 @@ export default class Player extends THREE.Object3D {
         THREE.AnimationClip.findByName(this.modelAnimations, 'T-Pose')
       )
     }
+
+    console.log(this.animations)
   }
 
   initModel() {
@@ -115,7 +117,7 @@ export default class Player extends THREE.Object3D {
     // this.innerGroup.position.copy(this.cellCenter)
     this.add(this.innerGroup)
 
-    // this.innerGroup.add(this.model)
+    this.innerGroup.add(this.model)
 
     this.pathfinder = new THREE.Group()
     this.innerGroup.add(this.pathfinder)
@@ -143,9 +145,10 @@ export default class Player extends THREE.Object3D {
 
   setInitialState() {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
+    this.animations.tPose.stop()
     this.animations.run.stop()
     this.animations.fall.stop()
-    this.animations.idle.stop()
+    this.animations.idle.play()
   }
 
   async init() {
@@ -154,12 +157,12 @@ export default class Player extends THREE.Object3D {
 
     this.trails = []
 
-    // this.initAnimations()
+    this.initAnimations()
     this.initModel()
-    this.initSkeleton()
+    // this.initSkeleton()
     this.initHitbox()
 
-    // this.setInitialState()
+    this.setInitialState()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
@@ -198,7 +201,7 @@ export default class Player extends THREE.Object3D {
   }
 
   initSkeleton() {
-    const gui = useGUI()
+    // const gui = useGUI()
 
     const skeleton = SkeletonUtils.clone(this.model)
 
@@ -212,27 +215,27 @@ export default class Player extends THREE.Object3D {
       flatShading: true
     })
 
-    const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
-    const material = playerWireframeMaterial.clone()
-    this.cubeWireframe = new THREE.Mesh(geometry, material)
-    this.cubeWireframe.position.copy(this.position)
-    this.cubeWireframe.position.y += 1
-    this.innerGroup.add(this.cubeWireframe)
+    // const geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5)
+    // const material = playerWireframeMaterial.clone()
+    // this.cubeWireframe = new THREE.Mesh(geometry, material)
+    // this.cubeWireframe.position.copy(this.position)
+    // this.cubeWireframe.position.y += 1
+    // this.innerGroup.add(this.cubeWireframe)
 
-    const geometryCubeFill = geometry.clone()
-    const materialCubeFill = playerStandardMaterial.clone()
-    this.cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
-    this.cubeFill.position.copy(this.position)
-    this.cubeFill.position.y += 1
-    this.innerGroup.add(this.cubeFill)
-    gui.addMesh('standard_material', this.cubeFill)
+    // const geometryCubeFill = geometry.clone()
+    // const materialCubeFill = playerStandardMaterial.clone()
+    // this.cubeFill = new THREE.Mesh(geometryCubeFill, materialCubeFill)
+    // this.cubeFill.position.copy(this.position)
+    // this.cubeFill.position.y += 1
+    // this.innerGroup.add(this.cubeFill)
+    // gui.addMesh('standard_material', this.cubeFill)
 
-    skeleton.getObjectByName('black').material = playerWireframeMaterial
+    skeleton.getObjectByName('black').material = playerStandardMaterial
     skeleton.getObjectByName('green').material = playerWireframeMaterial
 
     skeleton.position.copy(this.position)
 
-    // this.innerGroup.add(skeleton)
+    this.innerGroup.add(skeleton)
   }
 
   startPlayerDisplay() {

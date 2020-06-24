@@ -30,9 +30,11 @@ import TerminalP2 from '@/components/game/terminal/terminal-p2'
 import TerminalP3 from '@/components/game/terminal/terminal-p3'
 import TerminalP4 from '@/components/game/terminal/terminal-p4'
 
+import TerminalTitle from '@/components/game/terminal/terminal-title'
+
 export default {
   components: {
-    TerminalTitle: () => import('@/components/game/terminal/terminal-title'),
+    TerminalTitle,
     TerminalP1,
     TerminalP2,
     TerminalP3,
@@ -88,7 +90,7 @@ export default {
   height: 100vh;
   margin-left: 64px;
   position: relative;
-  width: 65vh;
+  width: 610px;
 
   &__inner {
     padding: 75px;

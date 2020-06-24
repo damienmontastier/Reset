@@ -9,15 +9,6 @@ import lottie from 'lottie-web'
 import hardDriveLottieData from '@/assets/lottie/hard-drive.json'
 
 export default {
-  mounted() {
-    this.iconAnimation = lottie.loadAnimation({
-      container: this.$refs.icon,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: hardDriveLottieData
-    })
-  },
   computed: {
     stages() {
       return this.$store.state.stages.list
@@ -41,9 +32,22 @@ export default {
       // console.log(this.isUnopenedSolutions)
 
       if (this.isUnopenedSolutions) {
+        this.iconAnimation.setDirection(1)
+        this.iconAnimation.play()
+      } else {
+        this.iconAnimation.setDirection(-1)
         this.iconAnimation.play()
       }
     }
+  },
+  mounted() {
+    this.iconAnimation = lottie.loadAnimation({
+      container: this.$refs.icon,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: hardDriveLottieData
+    })
   }
 }
 </script>
