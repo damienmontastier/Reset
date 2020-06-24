@@ -140,7 +140,7 @@ export default class Player extends THREE.Object3D {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
     this.animations.run.stop()
     this.animations.fall.stop()
-    this.animations.idle.stop()
+    this.animations.idle.play()
     this.animations.tPose.stop()
   }
 
@@ -155,7 +155,6 @@ export default class Player extends THREE.Object3D {
     this.initHitbox()
 
     this.setInitialState()
-    this.initSkeleton()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
@@ -217,7 +216,9 @@ export default class Player extends THREE.Object3D {
     GUI.addObject3D('skeleton', this.skeletonVirtualization)
   }
 
-  startPlayerDisplay() {
+  startAppearPlayer() {
+    this.initSkeleton()
+
     this.animations.tPose.play()
 
     this.model.getObjectByName('black').material.uniforms.uThreshold.value = 1.5

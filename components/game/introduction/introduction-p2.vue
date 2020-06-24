@@ -27,11 +27,12 @@
     <div class="introductionP2__signature introduction--wrapper">
       <span>Signature :</span>
       <div
+        ref="signature"
         @click="triggerSignature"
         :class="{ 'is-signed': isSigned }"
         class="signature_insert"
       >
-        {{ isSigned ? 'Signé' : ' Click for sign, Pas signé' }}
+        <span v-if="!isSigned">Click for sign</span>
       </div>
     </div>
     <btn
@@ -43,6 +44,9 @@
 </template>
 
 <script>
+import lottie from 'lottie-web'
+import missionSign from '@/assets/lottie/mission-sign.json'
+
 export default {
   components: {
     Btn: () => import('@/components/components/btn-introduction')
@@ -52,8 +56,19 @@ export default {
       isSigned: false
     }
   },
+  mounted() {
+    this.signAnimation = lottie.loadAnimation({
+      container: this.$refs.signature,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: missionSign
+    })
+  },
   methods: {
     triggerSignature() {
+      console.log(this.signAnimation)
+      this.signAnimation.play()
       this.isSigned = true
     }
   }
@@ -100,12 +115,26 @@ export default {
     }
 
     .signature_insert {
+      align-items: center;
       background: var(--color-grey-lighten);
       border: 1px solid var(--color-green);
+      display: flex;
       height: 80px;
+      justify-content: center;
       margin-left: auto;
       margin-right: 50px;
+      position: relative;
       width: 50%;
+
+      svg {
+        left: 0;
+        position: absolute;
+        top: 0;
+      }
+
+      span {
+        color: var(--color-grey-light);
+      }
 
       &.is-signed {
         background-color: transparent;

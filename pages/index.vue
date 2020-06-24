@@ -1,5 +1,5 @@
 <template>
-  <introduction @startMission="start"></introduction>
+  <introduction @startMission="onStartGame"></introduction>
 </template>
 
 <script>
@@ -71,7 +71,8 @@ export default {
       this.spawnPoint = this.map.spawnPoint.clone()
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
-      this.player.startPlayerDisplay()
+      this.player.startAppearPlayer()
+      this.player.animations.idle.stop()
 
       camera.camera.lookAt(
         camera._position
@@ -123,18 +124,20 @@ export default {
       this.dotsPlane.update(clock)
     },
 
-    start() {
+    onStartGame() {
       console.log('do movement camera to player')
       console.log('appear player')
       console.log('show controls keys')
-      console.log('enabled movement player')
+      console.log('dispose skeleton / delete skeleton')
+
+      this.player.animations.idle.play()
+
       gsap.to(this.player.animations.tPose, {
         weight: 0,
         duration: 0.5,
         ease: 'power3.out'
       })
 
-      this.player.animations.idle.play()
       this.movementEnabled = true
     },
 
