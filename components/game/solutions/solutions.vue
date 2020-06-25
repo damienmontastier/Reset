@@ -170,7 +170,7 @@ export default {
       return this.solutions
         .map((solution) => {
           solution.stage = this.stages[solution.stage_id]
-          solution.unlocked = solution.required_score > solution.stage.score
+          solution.unlocked = solution.stage.score < solution.required_score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)

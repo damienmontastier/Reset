@@ -62,8 +62,9 @@ export default {
 
   watch: {
     shouldGridBeDisplayed() {
-      const { UIGrid } = useGame()
+      const { UIGrid, scene } = useGame()
       UIGrid.visible = this.shouldGridBeDisplayed
+      scene.visible = !this.shouldGridBeDisplayed
     }
   },
 

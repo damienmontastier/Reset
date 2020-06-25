@@ -21,8 +21,6 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 /* eslint-disable vue/no-unused-components */
 
 import TerminalP1 from '@/components/game/terminal/terminal-p1'
@@ -66,9 +64,6 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
     terminalCompleted() {
       this.closeTerminal()
       console.log('finish, close terminal, apply modification')
@@ -76,7 +71,7 @@ export default {
       this.$events.emit('TERMINAL COMPLETED')
     },
     closeTerminal() {
-      this.setTerminalOpened(false)
+      this.$store.commit('ui/setTerminalVisible', false)
     }
   }
 }

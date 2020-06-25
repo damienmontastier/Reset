@@ -53,7 +53,7 @@
       <div class="missionReport__stats__row">
         <p>Elapsed time</p>
         <div class="missionReport__stats__row__hr" />
-        <p>01:48:210</p>
+        <p v-if="score">{{ sec2time(score.value) }}</p>
       </div>
       <div class="missionReport__stats__row">
         <p>Posts dodged</p>
@@ -88,6 +88,7 @@
 
 <script>
 import UiButton from '@/components/components/ui-button'
+import score from '@/hooks/use-score'
 
 export default {
   components: {
@@ -95,13 +96,32 @@ export default {
   },
   data() {
     return {
-      mounted: false
+      mounted: false,
+      score: undefined
     }
   },
   mounted() {
+    this.score = score
+
     setTimeout(() => {
       this.mounted = true
     }, 0)
+  },
+  methods: {
+    sec2time(timeInSeconds) {
+      const pad = function(num, size) {
+        return ('000' + num).slice(size * -1)
+      }
+
+      const time = parseFloat(Math.max(0, timeInSeconds)).toFixed(3)
+      const minutes = Math.floor(time / 60) % 60
+      const seconds = Math.floor(time - minutes * 60)
+      const milliseconds = time.slice(-3)
+
+      return (
+        pad(minutes, 2) + ':' + pad(seconds, 2) + ':' + pad(milliseconds, 3)
+      )
+    }
   }
 }
 </script>

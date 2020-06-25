@@ -117,12 +117,14 @@ export default {
       //   // this.setTerminalOpened(false)
       // }
 
+      this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
+    },
+    '$store.state.ui.terminalVisible'() {
       this.cameraAnimation(
-        this.playerIsOnTerminal
+        this.$store.state.ui.terminalVisible
           ? LEVEL01_CONFIG.cameras.close_up
           : LEVEL01_CONFIG.cameras.default
       )
-      this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
     }
   },
   mounted() {
@@ -326,17 +328,22 @@ export default {
             score: this.countdown.time
           })
 
+          const { UIOverlay } = useGame()
+
           const tl = new gsap.timeline({
             onComplete: () => {
               // this.missionIsOver = true
               this.$store.commit('ui/setMissionReportVisible', true)
+              setTimeout(() => {
+                UIOverlay.material.opacity = 0
+              }, 0)
             }
           })
 
           tl.to(
             this.map.usb.scale,
             {
-              duration: 2,
+              duration: 1,
               ease: 'expo.out',
               x: 0.3,
               y: 0.3,
@@ -352,7 +359,7 @@ export default {
               ease: 'expo.out',
               _deltaY: 1.5
             },
-            0.5
+            0
           )
 
           tl.to(
@@ -364,7 +371,7 @@ export default {
               y: 1,
               z: 1
             },
-            1.5
+            1
           )
 
           tl.to(
@@ -374,7 +381,17 @@ export default {
               ease: 'expo.out',
               opacity: 0
             },
-            2
+            1
+          )
+
+          tl.to(
+            UIOverlay.material,
+            {
+              duration: 3,
+              ease: 'power4.in',
+              opacity: 1
+            },
+            0
           )
         }
 

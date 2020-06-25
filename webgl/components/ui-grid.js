@@ -1,6 +1,5 @@
 import gsap from 'gsap'
 
-import useGUI from '@/hooks/use-gui'
 import useCamera from '@/hooks/use-camera'
 
 import viewport from '@/plugins/viewport'
@@ -46,15 +45,6 @@ export default class UIGrid extends THREE.Object3D {
     this.position.z = -1
 
     this.onWindowResize()
-
-    const GUI = useGUI()
-    GUI.addObject3D('ui grid', this)
-    const GUIFolder = GUI.addFolder('ui grid_')
-    GUIFolder.add(this.uniforms.uSegments, 'value')
-      .name('segments')
-      .min(1)
-      .max(25)
-      .step(1)
 
     viewport.events.on('resize', this.onWindowResize.bind(this))
     mouse.events.on('mousemove', this.onMouseMove.bind(this))
