@@ -68,7 +68,7 @@ export default {
       this.introGroup.add(this.map)
 
       this.introSpline = await new Spline().load(
-        'obj/splines/intro_spline_01.obj'
+        'obj/splines/intro_spline_02.obj'
       )
       this.map.add(this.introSpline)
 
