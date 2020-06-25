@@ -16,6 +16,7 @@ import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
 import GridTerrain from '@/game/features/grid-terrain'
 import DotsPlane from '@/webgl/components/dots-plane'
+import Spline from '@/webgl/components/spline'
 
 import INTRODUCTION_CONFIG from '@/config/introduction'
 
@@ -53,6 +54,8 @@ export default {
       const camera = useCamera()
       const GUI = useGUI()
 
+      GUI.camera.add(this, 'introCameraTraveling')
+
       this.cameraPosition = 'follow player'
 
       webglScene.background = new THREE.Color(0xffffff)
@@ -64,6 +67,11 @@ export default {
       await this.map.load()
       this.introGroup.add(this.map)
 
+      this.introSpline = await new Spline().load(
+        'obj/splines/intro_spline_01.obj'
+      )
+      this.map.add(this.introSpline)
+
       this.terrain = new GridTerrain(this.map.zones)
 
       this.player = new Player()
@@ -71,7 +79,6 @@ export default {
       this.spawnPoint = this.map.spawnPoint.clone()
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
-      this.player.startAppearPlayer()
       this.player.animations.idle.stop()
 
       camera.camera.lookAt(
@@ -95,6 +102,47 @@ export default {
 
       const RAF = useRAF()
       RAF.add('introduction', this.loop.bind(this))
+    },
+
+    introCameraTraveling() {
+      const camera = useCamera()
+      camera.disableMouseMove = true
+
+      this.player.startAppearPlayer()
+
+      this.cameraPosition = 'intro travelling'
+
+      this.progress = 0
+      gsap.to(this, {
+        duration: 8,
+        ease: 'none',
+        progress: 1,
+        onUpdate: () => {
+          const postion = this.introSpline.curvedPath.getPoint(this.progress)
+          camera.camera.lookAt(this.player.position)
+          camera._position.copy(postion)
+        },
+        onComplete: () => {
+          this.cameraPosition = 'follow player'
+          this.onStartMovementPlayer()
+          camera.disableMouseMove = false
+        }
+      })
+    },
+
+    onStartMovementPlayer() {
+      console.log('here')
+      this.player.animations.idle.play()
+      gsap.to(this.player.animations.tPose, {
+        weight: 0,
+        duration: 0.5,
+        onComplete: () => {
+          console.log('here')
+        },
+        ease: 'power3.out'
+      })
+
+      this.movementEnabled = true
     },
 
     loop(clock) {
@@ -130,15 +178,9 @@ export default {
       console.log('show controls keys')
       console.log('dispose skeleton / delete skeleton')
 
-      this.player.animations.idle.play()
+      // this.player.animations.idle.play()
 
-      gsap.to(this.player.animations.tPose, {
-        weight: 0,
-        duration: 0.5,
-        ease: 'power3.out'
-      })
-
-      this.movementEnabled = true
+      this.introCameraTraveling()
     },
 
     onKeydown(e) {

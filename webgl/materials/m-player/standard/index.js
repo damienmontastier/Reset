@@ -60,7 +60,9 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       skinning: true,
       transparent: true,
       wireframe,
-      flatShading
+      flatShading,
+      depthWrite: true,
+      depthTest: true
     })
   }
 }

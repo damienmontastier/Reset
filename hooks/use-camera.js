@@ -35,6 +35,7 @@ class Camera {
 
     this._shake = new THREE.Vector3()
     this._mouse = new THREE.Vector2()
+    this.disableMouseMove = false
 
     // events
     this.onWindowResizeHandler = this.onWindowResize.bind(this)
@@ -50,6 +51,8 @@ class Camera {
   }
 
   onMouseMove() {
+    if (this.disableMouseMove) return
+
     gsap.to(this._mouse, {
       duration: 4,
       ease: 'power4.out',

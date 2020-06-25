@@ -7,7 +7,6 @@
 
 <script>
 /* eslint-disable vue/no-unused-components */
-
 import IntroductionP1 from '@/components/game/introduction/introduction-p1'
 import IntroductionP2 from '@/components/game/introduction/introduction-p2'
 

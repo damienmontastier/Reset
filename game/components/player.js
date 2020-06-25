@@ -156,6 +156,8 @@ export default class Player extends THREE.Object3D {
 
     this.setInitialState()
 
+    this.initSkeleton()
+
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
   }
@@ -194,7 +196,7 @@ export default class Player extends THREE.Object3D {
 
   initSkeleton() {
     const playerWireframeMaterial = new PlayerBasicMaterial({
-      color: 0xff0000,
+      diffuse: 0x2ff000,
       wireframe: true
     })
 
@@ -207,8 +209,16 @@ export default class Player extends THREE.Object3D {
     ).material = playerWireframeMaterial.clone()
 
     this.skeletonVirtualization.getObjectByName(
+      'black'
+    ).material.uniforms.uThreshold.value = 1.5
+
+    this.skeletonVirtualization.getObjectByName(
       'green'
     ).material = playerWireframeMaterial.clone()
+
+    this.skeletonVirtualization.getObjectByName(
+      'green'
+    ).material.uniforms.uThreshold.value = 1.5
 
     this.innerGroup.add(this.skeletonVirtualization)
 
@@ -217,9 +227,8 @@ export default class Player extends THREE.Object3D {
   }
 
   startAppearPlayer() {
-    this.initSkeleton()
-
     this.animations.tPose.play()
+    this.animations.idle.stop()
 
     this.model.getObjectByName('black').material.uniforms.uThreshold.value = 1.5
     this.model.getObjectByName('green').material.uniforms.uThreshold.value = 1.5
@@ -241,7 +250,7 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 0,
-        duration: 2
+        duration: 8
       }
     )
     tl.to(
@@ -251,9 +260,22 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 0,
-        duration: 2
+        duration: 8
       },
-      '-=1'
+      '-=4'
+    )
+    tl.to(
+      [
+        this.skeletonVirtualization.getObjectByName('black').material.uniforms
+          .uThreshold,
+        this.skeletonVirtualization.getObjectByName('green').material.uniforms
+          .uThreshold
+      ],
+      {
+        value: 1.5,
+        duration: 4
+      },
+      '-=4'
     )
 
     // const GUI = useGUI()
