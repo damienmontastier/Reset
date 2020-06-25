@@ -11,7 +11,7 @@ const vertexMain = `
 void main() {
   vPosition = position;
   vNormalizedPosition = normalize(position) + 0.5;
-  // vNormalizedPosition.y = map(vNormalizedPosition.y, 0.5, 1.3, 0., 1.);
+  vNormalizedPosition.y = map(vNormalizedPosition.y, 0.5, 1.5, 0., 1.);
 `
 let vertexShader = THREE.ShaderLib.basic.vertexShader
 vertexShader = vertexShader.replace('#include <common>', vertexDeclaration)
@@ -20,12 +20,20 @@ vertexShader = vertexShader.replace('void main() {', vertexMain)
 const fragDeclaration = `
 uniform vec3 diffuse;
 uniform float uThreshold;
+uniform float uDirection;
 varying vec3 vNormalizedPosition;
 varying vec3 vPosition;
 `
 
 const fragMain = `
-float alpha = step(uThreshold, vPosition.y);
+float alpha;
+if(uDirection != 1.0){
+  alpha = step(vPosition.y, uThreshold);
+} else {
+  alpha = step(uThreshold, vPosition.y);
+}
+// alpha = step(uThreshold, vPosition.y);
+// alpha = step(vPosition.y, uThreshold);
 gl_FragColor = vec4( outgoingLight, alpha );
 `
 
@@ -50,6 +58,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
         THREE.ShaderLib.basic.uniforms,
         {
           uThreshold: { value: 0.0 },
+          uDirection: { value: 0.0 },
           diffuse: { value: new THREE.Color(diffuse) }
         }
       ]),

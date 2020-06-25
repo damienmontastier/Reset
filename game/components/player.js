@@ -209,35 +209,26 @@ export default class Player extends THREE.Object3D {
     ).material = playerWireframeMaterial.clone()
 
     this.skeletonVirtualization.getObjectByName(
-      'black'
-    ).material.uniforms.uThreshold.value = 1.5
-
-    this.skeletonVirtualization.getObjectByName(
       'green'
     ).material = playerWireframeMaterial.clone()
-
-    this.skeletonVirtualization.getObjectByName(
-      'green'
-    ).material.uniforms.uThreshold.value = 1.5
 
     this.innerGroup.add(this.skeletonVirtualization)
 
     const GUI = useGUI()
     GUI.addObject3D('skeleton', this.skeletonVirtualization)
+    GUI.add(this, 'startAppearPlayer')
   }
 
   startAppearPlayer() {
     this.animations.tPose.play()
     this.animations.idle.stop()
 
-    this.model.getObjectByName('black').material.uniforms.uThreshold.value = 1.5
-    this.model.getObjectByName('green').material.uniforms.uThreshold.value = 1.5
     this.skeletonVirtualization.getObjectByName(
       'black'
-    ).material.uniforms.uThreshold.value = 1.5
+    ).material.uniforms.uThreshold.value = 0
     this.skeletonVirtualization.getObjectByName(
       'green'
-    ).material.uniforms.uThreshold.value = 1.5
+    ).material.uniforms.uThreshold.value = 0
 
     const tl = gsap.timeline()
 
@@ -249,8 +240,23 @@ export default class Player extends THREE.Object3D {
           .uThreshold
       ],
       {
-        value: 0,
-        duration: 8
+        value: 1.5,
+        duration: 2,
+        onComplete: () => {
+          this.skeletonVirtualization.getObjectByName(
+            'black'
+          ).material.uniforms.uDirection.value = 1.0
+          this.skeletonVirtualization.getObjectByName(
+            'green'
+          ).material.uniforms.uDirection.value = 1.0
+
+          this.skeletonVirtualization.getObjectByName(
+            'black'
+          ).material.uniforms.uThreshold.value = 0.0
+          this.skeletonVirtualization.getObjectByName(
+            'green'
+          ).material.uniforms.uThreshold.value = 0.0
+        }
       }
     )
     tl.to(
@@ -259,10 +265,9 @@ export default class Player extends THREE.Object3D {
         this.model.getObjectByName('green').material.uniforms.uThreshold
       ],
       {
-        value: 0,
-        duration: 8
-      },
-      '-=4'
+        value: 1.5,
+        duration: 4
+      }
     )
     tl.to(
       [
@@ -275,7 +280,7 @@ export default class Player extends THREE.Object3D {
         value: 1.5,
         duration: 4
       },
-      '-=4'
+      2
     )
 
     // const GUI = useGUI()

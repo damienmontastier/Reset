@@ -11,7 +11,7 @@ const vertexMain = `
 void main() {
   vPosition = position;
   vNormalizedPosition = normalize(position) + 0.5;
-  vNormalizedPosition.y = map(vNormalizedPosition.y, 0., 1.5, 0., 1.);
+  // vNormalizedPosition.y = map(vNormalizedPosition.y, 0., 1.5, 0., 1.);
 `
 let vertexShader = THREE.ShaderLib.standard.vertexShader
 vertexShader = vertexShader.replace('#define STANDARD', vertexDeclaration)
@@ -25,9 +25,8 @@ varying vec3 vPosition;
 `
 
 const fragMain = `
-float alpha = smoothstep(uThreshold - .1, uThreshold, vPosition.y);
-// float alpha = step(uThreshold, vPosition.y);
-gl_FragColor = vec4( outgoingLight, alpha );
+float alpha = smoothstep(uThreshold, uThreshold  - .1, vPosition.y);
+gl_FragColor = vec4(outgoingLight, alpha);
 `
 
 let fragmentShader = THREE.ShaderLib.standard.fragmentShader

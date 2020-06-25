@@ -1,5 +1,8 @@
 <template>
-  <introduction @startMission="onStartGame"></introduction>
+  <div class="homepage">
+    <introduction @startMission="onStartGame"></introduction>
+    <keyboard-instructions></keyboard-instructions>
+  </div>
 </template>
 
 <script>
@@ -19,10 +22,13 @@ import DotsPlane from '@/webgl/components/dots-plane'
 import Spline from '@/webgl/components/spline'
 
 import INTRODUCTION_CONFIG from '@/config/introduction'
+import Introduction from '@/components/elements/introduction'
+import keyboardInstructions from '@/components/elements/keyboard-instructions'
 
 export default {
   components: {
-    Introduction: () => import('@/components/elements/introduction')
+    Introduction,
+    keyboardInstructions
   },
   data() {
     return {
@@ -68,7 +74,7 @@ export default {
       this.introGroup.add(this.map)
 
       this.introSpline = await new Spline().load(
-        'obj/splines/intro_spline_02.obj'
+        'obj/splines/intro_spline_03.obj'
       )
       this.map.add(this.introSpline)
 
@@ -174,11 +180,8 @@ export default {
 
     onStartGame() {
       console.log('do movement camera to player')
-      console.log('appear player')
       console.log('show controls keys')
       console.log('dispose skeleton / delete skeleton')
-
-      // this.player.animations.idle.play()
 
       this.introCameraTraveling()
     },
