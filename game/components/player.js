@@ -107,8 +107,6 @@ export default class Player extends THREE.Object3D {
         THREE.AnimationClip.findByName(this.modelAnimations, 'T-Pose')
       )
     }
-
-    console.log(this.animations)
   }
 
   initModel() {

@@ -44,17 +44,20 @@ export default {
   data() {
     return {
       word: '',
-      maskProgress: 0,
-      commands: [
-        'Booting System',
-        'Loading Case #257468',
-        'Fetching Data',
-        'Checking Mission status',
-        'Status : Awaiting Signature'
-      ]
+      maskProgress: 0
+      // commands: [
+      //   'Booting System',
+      //   'Loading Case #257468',
+      //   'Fetching Data',
+      //   'Checking Mission status',
+      //   'Status : Awaiting Signature'
+      // ]
     }
   },
   computed: {
+    commands() {
+      return this.$store.state.loading.commands
+    },
     progress() {
       return this.$store.getters['loading/progress']
     },
@@ -80,34 +83,35 @@ export default {
   },
   methods: {
     animeGlitchText() {
-      gsap.to(this, {
+      const tl = gsap.to(this, {
         delay: 1,
         duration: 2.5,
         ease: 'none',
         maskProgress: 1,
+        onUpdate: (e) => {
+          const t = tl._time * 1000
+
+          if (t > 250 && t <= 750) {
+            this.word = 'R' + randomWord(4)
+          } else if (t > 750 && t <= 1250) {
+            this.word = 'RE' + randomWord(3)
+          } else if (t > 1250 && t <= 1750) {
+            this.word = 'RES' + randomWord(2)
+          } else if (t > 1750 && t <= 2250) {
+            this.word = 'RESE' + randomWord(1)
+          } else if (t > 2250) {
+            this.word = 'RESET'
+          } else {
+            this.word = randomWord(5)
+          }
+        },
         onComplete: () => {
           this.$store.commit('loading/setVisible', false)
+          this.$events.emit('loading completed')
         }
       })
-      let t = 0
-      this.interval = setInterval(() => {
-        if (t > 500 && t <= 1000) {
-          this.word = 'R' + randomWord(4)
-        } else if (t > 1000 && t <= 1500) {
-          this.word = 'RE' + randomWord(3)
-        } else if (t > 1500 && t <= 2000) {
-          this.word = 'RES' + randomWord(2)
-        } else if (t > 2000 && t <= 2500) {
-          this.word = 'RESE' + randomWord(1)
-        } else if (t > 2500) {
-          this.word = 'RESET'
-          clearInterval(this.interval)
-        } else {
-          this.word = randomWord(5)
-        }
 
-        t += 100
-      }, 100)
+      return tl
     }
   }
 }

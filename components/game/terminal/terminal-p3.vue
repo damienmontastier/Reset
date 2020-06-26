@@ -11,8 +11,8 @@
         class="terminal__block"
       >
         <div>
-          En confirmant vos choix, vous verrez moins de posts. <br />
-          Etes-vous CERTAIN de vouloir continuer ?
+          By confirming your choices, you will see fewer posts. <br />
+          Are you SURE you want to continue ?
         </div>
       </terminal-fieldset>
 
@@ -40,7 +40,8 @@
           "
           class="terminalFieldset__error"
         >
-          <span>Faites glisser les lettres pour valider votre réponse </span>
+          <!-- <span>Faites glisser les lettres pour valider votre réponse </span> -->
+          <span>Slide the letters to validate your answer </span>
         </div>
       </terminal-fieldset>
 
@@ -56,7 +57,7 @@
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
         >
-          Confirmer
+          Confirm
         </ui-button>
       </div>
     </div>
@@ -78,9 +79,9 @@ export default {
     return {
       displayError: false,
       sliders: [
-        { quotient: 1, letter: 'O', finish: false },
-        { quotient: 0.6, letter: 'U', finish: false },
-        { quotient: 0.3, letter: 'I', finish: false }
+        { quotient: 1, letter: 'Y', finish: false },
+        { quotient: 0.6, letter: 'E', finish: false },
+        { quotient: 0.3, letter: 'S', finish: false }
       ],
       slidersIsCompleted: false,
       mounted: false

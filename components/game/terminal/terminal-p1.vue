@@ -11,8 +11,8 @@
         class="terminal__block"
       >
         <div>
-          Ce terminal vous permet de réguler les flux de vos différents réseaux
-          sociaux. Faites le tri, et ne gardez que l’essentiel…
+          This terminal allows you to monitor the feeds of your different social
+          networks. Sort them, and keep only the essentials.
         </div>
       </terminal-fieldset>
 
@@ -34,17 +34,18 @@
             name="notAccept"
           />
           <label for="notAccept">
-            Je n’accepte pas les
-            <a class="terminal__a"> Conditions Générales </a>
-            d’utilisation</label
-          >
+            I do not accept
+            <a class="terminal__a"> Terms of Use</a>
+          </label>
         </div>
 
         <div slot="error" v-if="displayError" class="terminalFieldset__error">
-          <span
-            >N’oubliez PAS d’accepter nos conditions générales
-            d’utilisation</span
-          >
+          <!-- <span>
+            N’oubliez PAS d’accepter nos conditions générales d’utilisation
+          </span> -->
+          <span>
+            DON'T forget to accept Terms of Use
+          </span>
         </div>
       </terminal-fieldset>
 
@@ -60,7 +61,7 @@
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
         >
-          recommencer
+          restart
         </ui-button>
         <ui-button
           @click.native="closeTerminal"
@@ -73,7 +74,7 @@
           --bg-color: var(--color-black);
           --border-color: var(--color-green);"
         >
-          fermer
+          close
         </ui-button>
         <div
           :class="{
@@ -83,9 +84,9 @@
           :style="{ 'transition-delay': `0.5s` }"
           class="terminal__submit__continue"
         >
-          Pour
-          <a class="terminal__a">Continuer</a>, CLIQUEZ
-          <a @click="nextPart" class="terminal__a not-underline">ici</a>.
+          To
+          <a class="terminal__a">Continue</a>, CLICK
+          <a @click="nextPart" class="terminal__a not-underline">here</a>.
         </div>
       </div>
     </div>

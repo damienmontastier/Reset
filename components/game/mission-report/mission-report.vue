@@ -36,11 +36,24 @@
       :style="{ 'transition-delay': `0.2s` }"
       class="missionReport__body"
     >
-      Congratulations, Agent X.<br /><br />
+      <!-- Congratulations, Agent X.<br /><br />
       You've made your way through the <i>infinite scroll</i>. Thanks to the
       crucial information you collected, we made the first step towards a
       brighter future.<br /><br />
-      Good job !
+      Good job ! -->
+      <typed
+        :strings="[
+          `Congratulations, Agent X.
+          <br /><br />
+          You've made your way through the <i>infinite scroll</i>.
+          <br />
+          Thanks to the crucial information you collected,
+          <br />
+          we made the first step towards a brighter future.
+          <br /><br />
+          Good job !`
+        ]"
+      />
     </div>
     <div
       :class="{
@@ -89,10 +102,12 @@
 <script>
 import UiButton from '@/components/components/ui-button'
 import score from '@/hooks/use-score'
+import Typed from '@/components/components/typed'
 
 export default {
   components: {
-    UiButton
+    UiButton,
+    Typed
   },
   data() {
     return {
@@ -172,6 +187,7 @@ export default {
     color: var(--color-grey-lighten);
     font-size: 16px;
     line-height: 21px;
+    min-height: 199px;
 
     i {
       color: var(--color-green);

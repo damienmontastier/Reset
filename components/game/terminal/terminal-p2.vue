@@ -11,7 +11,7 @@
         class="terminal__block"
       >
         <div>
-          Sélectionez 3 centres d'intéret
+          Select 3 areas of interest
         </div>
       </terminal-fieldset>
 
@@ -39,7 +39,7 @@
         </div>
 
         <div slot="error" v-if="displayError" class="terminalFieldset__error">
-          <span>Vous devez sélectionner 3 centres d’intérêts différents </span>
+          <span>You have to select 3 different interests </span>
         </div>
       </terminal-fieldset>
 
@@ -54,8 +54,9 @@
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          >Annuler</ui-button
         >
+          cancel
+        </ui-button>
         <ui-button
           @click.native="nextPage"
           :class="{
@@ -66,8 +67,9 @@
           style="--color: var(--color-green);
           --bg-color: var(--color-black);
           --border-color: var(--color-green);"
-          >Continuer</ui-button
         >
+          next
+        </ui-button>
       </div>
     </div>
   </div>

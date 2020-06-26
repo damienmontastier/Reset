@@ -16,7 +16,10 @@
     >
       toggle Terminam
     </button>
-    <button @click="missionIsOver = !missionIsOver" class="gameLevel01__debug">
+    <button
+      @click="$store.commit('ui/setMissionReportVisible', true)"
+      class="gameLevel01__debug"
+    >
       toggle report
     </button>
   </div>
@@ -135,6 +138,8 @@ export default {
     // TO DELETE
 
     // this.$events.on('level:restart', this.doRespawn.bind(this))
+
+    this.$events.on('loading completed', this.onLoadingCompleted)
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
@@ -148,7 +153,29 @@ export default {
     // ...mapMutations({
     //   setTerminalOpened: 'setTerminalOpened'
     // }),
+    onLoadingCompleted() {
+      console.log('onLoadingCompleted')
+
+      this.countdown.paused = false
+
+      const audioManager = useAudio()
+      audioManager
+        .play('level01')
+        .volume(0.65)
+        .loop(true)
+      audioManager
+        .play('factory_ambiance')
+        .volume(1)
+        .loop(true)
+    },
     async load() {
+      this.$store.commit('loading/setCommands', [
+        'Bypassing Firewall',
+        'Initializing sequence',
+        'Loading FIRST_STAGE',
+        'FETCHING DATA',
+        'Status : Ready'
+      ])
       this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
@@ -178,7 +205,8 @@ export default {
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
-        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' }
+        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' },
+        { path: '/sounds/RESET_USB.mp3', id: 'level_goal' }
       ])
 
       this.$store.commit('loading/incrementLoaded')
@@ -186,25 +214,13 @@ export default {
     },
     async init() {
       this.cameraPosition = 'follow player'
-      this.countdown = new Countdown(120)
+      this.countdown = new Countdown()
       score.type = 'countdown'
 
       const camera = useCamera()
       // camera._distance = 25
 
       await this.load()
-
-      this.countdown.paused = false
-
-      const audioManager = useAudio()
-      audioManager
-        .play('level01')
-        .volume(0.65)
-        .loop(true)
-      audioManager
-        .play('factory_ambiance')
-        .volume(1)
-        .loop(true)
 
       // const {
       //   OrbitControls
@@ -322,6 +338,9 @@ export default {
         if (this.currentZones.includes('zone_goal')) {
           // GOAL REACH
 
+          const audioManager = useAudio()
+          audioManager.play('level_goal').volume(0.65)
+
           this.countdown.paused = true
           this.$store.commit('stages/setScore', {
             stage: 'level1',
@@ -438,10 +457,6 @@ export default {
     },
 
     loop(clock) {
-      if (this.countdown.time <= 0) {
-        console.log('loooose')
-      }
-
       score.value = this.countdown.time
 
       this.map.update(clock)

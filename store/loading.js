@@ -1,4 +1,5 @@
 export const state = () => ({
+  commands: [],
   toLoad: 0,
   loaded: 0,
   visible: false
@@ -13,6 +14,10 @@ export const mutations = {
   },
   setVisible(state, value) {
     state.visible = value
+  },
+  setCommands(state, value) {
+    console.log(value)
+    state.commands = value
   }
 }
 

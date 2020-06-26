@@ -32,15 +32,23 @@ export default class Level01 extends THREE.Object3D {
   async load() {
     // materials
     this.standardMaterial = standardMaterial.clone()
-    this.greenMaterial = new BasicMaterial({ color: 0x2ff000 })
+    this.greenMaterial = new THREE.MeshBasicMaterial({
+      color: 0x2ff000,
+      transparent: true
+    })
+    this.greenWireframeMaterial = new BasicMaterial({ color: 0x2ff000 })
 
     // this.solidGreenMaterial = new THREE.MeshBasicMaterial({ color: 0x2ff000 })
 
-    this.blackMaterial = new BasicMaterial({ color: 0x000000 })
+    this.blackMaterial = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true
+    })
+    this.blackWireframeMaterial = new BasicMaterial({ color: 0x000000 })
 
     const GUI = useGUI()
     GUI.addMaterial('solid material', this.standardMaterial)
-    GUI.add(this.greenMaterial.uniforms.uAppear, 'value')
+    GUI.add(this.greenWireframeMaterial.uniforms.uAppear, 'value')
       .min(0)
       .max(1)
       .step(0.01)
@@ -76,7 +84,7 @@ export default class Level01 extends THREE.Object3D {
 
     GUI.add(this.greenMaterial, 'transparent').name('green transparent')
 
-    GUI.add(this.blackMaterial.uniforms.uAppear, 'value')
+    GUI.add(this.blackWireframeMaterial.uniforms.uAppear, 'value')
       .min(0)
       .max(1)
       .step(0.01)
@@ -101,7 +109,7 @@ export default class Level01 extends THREE.Object3D {
         },
         {
           name: 'wireframe',
-          path: 'obj/level_01/level01_wireframe_09.obj'
+          path: 'obj/level_01/level01_wireframe_10.obj'
         },
         {
           name: 'debug_solid',
@@ -211,13 +219,13 @@ export default class Level01 extends THREE.Object3D {
     this.wireframe.traverse((child) => {
       if (child.name.includes('green')) {
         // child.material = GreenMaterial
-        child.material = this.greenMaterial
+        child.material = this.greenWireframeMaterial
       }
 
       if (child.name.includes('black')) {
         // child.material = BlackMaterial
 
-        child.material = this.blackMaterial
+        child.material = this.blackWireframeMaterial
       }
     })
 
@@ -453,6 +461,8 @@ export default class Level01 extends THREE.Object3D {
     this.treadmills.forEach((treadmill) => {
       treadmill.update(clock)
     })
+
+    this.greenWireframeMaterial.uniforms.uTime.value = clock.time
   }
 
   appear() {
@@ -460,8 +470,8 @@ export default class Level01 extends THREE.Object3D {
 
     tl.from(
       [
-        this.greenMaterial.uniforms.uAppear,
-        this.blackMaterial.uniforms.uAppear
+        this.greenWireframeMaterial.uniforms.uAppear,
+        this.blackWireframeMaterial.uniforms.uAppear
       ],
       {
         duration: 10,

@@ -11,7 +11,7 @@
         class="terminal__block"
       >
         <div>
-          Vous avez régulé vos flux avec succès !
+          You have successfully regulated your feeds !
         </div>
       </terminal-fieldset>
 
@@ -46,8 +46,9 @@
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          >Terminer</ui-button
         >
+          close
+        </ui-button>
       </div>
     </div>
   </div>
