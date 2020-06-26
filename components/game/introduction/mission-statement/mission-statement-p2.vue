@@ -1,7 +1,16 @@
 <template>
-  <div class="introductionP2 border">
-    <div class="introductionP2__title border-bottom">MISSION Statement</div>
-    <div class="introductionP2__header introduction--wrapper border-bottom">
+  <div class="mission-statement-P2 border">
+    <div class="mission-statement-P2__title border-bottom">
+      MISSION Statement
+    </div>
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.1s` }"
+      class="mission-statement-P2__header mission-statement--wrapper border-bottom"
+    >
       <p>
         <span>From : "YouKnowWho"</span>
         <span>29/06/2020</span>
@@ -11,7 +20,14 @@
         <span>Contrat #257468</span>
       </p>
     </div>
-    <div class="introductionP2__body introduction--wrapper border-bottom">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.2s` }"
+      class="mission-statement-P2__body mission-statement--wrapper border-bottom"
+    >
       <p>
         The hour is serious, Agent X.
         <br />
@@ -24,15 +40,24 @@
         <br />You have 5min. Good luck.
       </p>
     </div>
-    <div class="introductionP2__signature introduction--wrapper">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.3s` }"
+      class="mission-statement-P2__signature mission-statement--wrapper"
+    >
       <span>Signature :</span>
       <div
         ref="signature"
         @click="triggerSignature"
-        :class="{ 'is-signed': isSigned }"
+        :class="{
+          'is-signed': startSignature
+        }"
         class="signature_insert"
       >
-        <span v-if="!isSigned">Click for sign</span>
+        <span v-if="!startSignature">Click to sign</span>
       </div>
     </div>
     <btn
@@ -53,7 +78,9 @@ export default {
   },
   data() {
     return {
-      isSigned: false
+      isSigned: false,
+      startSignature: false,
+      mounted: false
     }
   },
   mounted() {
@@ -64,11 +91,18 @@ export default {
       autoplay: false,
       animationData: missionSign
     })
+    this.signAnimation.addEventListener('complete', this.signAnimationCompleted)
+
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
   },
   methods: {
     triggerSignature() {
-      console.log(this.signAnimation)
       this.signAnimation.play()
+      this.startSignature = true
+    },
+    signAnimationCompleted() {
       this.isSigned = true
     }
   }
@@ -76,7 +110,7 @@ export default {
 </script>
 
 <style lang="scss">
-.introductionP2 {
+.mission-statement-P2 {
   background: var(--color-grey-introduction);
   font-family: var(--font-violet);
   width: 100%;

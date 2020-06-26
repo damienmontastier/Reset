@@ -1,9 +1,16 @@
 <template>
-  <div class="introductionP1">
-    <div class="introductionP1__logo">
+  <div
+    :class="{
+      transition__fadeIn: true,
+      'transition--on': mounted
+    }"
+    :style="{ 'transition-delay': `0.1s` }"
+    class="mission-statement-P1"
+  >
+    <div class="mission-statement-P1__logo">
       <logo></logo>
     </div>
-    <div class="introductionP1__intro border">
+    <div class="mission-statement-P1__intro border">
       <p>Will you help us fight the world's addiction to Smartphones ?</p>
 
       <btn @click.native="$emit('increment')" :inverted="true">PLAY</btn>
@@ -16,12 +23,22 @@ export default {
   components: {
     Logo: () => import('@/components/svg/logo-big'),
     Btn: () => import('@/components/components/btn-introduction')
+  },
+  data() {
+    return {
+      mounted: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
   }
 }
 </script>
 
 <style lang="scss">
-.introductionP1 {
+.mission-statement-P1 {
   position: relative;
   width: 23vw;
 

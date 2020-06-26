@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <introduction @startMission="onStartGame"></introduction>
+    <mission-statement @startMission="onStartGame"></mission-statement>
     <keyboard-instructions></keyboard-instructions>
   </div>
 </template>
@@ -22,19 +22,20 @@ import DotsPlane from '@/webgl/components/dots-plane'
 import Spline from '@/webgl/components/spline'
 
 import INTRODUCTION_CONFIG from '@/config/introduction'
-import Introduction from '@/components/elements/introduction'
-import keyboardInstructions from '@/components/elements/keyboard-instructions'
+import missionStatement from '@/components/game/introduction/mission-statement'
+import keyboardInstructions from '@/components/game/introduction/keyboard-instructions'
 
 export default {
   components: {
-    Introduction,
+    missionStatement,
     keyboardInstructions
   },
   data() {
     return {
       currentZones: [],
       playerIsInteract: undefined,
-      movementEnabled: false
+      movementEnabled: false,
+      showControls: false
     }
   },
   watch: {
@@ -130,20 +131,21 @@ export default {
         },
         onComplete: () => {
           this.cameraPosition = 'follow player'
-          this.onStartMovementPlayer()
           camera.disableMouseMove = false
+
+          this.onStartMovementPlayer()
         }
       })
     },
 
     onStartMovementPlayer() {
-      console.log('here')
       this.player.animations.idle.play()
+
       gsap.to(this.player.animations.tPose, {
         weight: 0,
         duration: 0.5,
         onComplete: () => {
-          console.log('here')
+          this.showControls = true
         },
         ease: 'power3.out'
       })
@@ -179,8 +181,6 @@ export default {
     },
 
     onStartGame() {
-      console.log('do movement camera to player')
-      console.log('show controls keys')
       console.log('dispose skeleton / delete skeleton')
 
       this.introCameraTraveling()
