@@ -1,7 +1,10 @@
 <template>
   <div class="homepage">
     <mission-statement @startMission="onStartGame"></mission-statement>
-    <keyboard-instructions></keyboard-instructions>
+    <keyboard-instructions
+      @closeKeyboardInstructions="showControls = false"
+      v-if="showControls"
+    ></keyboard-instructions>
   </div>
 </template>
 
@@ -139,6 +142,19 @@ export default {
     },
 
     onStartMovementPlayer() {
+      console.log('dispose skeleton / delete skeleton')
+      const { scene } = useGame()
+
+      this.player.skeletonVirtualization.traverse((child) => {
+        if (child.skeleton && child.skeleton.boneTexture) {
+          child.geometry.dispose()
+          child.material.dispose()
+          child.skeleton.boneTexture.dispose()
+        }
+      })
+
+      scene.remove(this.player.skeletonVirtualization)
+
       this.player.animations.idle.play()
 
       gsap.to(this.player.animations.tPose, {
@@ -181,8 +197,6 @@ export default {
     },
 
     onStartGame() {
-      console.log('dispose skeleton / delete skeleton')
-
       this.introCameraTraveling()
     },
 

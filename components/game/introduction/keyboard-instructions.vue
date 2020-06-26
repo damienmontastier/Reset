@@ -1,9 +1,9 @@
 <template>
   <div class="keyboard-instructions">
-    <keyboard-arrow
+    <keyboard-arrow v-if="showFirstControls"
       ><p>Use the keyboard arrows to move around.</p></keyboard-arrow
     >
-    <keyboard-key>
+    <keyboard-key v-else>
       <p slot="before" class="before">Use</p>
       <p slot="after" class="after">to move around.</p>
     </keyboard-key>
@@ -22,17 +22,17 @@ export default {
   data() {
     return {
       showFirstControls: true,
-      showControls: true,
-      displayDurationControls: 4500
+      durationControls: 4500
     }
   },
   mounted() {
     setTimeout(() => {
       this.showFirstControls = false
+
       setTimeout(() => {
-        // this.showControls = false
-      }, this.displayDurationControls)
-    }, this.displayDurationControls)
+        this.$emit('closeKeyboardInstructions')
+      }, this.durationControls)
+    }, this.durationControls)
   },
   methods: {}
 }

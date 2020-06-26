@@ -241,7 +241,7 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 1.5,
-        duration: 2,
+        duration: 3,
         onComplete: () => {
           this.skeletonVirtualization.getObjectByName(
             'black'
@@ -280,7 +280,7 @@ export default class Player extends THREE.Object3D {
         value: 1.5,
         duration: 4
       },
-      2
+      3
     )
 
     // const GUI = useGUI()

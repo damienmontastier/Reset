@@ -37,10 +37,6 @@ export default {
     TerminalP2,
     TerminalP3,
     TerminalP4
-    // TerminalP1: () => import('@/components/game/terminal/terminal-p1'),
-    // TerminalP2: () => import('@/components/game/terminal/terminal-p2'),
-    // TerminalP3: () => import('@/components/game/terminal/terminal-p3'),
-    // TerminalP4: () => import('@/components/game/terminal/terminal-p4')
   },
   data() {
     return {
@@ -69,7 +65,6 @@ export default {
     }),
     terminalCompleted() {
       this.closeTerminal()
-      console.log('finish, close terminal, apply modification')
 
       this.$events.emit('TERMINAL COMPLETED')
     },
