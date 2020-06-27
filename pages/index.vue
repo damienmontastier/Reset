@@ -5,6 +5,8 @@
       @closeKeyboardInstructions="showControls = false"
       v-if="showControls"
     ></keyboard-instructions>
+    <!-- <video-transition v-if="playerInteractWithSmartphone"></video-transition> -->
+    <video-transition v-if="false"></video-transition>
   </div>
 </template>
 
@@ -27,16 +29,19 @@ import Spline from '@/webgl/components/spline'
 import INTRODUCTION_CONFIG from '@/config/introduction'
 import missionStatement from '@/components/game/introduction/mission-statement'
 import keyboardInstructions from '@/components/game/introduction/keyboard-instructions'
+import videoTransition from '@/components/game/introduction/video-transition'
 
 export default {
   components: {
     missionStatement,
-    keyboardInstructions
+    keyboardInstructions,
+    videoTransition
   },
   data() {
     return {
       currentZones: [],
       playerIsInteract: undefined,
+      playerInteractWithSmartphone: false,
       movementEnabled: false,
       showControls: false
     }
@@ -47,7 +52,8 @@ export default {
     },
     playerIsInteract(val, oldVal) {
       if (val) {
-        console.log('Interaction with smartphone')
+        this.playerInteractWithSmartphone = val
+        this.movementEnabled = false
       }
     }
   },
