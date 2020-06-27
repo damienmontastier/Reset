@@ -138,6 +138,7 @@ export default class Player extends THREE.Object3D {
 
   setInitialState() {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
+    this.animations.tPose.stop()
     this.animations.run.stop()
     this.animations.fall.stop()
     this.animations.idle.play()
@@ -153,10 +154,7 @@ export default class Player extends THREE.Object3D {
     this.initAnimations()
     this.initModel()
     this.initHitbox()
-
     this.setInitialState()
-
-    this.initSkeleton()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
@@ -194,41 +192,9 @@ export default class Player extends THREE.Object3D {
     })
   }
 
-  initSkeleton() {
-    const playerWireframeMaterial = new PlayerBasicMaterial({
-      diffuse: 0x2ff000,
-      wireframe: true
-    })
-
-    this.skeletonVirtualization = SkeletonUtils.clone(this.model)
-
-    this.skeletonVirtualization.applyMatrix4(this.model.matrixWorld)
-
-    this.skeletonVirtualization.getObjectByName(
-      'black'
-    ).material = playerWireframeMaterial.clone()
-
-    this.skeletonVirtualization.getObjectByName(
-      'green'
-    ).material = playerWireframeMaterial.clone()
-
-    this.innerGroup.add(this.skeletonVirtualization)
-
-    const GUI = useGUI()
-    GUI.addObject3D('skeleton', this.skeletonVirtualization)
-    GUI.add(this, 'startAppearPlayer')
-  }
-
-  startAppearPlayer() {
+  appearPlayer() {
     this.animations.tPose.play()
     this.animations.idle.stop()
-
-    this.skeletonVirtualization.getObjectByName(
-      'black'
-    ).material.uniforms.uThreshold.value = 0
-    this.skeletonVirtualization.getObjectByName(
-      'green'
-    ).material.uniforms.uThreshold.value = 0
 
     const tl = gsap.timeline()
 
@@ -282,15 +248,42 @@ export default class Player extends THREE.Object3D {
       },
       3
     )
+  }
 
-    // const GUI = useGUI()
-    // GUI.add(
-    //   this.model.getObjectByName('black').material.uniforms.uThreshold,
-    //   'value'
-    // )
-    //   .min(0)
-    //   .max(1.5)
-    //   .step(0.1)
+  initSkeletonVirtualization() {
+    const playerWireframeMaterial = new PlayerBasicMaterial({
+      diffuse: 0x2ff000,
+      wireframe: true
+    })
+
+    this.skeletonVirtualization = SkeletonUtils.clone(this.model)
+
+    this.skeletonVirtualization.applyMatrix4(this.model.matrixWorld)
+
+    this.skeletonVirtualization.getObjectByName(
+      'black'
+    ).material = playerWireframeMaterial.clone()
+
+    this.skeletonVirtualization.getObjectByName(
+      'green'
+    ).material = playerWireframeMaterial.clone()
+
+    this.innerGroup.add(this.skeletonVirtualization)
+
+    this.disappearPlayer()
+  }
+
+  disappearPlayer() {
+    this.skeletonVirtualization.getObjectByName(
+      'black'
+    ).material.uniforms.uThreshold.value = 0.0
+
+    this.skeletonVirtualization.getObjectByName(
+      'green'
+    ).material.uniforms.uThreshold.value = 0.0
+
+    this.model.getObjectByName('black').material.uniforms.uThreshold.value = 0.0
+    this.model.getObjectByName('green').material.uniforms.uThreshold.value = 0.0
   }
 
   moveTo(position) {

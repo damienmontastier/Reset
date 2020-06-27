@@ -139,10 +139,6 @@ export default class Composer {
   }
 
   initGUI() {
-    if (this.outlineEffect) {
-      this.initSobelGUI()
-    }
-
     if (this.bloomEffect) {
       this.initBloomGUI()
     }
@@ -162,34 +158,6 @@ export default class Composer {
       .onChange(() => {
         this.setQuality(this.quality)
       })
-  }
-
-  initSobelGUI() {
-    const GUI = useGUI()
-
-    const sobelGUI = GUI.postprocessing.addFolder('outline')
-    const color = new THREE.Color()
-    const outlineParams = {
-      'outline color': color
-        .copyLinearToSRGB(this.outlineEffect.uniforms.get('outlineColor').value)
-        .getHex()
-    }
-
-    sobelGUI
-      .add(this.outlineEffect.uniforms.get('step'), 'value')
-      .name('step')
-      .step(0.001)
-
-    // sobelGUI
-    //   .add(this.outlineEffect.uniforms.get('threshold'), 'value')
-    //   .name('threshold')
-
-    sobelGUI.addColor(outlineParams, 'outline color').onChange(() => {
-      this.outlineEffect.uniforms
-        .get('outlineColor')
-        .value.setHex(outlineParams['outline color'])
-        .convertSRGBToLinear()
-    })
   }
 
   initBloomGUI() {

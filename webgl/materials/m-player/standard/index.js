@@ -49,7 +49,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib.standard.uniforms,
         {
-          uThreshold: { value: 0.0 },
+          uThreshold: { value: 1.5 },
           emissive: { value: new THREE.Color(emissive) }
         }
       ]),

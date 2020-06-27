@@ -1,7 +1,5 @@
 import gsap from 'gsap'
 
-import useGUI from '@/hooks/use-gui'
-
 import CheckpointMaterial from '@/webgl/materials/checkpoint'
 
 export default class Checkpoint extends THREE.Object3D {
@@ -11,9 +9,6 @@ export default class Checkpoint extends THREE.Object3D {
     // this.scale.setScalar(0.95)
     this.geometry = new THREE.PlaneBufferGeometry(1, 1)
     this.material = new CheckpointMaterial({ color: 0xffffff })
-
-    const GUI = useGUI()
-    GUI.addObject3D(Math.random(), this)
 
     this.face1 = new THREE.Mesh(this.geometry, this.material)
     this.face2 = this.face1.clone()

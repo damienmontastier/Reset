@@ -1,6 +1,6 @@
 <template>
   <div class="homepage">
-    <mission-statement @startMission="onStartGame"></mission-statement>
+    <mission-statement @startMission="startTraveling"></mission-statement>
     <keyboard-instructions
       @closeKeyboardInstructions="showControls = false"
       v-if="showControls"
@@ -70,8 +70,6 @@ export default {
       const camera = useCamera()
       const GUI = useGUI()
 
-      GUI.camera.add(this, 'introCameraTraveling')
-
       this.cameraPosition = 'follow player'
 
       webglScene.background = new THREE.Color(0xffffff)
@@ -96,6 +94,7 @@ export default {
       this.player.position.copy(this.spawnPoint)
       this.introGroup.add(this.player)
       this.player.animations.idle.stop()
+      this.player.initSkeletonVirtualization()
 
       camera.camera.lookAt(
         camera._position
@@ -120,11 +119,11 @@ export default {
       RAF.add('introduction', this.loop.bind(this))
     },
 
-    introCameraTraveling() {
+    startTraveling() {
       const camera = useCamera()
       camera.disableMouseMove = true
 
-      this.player.startAppearPlayer()
+      this.player.appearPlayer()
 
       this.cameraPosition = 'intro travelling'
 
@@ -148,7 +147,6 @@ export default {
     },
 
     onStartMovementPlayer() {
-      console.log('dispose skeleton / delete skeleton')
       const { scene } = useGame()
 
       this.player.skeletonVirtualization.traverse((child) => {

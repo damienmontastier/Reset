@@ -32,8 +32,6 @@ if(uDirection != 1.0){
 } else {
   alpha = step(uThreshold, vPosition.y);
 }
-// alpha = step(uThreshold, vPosition.y);
-// alpha = step(vPosition.y, uThreshold);
 gl_FragColor = vec4( outgoingLight, alpha );
 `
 
@@ -57,7 +55,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       uniforms: THREE.UniformsUtils.merge([
         THREE.ShaderLib.basic.uniforms,
         {
-          uThreshold: { value: 0.0 },
+          uThreshold: { value: 1.5 },
           uDirection: { value: 0.0 },
           diffuse: { value: new THREE.Color(diffuse) }
         }

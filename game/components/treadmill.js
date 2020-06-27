@@ -145,8 +145,8 @@ export default class Treadmill extends THREE.Object3D {
   update(clock) {
     if (!windowFocus.visible) return
 
-    const { camera } = useCamera()
-    if (camera.position.distanceTo(this.parent.position) > 20) return
+    const camera = useCamera()
+    if (camera._position.distanceTo(this.parent.position) > 25) return
 
     const deltaPosition = this.deltaPosition.multiply(
       new THREE.Vector3(clock.lagSmoothing, 0, 0)
@@ -160,7 +160,7 @@ export default class Treadmill extends THREE.Object3D {
 
     this.parcelPosts.children.forEach((post) => {
       post.position.add(deltaPosition)
-      post.updateMatrixWorld()
+      // post.updateMatrixWorld()
 
       if (post.position.x > 7 || post.position.x < -7) {
         post.destroy()

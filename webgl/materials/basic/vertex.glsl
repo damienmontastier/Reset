@@ -92,36 +92,35 @@ float snoise(vec4 v){
 
 }
 
-#define NUM_OCTAVES 10
-
-float fbm(vec4 x) {
-	float v = 0.0;
-	float a = 0.5;
-	vec4 shift = vec4(100);
-	for (int i = 0; i < NUM_OCTAVES; ++i) {
-		v += a * snoise(x);
-		x = x * 2.0 + shift;
-		a *= 0.5;
-	}
-	return v;
-}
-
 float map(float value, float min1, float max1, float min2, float max2) {
   return min2 + (value - min1) * (max2 - min2) / (max1 - min1);
 }
 
-varying float vNoise;
+varying float vNoiseA;
+varying float vNoiseB;
 varying vec3 vPosition;
 varying vec3 vNormal;
 
 uniform float uNoiseFrequency;
+uniform float uTime;
 
 void main() {
   vPosition = position;
   vNormal = normal;
 
-  vNoise = fbm(vec4(vPosition * uNoiseFrequency,0.5));
-  vNoise = map(vNoise,-0.7,0.7,0.,1.);
+  // vNoise = fbm(vec4(vPosition * uNoiseFrequency,0.));
+  // vNoise = map(vNoise,-0.7,0.7,0.,1.);
+
+  vNoiseA = snoise(vec4(vPosition * uNoiseFrequency,0.));
+  vNoiseA = (vNoiseA * 0.5) + 0.5;
+  
+  float time = uTime * 0.8;
+
+  vNoiseB = snoise(vec4(vPosition + vec3(0.,0.,time) , time));
+  vNoiseB = map(vNoiseB,-1.,1.,0.1,1.) * 2.;
+
+  // vNoiseB = fbm(vec4(vPosition * uNoiseFrequency,uTime * 0.1));
+  // vNoiseB = map(vNoiseB,-0.7,0.7,0.,2.);
 
   gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }

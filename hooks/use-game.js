@@ -4,6 +4,7 @@ import useRAF from '@/hooks/use-raf'
 // import useGUI from '@/hooks/use-gui'
 
 import UIGrid from '@/webgl/components/ui-grid'
+import UIOverlay from '@/webgl/components/ui-overlay'
 
 import * as INTERSECTIONS from '@/webgl/plugins/intersections'
 
@@ -28,12 +29,17 @@ class Game {
     // this.initCamera()
 
     const { camera } = useCamera()
+    const { scene } = useWebGL()
 
-    this.scene.add(camera)
+    scene.add(camera)
 
     this.UIGrid = new UIGrid()
     this.UIGrid.visible = false
     camera.add(this.UIGrid)
+
+    this.UIOverlay = new UIOverlay()
+    this.UIOverlay.material.opacity = 0
+    camera.add(this.UIOverlay)
 
     const RAF = useRAF()
     RAF.add('use-game', this.loop.bind(this), 1)

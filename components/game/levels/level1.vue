@@ -1,14 +1,32 @@
 <template>
   <div class="gameLevel01">
     <game-notifications ref="notifications" />
-    <terminal v-if="terminalOpened" class="gameLevel01__terminal" />
+    <terminal
+      v-if="$store.state.ui.terminalVisible"
+      class="gameLevel01__terminal"
+    />
     <!-- <solutions class="gameLevel01__solutions" /> -->
-    <mission-report class="gameLevel01__missionReport" />
+    <mission-report
+      v-if="$store.state.ui.missionReportVisible"
+      class="gameLevel01__missionReport"
+    />
+    <button
+      @click="playerIsOnTerminal = !playerIsOnTerminal"
+      class="gameLevel01__debug"
+    >
+      toggle Terminam
+    </button>
+    <button
+      @click="$store.commit('ui/setMissionReportVisible', true)"
+      class="gameLevel01__debug"
+    >
+      toggle report
+    </button>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import gsap from 'gsap'
 
 import useGUI from '@/hooks/use-gui'
@@ -30,13 +48,15 @@ import Countdown from '@/assets/js/countdown'
 import treadmillConfig from '@/config/treadmills'
 import LEVEL01_CONFIG from '@/config/level01'
 
+import MissionReport from '@/components/game/mission-report/mission-report'
+import Terminal from '@/components/game/terminal/terminal'
+import GameNotifications from '@/components/elements/game-notifications'
+
 export default {
   components: {
-    Terminal: () => import('@/components/game/terminal/terminal'),
-    gameNotifications: () => import('@/components/elements/game-notifications'),
-    // Solutions: () => import('@/components/game/solutions/solutions'),
-    MissionReport: () =>
-      import('@/components/game/mission-report/mission-report')
+    Terminal,
+    MissionReport,
+    GameNotifications
   },
   data() {
     return {
@@ -45,13 +65,13 @@ export default {
       playerIsOnTerminal: undefined,
       playerIsOnTuto: undefined,
       playerIsOnTreadmill: undefined,
-      playerIsOnEndgame: undefined
+      playerIsOnEndgame: undefined,
+      missionIsOver: false
     }
   },
 
   computed: {
     ...mapState({
-      terminalOpened: (state) => state.terminalOpened,
       posts: (state) => state.notifications.posts
     })
   },
@@ -89,13 +109,24 @@ export default {
         console.log('TREADMILL LEAVE')
       }
     },
-    playerIsOnTerminal(newVal, oldVal) {
-      if (this.playerIsOnTerminal === true) {
-        this.setTerminalOpened(true)
-      } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
-        console.log('here')
-        this.setTerminalOpened(false)
-      }
+    playerIsOnTerminal() {
+      // if (this.playerIsOnTerminal === true) {
+      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.close_up)
+      //   // this.setTerminalOpened(true)
+      // } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
+      //   console.log('here')
+      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
+      //   // this.setTerminalOpened(false)
+      // }
+
+      this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
+    },
+    '$store.state.ui.terminalVisible'() {
+      this.cameraAnimation(
+        this.$store.state.ui.terminalVisible
+          ? LEVEL01_CONFIG.cameras.close_up
+          : LEVEL01_CONFIG.cameras.default
+      )
     }
   },
   mounted() {
@@ -106,6 +137,8 @@ export default {
     // TO DELETE
 
     // this.$events.on('level:restart', this.doRespawn.bind(this))
+
+    this.$events.on('loading completed', this.onLoadingCompleted)
   },
   beforeDestroy() {
     this.player.hitbox.events.off('intersection', this.onPlayerIntersects)
@@ -116,10 +149,32 @@ export default {
     RAF.remove('level1', this.loop.bind(this))
   },
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
+    // ...mapMutations({
+    //   setTerminalOpened: 'setTerminalOpened'
+    // }),
+    onLoadingCompleted() {
+      console.log('onLoadingCompleted')
+
+      this.countdown.paused = false
+
+      const audioManager = useAudio()
+      audioManager
+        .play('level01')
+        .volume(0.65)
+        .loop(true)
+      audioManager
+        .play('factory_ambiance')
+        .volume(1)
+        .loop(true)
+    },
     async load() {
+      this.$store.commit('loading/setCommands', [
+        'Bypassing Firewall',
+        'Initializing sequence',
+        'Loading FIRST_STAGE',
+        'FETCHING DATA',
+        'Status : Ready'
+      ])
       this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
@@ -136,6 +191,7 @@ export default {
 
       this.player = new Player()
       await this.player.init()
+      console.log(this.player)
 
       this.$store.commit('loading/incrementLoaded')
       console.log('60%')
@@ -149,7 +205,8 @@ export default {
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
-        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' }
+        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' },
+        { path: '/sounds/RESET_USB.mp3', id: 'level_goal' }
       ])
 
       this.$store.commit('loading/incrementLoaded')
@@ -157,22 +214,13 @@ export default {
     },
     async init() {
       this.cameraPosition = 'follow player'
-      this.countdown = new Countdown(120)
+      this.countdown = new Countdown()
       score.type = 'countdown'
 
+      const camera = useCamera()
+      // camera._distance = 25
+
       await this.load()
-
-      this.countdown.paused = false
-
-      const audioManager = useAudio()
-      audioManager
-        .play('level01')
-        .volume(0.65)
-        .loop(true)
-      audioManager
-        .play('factory_ambiance')
-        .volume(1)
-        .loop(true)
 
       // const {
       //   OrbitControls
@@ -203,7 +251,6 @@ export default {
 
       this.levelGroup.add(this.player)
 
-      const camera = useCamera()
       camera._position.copy(
         this.player.worldPosition.clone().add(camera._angle)
       )
@@ -289,14 +336,82 @@ export default {
         this.currentZones = intersectZones
 
         if (this.currentZones.includes('zone_goal')) {
-          console.log('goal')
+          // GOAL REACH
+
+          const audioManager = useAudio()
+          audioManager.play('level_goal').volume(0.65)
+
           this.countdown.paused = true
           this.$store.commit('stages/setScore', {
             stage: 'level1',
             score: this.countdown.time
           })
 
-          console.log(this.countdown.time)
+          const { UIOverlay } = useGame()
+
+          const tl = new gsap.timeline({
+            onComplete: () => {
+              // this.missionIsOver = true
+              this.$store.commit('ui/setMissionReportVisible', true)
+              setTimeout(() => {
+                UIOverlay.material.opacity = 0
+              }, 0)
+            }
+          })
+
+          tl.to(
+            this.map.usb.scale,
+            {
+              duration: 1,
+              ease: 'expo.out',
+              x: 0.3,
+              y: 0.3,
+              z: 0.3
+            },
+            0
+          )
+
+          tl.to(
+            this.map.usb,
+            {
+              duration: 2,
+              ease: 'expo.out',
+              _deltaY: 1.5
+            },
+            0
+          )
+
+          tl.to(
+            this.map.usb.scale,
+            {
+              duration: 2,
+              ease: 'expo.out',
+              x: 1,
+              y: 1,
+              z: 1
+            },
+            1
+          )
+
+          tl.to(
+            [this.map.usbStandardMaterial, this.map.usbBasicMaterial],
+            {
+              duration: 2,
+              ease: 'expo.out',
+              opacity: 0
+            },
+            1
+          )
+
+          tl.to(
+            UIOverlay.material,
+            {
+              duration: 3,
+              ease: 'power4.in',
+              opacity: 1
+            },
+            0
+          )
         }
 
         // if (intersectZones.includes('zone_tuto')) {
@@ -342,10 +457,6 @@ export default {
     },
 
     loop(clock) {
-      if (this.countdown.time <= 0) {
-        console.log('loooose')
-      }
-
       score.value = this.countdown.time
 
       this.map.update(clock)
@@ -640,22 +751,20 @@ export default {
   height: 100vh;
   width: 100vw;
 
+  &__debug {
+    pointer-events: all;
+    position: absolute;
+    top: 100px;
+  }
+
   &__solutions,
   &__terminal,
   &__missionReport {
     pointer-events: all;
   }
 
-  &__solutions {
-    display: none;
-    left: 64px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
   &__missionReport {
-    display: none;
+    // display: none;
     left: 50%;
     position: absolute;
     top: 50%;

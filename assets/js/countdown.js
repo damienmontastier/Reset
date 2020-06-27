@@ -4,10 +4,9 @@ import windowFocus from '@/plugins/window-focus'
 import uuidv4 from '@/assets/js/uuidv4'
 
 export default class Countdown {
-  constructor(startTime = 100) {
+  constructor() {
     this.uuid = uuidv4()
 
-    this.startTime = startTime
     this.elapsedTime = 0
 
     this.paused = true
@@ -17,7 +16,7 @@ export default class Countdown {
   }
 
   get time() {
-    return this.startTime - this.elapsedTime
+    return this.elapsedTime
   }
 
   loop(clock) {
