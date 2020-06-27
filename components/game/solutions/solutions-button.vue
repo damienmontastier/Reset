@@ -32,6 +32,10 @@ export default {
       // console.log(this.isUnopenedSolutions)
 
       if (this.isUnopenedSolutions) {
+        this.iconAnimation.setDirection(1)
+        this.iconAnimation.play()
+      } else {
+        this.iconAnimation.setDirection(-1)
         this.iconAnimation.play()
       }
     }

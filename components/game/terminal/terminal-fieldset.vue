@@ -15,7 +15,7 @@
       <slot />
     </div>
 
-    <slot name="error"> </slot>
+    <slot name="error" />
   </fieldset>
 </template>
 

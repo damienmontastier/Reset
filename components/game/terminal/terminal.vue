@@ -2,7 +2,8 @@
   <div class="gameTerminal">
     <div class="gameTerminal__inner">
       <div class="gameTerminal__title">
-        <terminal-title />
+        <!-- <terminal-title /> -->
+        <div ref="title" />
       </div>
       <!-- eslint-disable-next-line vue/require-component-is -->
       <component @increment="index++" v-bind:is="terminal" />
@@ -21,18 +22,21 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-
 /* eslint-disable vue/no-unused-components */
+
+import lottie from 'lottie-web'
+import terminalLottieData from '@/assets/lottie/terminal.json'
 
 import TerminalP1 from '@/components/game/terminal/terminal-p1'
 import TerminalP2 from '@/components/game/terminal/terminal-p2'
 import TerminalP3 from '@/components/game/terminal/terminal-p3'
 import TerminalP4 from '@/components/game/terminal/terminal-p4'
 
+// import TerminalTitle from '@/components/game/terminal/terminal-title'
+
 export default {
   components: {
-    TerminalTitle: () => import('@/components/game/terminal/terminal-title'),
+    // TerminalTitle,
     TerminalP1,
     TerminalP2,
     TerminalP3,
@@ -43,6 +47,18 @@ export default {
       terminals: [TerminalP1, TerminalP2, TerminalP3, TerminalP4],
       index: 0
     }
+  },
+
+  mounted() {
+    this.titleAnimation = lottie.loadAnimation({
+      container: this.$refs.title,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: terminalLottieData
+    })
+
+    this.titleAnimation.play()
   },
 
   computed: {
@@ -60,16 +76,13 @@ export default {
   },
 
   methods: {
-    ...mapMutations({
-      setTerminalOpened: 'setTerminalOpened'
-    }),
     terminalCompleted() {
       this.closeTerminal()
 
       this.$events.emit('TERMINAL COMPLETED')
     },
     closeTerminal() {
-      this.setTerminalOpened(false)
+      this.$store.commit('ui/setTerminalVisible', false)
     }
   }
 }
@@ -83,7 +96,7 @@ export default {
   height: 100vh;
   margin-left: 64px;
   position: relative;
-  width: 65vh;
+  width: 610px;
 
   &__inner {
     padding: 75px;
@@ -137,8 +150,8 @@ export default {
   }
 
   .terminal__submit {
-    font-size: 8px;
-    line-height: 10px;
+    font-size: 10px;
+    line-height: 12px;
 
     > * {
       margin-bottom: 8px;

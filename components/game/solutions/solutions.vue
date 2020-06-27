@@ -140,8 +140,6 @@ import Solution from './solution'
 import Modal from './modal'
 import CrossSvg from '@/components/svg/cross'
 
-import useGame from '@/hooks/use-game'
-
 import titleLottieData from '@/assets/lottie/hard-drive-title.json'
 
 export default {
@@ -170,7 +168,7 @@ export default {
       return this.solutions
         .map((solution) => {
           solution.stage = this.stages[solution.stage_id]
-          solution.unlocked = solution.required_score > solution.stage.score
+          solution.unlocked = solution.stage.score < solution.required_score
           return solution
         })
         .sort((a, b) => b.unlocked - a.unlocked)
@@ -195,10 +193,6 @@ export default {
       return this.unlockedSolutions.length / this.solutions.length
     }
   },
-  beforeDestroy() {
-    const { UIGrid } = useGame()
-    UIGrid.visible = false
-  },
   mounted() {
     this.titleAnimation = lottie.loadAnimation({
       container: this.$refs.title,
@@ -207,9 +201,6 @@ export default {
       autoplay: true,
       animationData: titleLottieData
     })
-
-    const { UIGrid } = useGame()
-    UIGrid.visible = true
 
     setTimeout(() => {
       this.mounted = true

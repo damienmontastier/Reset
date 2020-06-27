@@ -4,13 +4,34 @@
       <h2 class="qualitySelection__title u-uppercase">Select the quality</h2>
       <ul class="qualitySelection__list">
         <li class="qualitySelection__item u-uppercase u-link-hover">
-          <button @click="setQuality('low')">low</button>
+          <button
+            v-sounds="{
+              mouseenter: '/sounds/RESET_HOVER.mp3'
+            }"
+            @click="setQuality('low')"
+          >
+            low
+          </button>
         </li>
         <li class="qualitySelection__item u-uppercase u-link-hover">
-          <button @click="setQuality('medium')">medium</button>
+          <button
+            v-sounds="{
+              mouseenter: '/sounds/RESET_HOVER.mp3'
+            }"
+            @click="setQuality('medium')"
+          >
+            medium
+          </button>
         </li>
         <li class="qualitySelection__item u-uppercase u-link-hover">
-          <button @click="setQuality('high')">high</button>
+          <button
+            v-sounds="{
+              mouseenter: '/sounds/RESET_HOVER.mp3'
+            }"
+            @click="setQuality('high')"
+          >
+            high
+          </button>
         </li>
       </ul>
     </div>

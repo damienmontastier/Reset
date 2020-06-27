@@ -1,9 +1,24 @@
 <template>
   <section class="missionReport">
     <header class="missionReport__header">
-      <h2 class="missionReport__title">mission report</h2>
+      <h2
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        class="missionReport__title"
+      >
+        mission report
+      </h2>
     </header>
-    <div class="missionReport__head">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.1s` }"
+      class="missionReport__head"
+    >
       <div class="missionReport__head__left">
         <p>From : &#x3C;YouKnowWho&#x3E;</p>
         <p>To : &#x3C;Agent X&#x3E;</p>
@@ -13,18 +28,45 @@
         <p>Contrat #257468</p>
       </div>
     </div>
-    <div class="missionReport__body">
-      Congratulations, Agent X.<br /><br />
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.2s` }"
+      class="missionReport__body"
+    >
+      <!-- Congratulations, Agent X.<br /><br />
       You've made your way through the <i>infinite scroll</i>. Thanks to the
       crucial information you collected, we made the first step towards a
       brighter future.<br /><br />
-      Good job !
+      Good job ! -->
+      <typed
+        :strings="[
+          `Congratulations, Agent X.
+          <br /><br />
+          You've made your way through the <i>infinite scroll</i>.
+          <br />
+          Thanks to the crucial information you collected,
+          <br />
+          we made the first step towards a brighter future.
+          <br /><br />
+          Good job !`
+        ]"
+      />
     </div>
-    <div class="missionReport__stats">
+    <div
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.3s` }"
+      class="missionReport__stats"
+    >
       <div class="missionReport__stats__row">
         <p>Elapsed time</p>
         <div class="missionReport__stats__row__hr" />
-        <p>01:48:210</p>
+        <p v-if="score">{{ sec2time(score.value) }}</p>
       </div>
       <div class="missionReport__stats__row">
         <p>Posts dodged</p>
@@ -38,6 +80,15 @@
       </div>
     </div>
     <ui-button
+      @click.native="
+        $store.commit('ui/setMissionReportVisible', false)
+        $store.commit('solutions/setOpened', true)
+      "
+      :class="{
+        transition__fadeIn: true,
+        'transition--on': mounted
+      }"
+      :style="{ 'transition-delay': `0.4s` }"
       class="missionReport__btn"
       style="--color: var(--color-black);
           --bg-color: var(--color-green);
@@ -49,9 +100,43 @@
 </template>
 
 <script>
+import UiButton from '@/components/components/ui-button'
+import score from '@/hooks/use-score'
+import Typed from '@/components/components/typed'
+
 export default {
   components: {
-    UiButton: () => import('@/components/components/ui-button')
+    UiButton,
+    Typed
+  },
+  data() {
+    return {
+      mounted: false,
+      score: undefined
+    }
+  },
+  mounted() {
+    this.score = score
+
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
+  },
+  methods: {
+    sec2time(timeInSeconds) {
+      const pad = function(num, size) {
+        return ('000' + num).slice(size * -1)
+      }
+
+      const time = parseFloat(Math.max(0, timeInSeconds)).toFixed(3)
+      const minutes = Math.floor(time / 60) % 60
+      const seconds = Math.floor(time - minutes * 60)
+      const milliseconds = time.slice(-3)
+
+      return (
+        pad(minutes, 2) + ':' + pad(seconds, 2) + ':' + pad(milliseconds, 3)
+      )
+    }
   }
 }
 </script>
@@ -102,6 +187,7 @@ export default {
     color: var(--color-grey-lighten);
     font-size: 16px;
     line-height: 21px;
+    min-height: 199px;
 
     i {
       color: var(--color-green);

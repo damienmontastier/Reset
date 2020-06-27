@@ -1,13 +1,29 @@
 <template>
   <div class="terminalP2">
     <div class="terminalP2__inner">
-      <terminal-fieldset type="info" class="terminal__block">
+      <terminal-fieldset
+        :type="'info'"
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        :style="{ 'transition-delay': `0.1s` }"
+        class="terminal__block"
+      >
         <div>
-          Sélectionez 3 centres d'intéret
+          Select 3 areas of interest
         </div>
       </terminal-fieldset>
 
-      <terminal-fieldset type="cross" class="terminal__block">
+      <terminal-fieldset
+        :type="'cross'"
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+        :style="{ 'transition-delay': `0.2s` }"
+        class="terminal__block"
+      >
         <div v-for="(p, index) in items" :key="index" class="input">
           <input
             v-model="p.active"
@@ -23,36 +39,50 @@
         </div>
 
         <div slot="error" v-if="displayError" class="terminalFieldset__error">
-          <span>Vous devez sélectionner 3 centres d’intérêts différents </span>
+          <span>You have to select 3 different interests </span>
         </div>
       </terminal-fieldset>
 
       <div class="terminal__submit">
         <ui-button
           @click.native="closeTerminal"
+          :class="{
+            transition__fadeIn: true,
+            'transition--on': mounted
+          }"
+          :style="{ 'transition-delay': `0.3s` }"
           style="--color: var(--color-black);
           --bg-color: var(--color-green);
           --border-color: var(--color-green);"
-          >Annuler</ui-button
         >
+          cancel
+        </ui-button>
         <ui-button
           @click.native="nextPage"
+          :class="{
+            transition__fadeIn: true,
+            'transition--on': mounted
+          }"
+          :style="{ 'transition-delay': `0.4s` }"
           style="--color: var(--color-green);
           --bg-color: var(--color-black);
           --border-color: var(--color-green);"
-          >Continuer</ui-button
         >
+          next
+        </ui-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import UiButton from '@/components/components/ui-button'
+import TerminalFieldset from '@/components/game/terminal/terminal-fieldset'
+
 export default {
   components: {
-    UiButton: () => import('@/components/components/ui-button'),
-    TerminalFieldset: () =>
-      import('@/components/game/terminal/terminal-fieldset')
+    UiButton,
+    TerminalFieldset
   },
   data() {
     return {
@@ -68,7 +98,8 @@ export default {
         { name: 'Cordula', active: true, selectable: true },
         { name: 'Tout selectionner', active: true, selectable: false },
         { name: 'Tout déselectionner', active: true, selectable: false }
-      ]
+      ],
+      mounted: false
     }
   },
   computed: {
@@ -76,8 +107,11 @@ export default {
       return this.items.filter((item) => item.active && item.selectable)
     }
   },
-  watch: {},
-  created() {},
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
+  },
   methods: {
     closeTerminal() {
       this.$parent.closeTerminal()

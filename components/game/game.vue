@@ -11,7 +11,7 @@
         camera shake
       </button>
     </div>
-    <solutions-button class="appGame__button" />
+
     <game-controls class="appGame__controls" />
   </div>
 </template>
@@ -22,9 +22,7 @@ import useCamera from '@/hooks/use-camera'
 
 export default {
   components: {
-    GameControls: () => import('@/components/game/game-controls'),
-    SolutionsButton: () =>
-      import('@/components/game/solutions/solutions-button')
+    GameControls: () => import('@/components/game/game-controls')
   },
   mounted() {
     useGame()
@@ -65,13 +63,6 @@ export default {
     padding: 8px;
     position: absolute;
     top: 64px;
-  }
-
-  &__button {
-    bottom: 40px;
-    left: 40px;
-    pointer-events: all;
-    position: absolute;
   }
 
   &__controls {

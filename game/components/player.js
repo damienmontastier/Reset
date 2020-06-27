@@ -138,6 +138,7 @@ export default class Player extends THREE.Object3D {
 
   setInitialState() {
     this.model.rotation.y = THREE.MathUtils.degToRad(180)
+    this.animations.tPose.stop()
     this.animations.run.stop()
     this.animations.fall.stop()
     this.animations.idle.play()
@@ -195,6 +196,10 @@ export default class Player extends THREE.Object3D {
   }
 
   initSkeleton() {
+    // const gui = useGUI()
+
+    const skeleton = SkeletonUtils.clone(this.model)
+
     const playerWireframeMaterial = new PlayerBasicMaterial({
       diffuse: 0x2ff000,
       wireframe: true
@@ -214,9 +219,7 @@ export default class Player extends THREE.Object3D {
 
     this.innerGroup.add(this.skeletonVirtualization)
 
-    const GUI = useGUI()
-    GUI.addObject3D('skeleton', this.skeletonVirtualization)
-    GUI.add(this, 'startAppearPlayer')
+    this.innerGroup.add(skeleton)
   }
 
   startAppearPlayer() {
