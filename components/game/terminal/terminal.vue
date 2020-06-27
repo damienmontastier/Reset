@@ -49,18 +49,6 @@ export default {
     }
   },
 
-  mounted() {
-    this.titleAnimation = lottie.loadAnimation({
-      container: this.$refs.title,
-      renderer: 'svg',
-      loop: false,
-      autoplay: false,
-      animationData: terminalLottieData
-    })
-
-    this.titleAnimation.play()
-  },
-
   computed: {
     terminal() {
       return this.terminals[this.index]
@@ -73,6 +61,18 @@ export default {
         this.terminalCompleted()
       }
     }
+  },
+
+  mounted() {
+    this.titleAnimation = lottie.loadAnimation({
+      container: this.$refs.title,
+      renderer: 'svg',
+      loop: false,
+      autoplay: false,
+      animationData: terminalLottieData
+    })
+
+    this.titleAnimation.play()
   },
 
   methods: {

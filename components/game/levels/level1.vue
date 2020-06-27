@@ -72,8 +72,7 @@ export default {
 
   computed: {
     ...mapState({
-      // terminalOpened: (state) => state.terminalOpened,
-      posts: (state) => state.posts
+      posts: (state) => state.notifications.posts
     })
   },
   watch: {
@@ -192,6 +191,7 @@ export default {
 
       this.player = new Player()
       await this.player.init()
+      console.log(this.player)
 
       this.$store.commit('loading/incrementLoaded')
       console.log('60%')
