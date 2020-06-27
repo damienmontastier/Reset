@@ -1,5 +1,12 @@
 <template>
-  <div class="mission-statement-P2 border">
+  <div
+    :class="{
+      transition__fadeIn: true,
+      'transition--on': mounted
+    }"
+    :style="{ 'transition-delay': `0.1s` }"
+    class="mission-statement-P2 border"
+  >
     <div class="mission-statement-P2__title border-bottom">
       MISSION Statement
     </div>
@@ -8,7 +15,7 @@
         transition__fadeIn: true,
         'transition--on': mounted
       }"
-      :style="{ 'transition-delay': `0.1s` }"
+      :style="{ 'transition-delay': `0.2s` }"
       class="mission-statement-P2__header mission-statement--wrapper border-bottom"
     >
       <p>
@@ -25,11 +32,13 @@
         transition__fadeIn: true,
         'transition--on': mounted
       }"
-      :style="{ 'transition-delay': `0.2s` }"
+      :style="{ 'transition-delay': `0.3s` }"
       class="mission-statement-P2__body mission-statement--wrapper border-bottom"
     >
-      <p>
-        The hour is serious, Agent X.
+      <typed
+        @typedCompleted="appearSignature = true"
+        :strings="[
+          `The hour is serious, Agent X.
         <br />
         <br />The world's population is in the grip of a mysterious device, the
         Smartphone.
@@ -37,15 +46,16 @@
         <br />Infiltrate the device, avoid the time-consuming traps and bring us
         back the solutions we need to defeat it.
         <br />
-        <br />You have 5min. Good luck.
-      </p>
+        <br />You have 5min. Good luck.`
+        ]"
+      />
     </div>
     <div
       :class="{
         transition__fadeIn: true,
-        'transition--on': mounted
+        'transition--on': appearSignature
       }"
-      :style="{ 'transition-delay': `0.3s` }"
+      :style="{ 'transition-delay': `0.1s` }"
       class="mission-statement-P2__signature mission-statement--wrapper"
     >
       <span>Signature :</span>
@@ -71,16 +81,20 @@
 <script>
 import lottie from 'lottie-web'
 import missionSign from '@/assets/lottie/mission-sign.json'
+import Typed from '@/components/components/typed'
+import Btn from '@/components/components/btn-introduction'
 
 export default {
   components: {
-    Btn: () => import('@/components/components/btn-introduction')
+    Btn,
+    Typed
   },
   data() {
     return {
       isSigned: false,
       startSignature: false,
-      mounted: false
+      mounted: false,
+      appearSignature: false
     }
   },
   mounted() {
@@ -138,6 +152,7 @@ export default {
 
   &__body {
     font-size: 16px;
+    height: 240px;
     line-height: 21px;
   }
 

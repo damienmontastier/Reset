@@ -45,7 +45,7 @@ export default {
   justify-content: center;
   margin-left: 80px;
   position: relative;
-  width: 32vw;
+  width: 480px;
   z-index: 999;
 
   .border {

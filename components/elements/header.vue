@@ -49,16 +49,6 @@ export default {
     }
   },
   watch: {
-    // 'score.value'() {
-    //   console.log(score.value)
-    // },
-    // 'clock.countdown'(val) {
-    //   this.timeLeft = val
-
-    //   if (val === this.clock.timeCountdown) {
-    //     console.log('countdown finish, game over')
-    //   }
-    // },
     'clock.time'(val) {
       this.time = val
     },

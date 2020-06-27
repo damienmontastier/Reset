@@ -6,7 +6,9 @@
     <app-header
       id="appHeader"
       v-if="
-        !$store.state.solutions.opened && !$store.state.ui.missionReportVisible
+        !$store.state.solutions.opened &&
+          !$store.state.ui.missionReportVisible &&
+          $router.currentRoute.params.slug === 'infinite-scroll'
       "
     />
     <solutions id="solutions" v-if="$store.state.solutions.opened" />

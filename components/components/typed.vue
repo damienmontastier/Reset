@@ -19,8 +19,16 @@ export default {
       typeSpeed: 0,
       backSpeed: 0,
       loop: false,
-      showCursor: false
+      showCursor: false,
+      onComplete: () => {
+        console.log('finish')
+        this.$emit('typedCompleted')
+      }
     })
+  },
+
+  beforeDestroy() {
+    this.typed.destroy()
   }
 }
 </script>

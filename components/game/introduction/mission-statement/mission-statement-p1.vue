@@ -40,7 +40,7 @@ export default {
 <style lang="scss">
 .mission-statement-P1 {
   position: relative;
-  width: 23vw;
+  width: 70%;
 
   &__logo {
     position: relative;

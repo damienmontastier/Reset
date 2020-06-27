@@ -1,6 +1,9 @@
 <template>
   <div class="homepage">
-    <mission-statement @startMission="startTraveling"></mission-statement>
+    <mission-statement
+      v-if="showMissionStatement"
+      @startMission="startTraveling"
+    ></mission-statement>
     <keyboard-instructions
       @closeKeyboardInstructions="showControls = false"
       v-if="showControls"
@@ -19,6 +22,7 @@ import useClock from '@/hooks/use-clock'
 import useWebGL from '@/hooks/use-webgl'
 import useRAF from '@/hooks/use-raf'
 import useGUI from '@/hooks/use-gui'
+import useAudio from '@/hooks/use-audio'
 
 import Player from '@/game/components/player'
 import MapIntroduction from '@/game/components/intro'
@@ -43,7 +47,8 @@ export default {
       playerIsInteract: undefined,
       playerInteractWithSmartphone: false,
       movementEnabled: false,
-      showControls: false
+      showControls: false,
+      showMissionStatement: true
     }
   },
   watch: {
@@ -62,6 +67,10 @@ export default {
   },
   beforeDestroy() {
     this.$controller.events.off('keyup', this.onKeydown)
+
+    const audioManager = useAudio()
+    audioManager.stop('virtualisation_perso')
+    audioManager.stop('intro')
   },
   methods: {
     async init() {
@@ -70,32 +79,9 @@ export default {
       const camera = useCamera()
       const GUI = useGUI()
 
+      await this.load()
+
       this.cameraPosition = 'follow player'
-
-      webglScene.background = new THREE.Color(0xffffff)
-
-      this.introGroup = new THREE.Group()
-      scene.add(this.introGroup)
-
-      this.map = new MapIntroduction()
-      await this.map.load()
-      this.introGroup.add(this.map)
-
-      this.introSpline = await new Spline().load(
-        'obj/splines/intro_spline_03.obj'
-      )
-      this.map.add(this.introSpline)
-
-      this.terrain = new GridTerrain(this.map.zones)
-
-      this.player = new Player()
-      await this.player.init()
-      this.spawnPoint = this.map.spawnPoint.clone()
-      this.player.position.copy(this.spawnPoint)
-      this.introGroup.add(this.player)
-      this.player.animations.idle.stop()
-      this.player.initSkeletonVirtualization()
-
       camera.camera.lookAt(
         camera._position
           .clone()
@@ -103,13 +89,26 @@ export default {
           .sub(camera._shake)
           .add(new THREE.Vector3(0, 0.75, 0))
       )
-
       GUI.camera.addVector('origin position', camera._position)
+
+      webglScene.background = new THREE.Color(0xffffff)
+
+      this.introGroup = new THREE.Group()
+      scene.add(this.introGroup)
+
+      this.introGroup.add(this.map)
+
+      this.terrain = new GridTerrain(this.map.zones)
+
+      this.spawnPoint = this.map.spawnPoint.clone()
+      this.player.position.copy(this.spawnPoint)
+      this.introGroup.add(this.player)
+      this.player.animations.idle.stop()
+      this.player.initSkeletonVirtualization()
 
       this.$controller.events.on('keyup', this.onKeydown)
 
       this.dotsPlane = new DotsPlane(INTRODUCTION_CONFIG.dots)
-
       scene.add(this.dotsPlane)
       this.dotsPlane.scale.setScalar(50)
       this.dotsPlane.rotation.x = -Math.PI / 2
@@ -119,9 +118,70 @@ export default {
       RAF.add('introduction', this.loop.bind(this))
     },
 
+    async load() {
+      this.$store.commit('loading/setCommands', [
+        'Booting System',
+        'Loading Case #257468',
+        'Fetching Data',
+        'Checking Mission Status',
+        'Status : Awaiting Signature'
+      ])
+      this.$store.commit('loading/setVisible', true)
+      this.$store.commit('loading/setToLoad', 5)
+
+      console.log('20%')
+
+      this.$store.commit('loading/incrementLoaded')
+
+      this.map = new MapIntroduction()
+      await this.map.load()
+
+      this.$store.commit('loading/incrementLoaded')
+
+      console.log('40%')
+
+      this.player = new Player()
+      await this.player.init()
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('60%')
+
+      this.introSpline = await new Spline().load(
+        'obj/splines/intro_spline_03.obj'
+      )
+      this.map.add(this.introSpline)
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('80%')
+
+      const audioManager = useAudio()
+      await audioManager.add([
+        { path: '/sounds/RESET_INTRO.mp3', id: 'intro' },
+        {
+          path: '/sounds/RESET_VIRTUALISATION-PERSO.mp3',
+          id: 'virtualisation_perso'
+        }
+      ])
+
+      this.$store.commit('loading/incrementLoaded')
+      console.log('100%')
+    },
+
     startTraveling() {
+      this.showMissionStatement = false
+
       const camera = useCamera()
       camera.disableMouseMove = true
+
+      const audioManager = useAudio()
+      audioManager
+        .play('virtualisation_perso')
+        .volume(1)
+        .loop(false)
+      audioManager
+        .play('intro')
+        .volume(0.5)
+        .loop(true)
 
       this.player.appearPlayer()
 
