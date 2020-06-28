@@ -155,8 +155,6 @@ export default {
     async onLoadingCompleted() {
       console.log('onLoadingCompleted')
 
-      this.countdown.paused = false
-
       const audioManager = useAudio()
       audioManager
         .play('level01')
@@ -167,7 +165,13 @@ export default {
         .volume(1)
         .loop(true)
 
-      await this.player.appearPlayer()
+      gsap.from(this.map.greenWireframeMaterial.uniforms.uAppear, {
+        duration: 4,
+        ease: 'none',
+        value: 0
+      })
+      await this.player.appearPlayer().timeScale(2)
+      this.countdown.paused = false
 
       // const tl = new gsap.timeline()
 
