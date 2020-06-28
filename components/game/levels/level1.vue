@@ -286,7 +286,7 @@ export default {
         this.player.position.copy(this.spawnPoint)
       }
 
-      this.player.model = THREE.MathUtils.degToRad(180)
+      this.player.model.rotation.y = THREE.MathUtils.degToRad(180)
 
       // TODO - Restart chronometre du niveau
     },
