@@ -61,7 +61,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose_Fly.glb'
+          path: 'obj/character/character 07_Idle_Run_Fall_T-Pose_Fly.glb'
         }
       ]
     })
@@ -79,7 +79,7 @@ export default class Player extends THREE.Object3D {
 
     const materialBlack = playerStandardMaterial.clone()
     const materialGreen = playerStandardMaterial.clone()
-    materialGreen.uniforms.emissive.value = new THREE.Color(0x2ff000)
+    materialGreen.uniforms.emissive.value = new THREE.Color(0xffffff)
 
     this.model.getObjectByName('black').material = materialBlack
     this.model.getObjectByName('green').material = materialGreen
@@ -139,25 +139,34 @@ export default class Player extends THREE.Object3D {
     intersections.addHitbox(this.hitbox)
   }
 
-  setInitialState() {
-    this.model.rotation.y = THREE.MathUtils.degToRad(180)
-    this.animations.tPose.stop()
-    this.animations.run.stop()
-    this.animations.fall.stop()
-    this.animations.idle.play()
-    this.animations.tPose.stop()
+  // setInitialState() {
+  // this.model.rotation.y = THREE.MathUtils.degToRad(180)
+  // this.animations.tPose.stop()
+  // this.animations.run.stop()
+  // this.animations.fall.stop()
+  // this.animations.idle.play()
+  // this.animations.tPose.stop()
+  // }
+
+  playAllAnimations() {
+    Object.values(this.animations).forEach((animation) => {
+      animation.play()
+      animation.weight = 0
+    })
   }
 
   async init() {
     this.events = new Events()
     await this.load()
+    this.initModel()
+    this.model.rotation.y = THREE.MathUtils.degToRad(180)
 
-    this.trails = []
+    this.initHitbox()
 
     this.initAnimations()
-    this.initModel()
-    this.initHitbox()
-    this.setInitialState()
+    this.playAllAnimations()
+
+    this.initSkeletonVirtualization()
 
     const RAF = useRAF()
     RAF.add('player', this.loop.bind(this))
@@ -180,24 +189,33 @@ export default class Player extends THREE.Object3D {
       this.positionTween = null
     }
 
-    this.animations.idle.stop()
-    this.animations.run.stop()
+    // this.animations.idle.stop()
+    // this.animations.run.stop()
+    this.animations.run.weight = 0
+    this.animations.idle.weight = 0
+    this.animations.fall.stop()
     this.animations.fall.play()
+    this.animations.fall.weight = 1
 
     return new Promise((resolve, reject) => {
       setTimeout(() => {
+        this.animations.fall.weight = 0
+        this.animations.idle.weight = 1
         this.animations.fall.stop()
         this.isFalling = false
 
         console.log('stop falling')
         resolve()
-      }, 700)
+      }, 900)
     })
   }
 
   appearPlayer() {
-    this.animations.tPose.play()
-    this.animations.idle.stop()
+    // this.animations.tPose.play()
+    // this.animations.idle.stop()
+
+    this.animations.idle.weight = 0
+    this.animations.fly.weight = 0
 
     const tl = gsap.timeline()
 
@@ -210,7 +228,8 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 1.5,
-        duration: 4,
+        duration: 3,
+        ease: 'none',
         onComplete: () => {
           this.skeletonVirtualization.getObjectByName(
             'black'
@@ -235,7 +254,8 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 1.5,
-        duration: 4
+        duration: 4,
+        ease: 'none'
       }
     )
     tl.to(
@@ -247,9 +267,19 @@ export default class Player extends THREE.Object3D {
       ],
       {
         value: 1.5,
-        duration: 4
+        duration: 4,
+        ease: 'none'
       },
       4
+    )
+    tl.to(
+      this.animations.idle,
+      {
+        duration: 0.4,
+        weight: 1,
+        ease: 'none'
+      },
+      7
     )
     return tl
   }
@@ -323,7 +353,7 @@ export default class Player extends THREE.Object3D {
     trail.rotation.copy(new THREE.Euler())
     trail.rotation.y = THREE.MathUtils.degToRad(rotation)
 
-    this.animations.run.play()
+    // this.animations.run.play()
 
     // trail.getObjectByName('black').material.dispose()
     // trail.getObjectByName('green').material.dispose()
@@ -356,7 +386,7 @@ export default class Player extends THREE.Object3D {
     tl.to(
       this.model.rotation,
       {
-        duration: 0.12,
+        duration: 0.16,
         y: THREE.MathUtils.degToRad(rotation)
       },
       0
@@ -365,12 +395,52 @@ export default class Player extends THREE.Object3D {
     tl.to(
       this.position,
       {
-        duration: 0.12,
+        duration: 0.16,
         x: position.x,
         y: position.y,
         z: position.z
       },
       0
+    )
+
+    tl.to(
+      this.animations.idle,
+      {
+        duration: 0.08,
+        ease: 'none',
+        weight: 0
+      },
+      0
+    )
+
+    tl.to(
+      this.animations.idle,
+      {
+        duration: 0.08,
+        ease: 'none',
+        weight: 1
+      },
+      0.08
+    )
+
+    tl.to(
+      this.animations.run,
+      {
+        duration: 0.08,
+        ease: 'none',
+        weight: 1
+      },
+      0
+    )
+
+    tl.to(
+      this.animations.run,
+      {
+        duration: 0.08,
+        ease: 'none',
+        weight: 0
+      },
+      0.08
     )
 
     this.positionTween = tl
@@ -379,7 +449,7 @@ export default class Player extends THREE.Object3D {
 
     this.positionTween.eventCallback('onComplete', () => {
       requestAnimationFrame(() => {
-        this.animations.run.stop()
+        // this.animations.run.stop()
         this.positionTween = false
       })
     })

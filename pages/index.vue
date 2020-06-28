@@ -79,8 +79,6 @@ export default {
       const camera = useCamera()
       const GUI = useGUI()
 
-      GUI.camera.add(this, 'startTraveling')
-
       await this.load()
 
       this.cameraPosition = 'follow player'
@@ -170,7 +168,7 @@ export default {
       console.log('100%')
     },
 
-    startTraveling() {
+    async startTraveling() {
       this.showMissionStatement = false
 
       const camera = useCamera()
@@ -186,8 +184,6 @@ export default {
         .volume(0.5)
         .loop(true)
 
-      // this.player.appearPlayer()
-
       this.cameraPosition = 'intro travelling'
 
       this.progress = 0
@@ -197,7 +193,10 @@ export default {
         progress: 1,
         onUpdate: () => {
           const postion = this.introSpline.curvedPath.getPoint(this.progress)
-          camera.camera.lookAt(this.player.position)
+          camera.camera.lookAt(
+            this.player.position.clone().add(new THREE.Vector3(0, 0.75, 0))
+          )
+
           camera._position.copy(postion)
         },
         onComplete: () => {
@@ -207,6 +206,8 @@ export default {
           this.onStartMovementPlayer()
         }
       })
+
+      await this.player.appearPlayer()
     },
 
     onStartMovementPlayer() {

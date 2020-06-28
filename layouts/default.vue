@@ -154,7 +154,7 @@ export default {
 #appView {
   // pointer-events: none;
   position: relative;
-  z-index: 8;
+  z-index: 10;
 }
 
 #appGame {

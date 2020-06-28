@@ -175,14 +175,17 @@ export default class Level01 extends THREE.Object3D {
   }
 
   initUSB() {
-    const geometry = new THREE.BoxBufferGeometry(1, 1)
-    const material = new THREE.MeshNormalMaterial()
+    // const geometry = new THREE.BoxBufferGeometry(1, 1)
+    // const material = new THREE.MeshNormalMaterial()
 
-    this.goalZone = new THREE.Mesh(geometry, material)
-    this.goalZone.name = 'zone_goal'
-    this.zones.add(this.goalZone)
+    // const goalZone = new THREE.Mesh(geometry, material)
+    // goalZone.name = 'zone_goal'
+    // this.zones.add(goalZone)
 
-    this.goalZone.position.set(0, 0.5, 11.5)
+    // goalZone.position.set(0, 0.5, 11.5)
+
+    const goalZone = this.zones.getObjectByName('zone_goal')
+    // console.log(goalZone)
 
     this.usbStandardMaterial = new THREE.MeshStandardMaterial({
       emissive: 0x157300,
@@ -204,15 +207,19 @@ export default class Level01 extends THREE.Object3D {
 
     this.usb.getObjectByName('model_usb_white').material = this.usbBasicMaterial
 
-    this.usb.position.set(-0.5, 1, 11.5)
+    // this.usbPosition = new THREE.Vector3(-0.5, 1, 11.5)
+    this.usbPosition = goalZone.position
+      .clone()
+      .add(new THREE.Vector3(-0.5, 0, 0))
+    this.usb.position.copy(this.usbPosition)
     this.usb._deltaY = 0
-    this.usbPosition = new THREE.Vector3(-0.5, 1, 11.5)
+
     this.solid.add(this.usb)
 
-    const GUI = useGUI()
-    GUI.addObject3D('goal', this.goalZone)
-    GUI.addObject3D('usb', this.usb)
-    GUI.addMaterial('usb-standard', this.usbStandardMaterial)
+    // const GUI = useGUI()
+    // GUI.addObject3D('goal', this.goalZone)
+    // GUI.addObject3D('usb', this.usb)
+    // GUI.addMaterial('usb-standard', this.usbStandardMaterial)
   }
 
   applyMaterials() {
@@ -241,9 +248,11 @@ export default class Level01 extends THREE.Object3D {
 
     this.solid.traverse((child) => {
       if (child.name.includes('model_border')) {
-        // child.material = GreenMaterial
-
         child.material = this.greenMaterial
+      }
+
+      if (child.name.includes('model_wall')) {
+        child.material = this.standardMaterial
       }
 
       if (child.name.includes('model_platform')) {
