@@ -59,6 +59,7 @@ export default {
       if (val) {
         this.playerInteractWithSmartphone = val
         this.movementEnabled = false
+        this.onPlayerInteractWithSmartphone()
       }
     }
   },
@@ -102,9 +103,21 @@ export default {
       this.terrain = new GridTerrain(this.map.zones)
 
       this.spawnPoint = this.map.spawnPoint.clone()
+
+      this.interactPoint = this.map.interactZonePoint.clone()
+
       this.player.position.copy(this.spawnPoint)
+
+      console.log(this.player.animations)
+
+      // setTimeout(() => {
+      //   this.player.position.copy(this.spawnPoint)
+      // }, 5000)
+
       this.introGroup.add(this.player)
-      this.player.animations.idle.stop()
+      this.player.getObjectByName(
+        'green'
+      ).material.uniforms.emissive.value = new THREE.Color(0x2ff000)
       this.player.initSkeletonVirtualization()
 
       this.$controller.events.on('keyup', this.onKeydown)
@@ -130,8 +143,6 @@ export default {
       this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
-      console.log('20%')
-
       this.$store.commit('loading/incrementLoaded')
 
       this.map = new MapIntroduction()
@@ -139,13 +150,10 @@ export default {
 
       this.$store.commit('loading/incrementLoaded')
 
-      console.log('40%')
-
       this.player = new Player()
       await this.player.init()
 
       this.$store.commit('loading/incrementLoaded')
-      console.log('60%')
 
       this.introSpline = await new Spline().load(
         'obj/splines/intro_spline_04.obj'
@@ -153,7 +161,6 @@ export default {
       this.map.add(this.introSpline)
 
       this.$store.commit('loading/incrementLoaded')
-      console.log('80%')
 
       const audioManager = useAudio()
       await audioManager.add([
@@ -165,10 +172,11 @@ export default {
       ])
 
       this.$store.commit('loading/incrementLoaded')
-      console.log('100%')
     },
 
     async startTraveling() {
+      this.player.position.copy(this.spawnPoint)
+
       this.showMissionStatement = false
 
       const camera = useCamera()
@@ -192,12 +200,12 @@ export default {
         ease: 'none',
         progress: 1,
         onUpdate: () => {
-          const postion = this.introSpline.curvedPath.getPoint(this.progress)
+          const position = this.introSpline.curvedPath.getPoint(this.progress)
           camera.camera.lookAt(
             this.player.position.clone().add(new THREE.Vector3(0, 0.75, 0))
           )
 
-          camera._position.copy(postion)
+          camera._position.copy(position)
         },
         onComplete: () => {
           this.cameraPosition = 'follow player'
@@ -208,6 +216,20 @@ export default {
       })
 
       await this.player.appearPlayer()
+    },
+
+    onPlayerInteractWithSmartphone() {
+      gsap.to(this.player.animations.fly, {
+        weight: 1,
+        duration: 1,
+        delay: 0.5,
+        onStart: () => {
+          this.player.animations.fly.setLoop(THREE.LoopOnce)
+          this.player.animations.fly.clampWhenFinished = true
+          this.player.animations.fly.timeScale = 0.8
+          this.player.animations.fly.play()
+        }
+      })
     },
 
     onStartMovementPlayer() {

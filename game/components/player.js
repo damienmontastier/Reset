@@ -105,6 +105,10 @@ export default class Player extends THREE.Object3D {
         THREE.AnimationClip.findByName(this.modelAnimations, 'fly')
       )
     }
+
+    this.animations.fly.stop()
+    // this.animations.fly.setLoop(THREE.LoopOnce)
+    // this.animations.fly.clampWhenFinished = true
   }
 
   initModel() {
@@ -270,7 +274,7 @@ export default class Player extends THREE.Object3D {
         duration: 4,
         ease: 'none'
       },
-      4
+      3
     )
     tl.to(
       this.animations.idle,

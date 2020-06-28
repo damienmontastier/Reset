@@ -71,11 +71,15 @@ export default class Introduction extends THREE.Object3D {
       }
     })
 
+    this.interactZonePoint = this.model
+      .getObjectByName('zone_interact')
+      .position.clone()
+
     const spawnPoint = this.model.getObjectByName('zone_spawn').position.clone()
 
     this.spawnPoint = new THREE.Vector3(
       spawnPoint.x - 0.5,
-      spawnPoint.y,
+      spawnPoint.y + 0.05,
       spawnPoint.z
     )
 

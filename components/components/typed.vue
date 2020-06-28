@@ -21,7 +21,6 @@ export default {
       loop: false,
       showCursor: false,
       onComplete: () => {
-        console.log('finish')
         this.$emit('typedCompleted')
       }
     })

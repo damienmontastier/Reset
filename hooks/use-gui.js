@@ -11,7 +11,6 @@ const useGUI = () => {
 
     // camera
     GUI.camera = GUI.addFolder('Camera')
-    GUI.camera.closed = false
 
     // rendering
     GUI.rendering = GUI.addFolder('Rendering')
