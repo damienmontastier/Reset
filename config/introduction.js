@@ -9,6 +9,6 @@ export default {
   lights: {
     position: new THREE.Vector3(0, 512, 0),
     intensity: 0.5,
-    color: 0x2ff000
+    color: 0xfffff
   }
 }

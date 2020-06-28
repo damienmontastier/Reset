@@ -108,8 +108,6 @@ export default {
 
       this.player.position.copy(this.spawnPoint)
 
-      console.log(this.player.animations)
-
       // setTimeout(() => {
       //   this.player.position.copy(this.spawnPoint)
       // }, 5000)
@@ -140,7 +138,7 @@ export default {
         'Checking Mission Status',
         'Status : Awaiting Signature'
       ])
-      this.$store.commit('loading/setVisible', true)
+      // this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
       this.$store.commit('loading/incrementLoaded')
@@ -219,6 +217,8 @@ export default {
     },
 
     onPlayerInteractWithSmartphone() {
+      this.player.animations.fly.stop()
+
       gsap.to(this.player.animations.fly, {
         weight: 1,
         duration: 1,

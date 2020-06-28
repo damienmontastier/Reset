@@ -113,8 +113,10 @@ export default {
   },
   methods: {
     triggerSignature() {
-      this.signAnimation.play()
-      this.startSignature = true
+      if (this.appearSignature) {
+        this.signAnimation.play()
+        this.startSignature = true
+      }
     },
     signAnimationCompleted() {
       this.isSigned = true
