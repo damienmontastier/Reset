@@ -32,7 +32,7 @@ if(uDirection != 1.0){
 } else {
   alpha = step(uThreshold, vPosition.y);
 }
-gl_FragColor = vec4( outgoingLight, alpha );
+gl_FragColor = vec4( outgoingLight, alpha *0.25 );
 `
 
 let fragmentShader = THREE.ShaderLib.basic.fragmentShader
@@ -65,8 +65,7 @@ export default class PlayerMaterial extends THREE.ShaderMaterial {
       skinning: true,
       transparent: true,
       wireframe,
-      flatShading: false,
-      depthWrite: true,
+      depthWrite: false,
       depthTest: true
     })
   }

@@ -152,7 +152,7 @@ export default {
     // ...mapMutations({
     //   setTerminalOpened: 'setTerminalOpened'
     // }),
-    onLoadingCompleted() {
+    async onLoadingCompleted() {
       console.log('onLoadingCompleted')
 
       this.countdown.paused = false
@@ -166,6 +166,22 @@ export default {
         .play('factory_ambiance')
         .volume(1)
         .loop(true)
+
+      await this.player.appearPlayer()
+
+      // const tl = new gsap.timeline()
+
+      // tl.to(
+      //   this.player.animations.tPose,
+      //   {
+      //     weight: 0,
+      //     duration: 1,
+      //     ease: 'expo.out'
+      //   },
+      //   0
+      // )
+
+      // this.player.animations.idle.play()
     },
     async load() {
       this.$store.commit('loading/setCommands', [
@@ -221,6 +237,8 @@ export default {
       // camera._distance = 25
 
       await this.load()
+      // this.player.animations.idle.stop()
+      // this.player.initSkeletonVirtualization()
 
       // const {
       //   OrbitControls
@@ -564,7 +582,7 @@ export default {
         this.hookingTreadmill.unHook(this.player)
       }
 
-      this.player.setInitialState()
+      // this.player.setInitialState()
 
       this.doRespawn()
     },
