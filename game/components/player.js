@@ -61,7 +61,7 @@ export default class Player extends THREE.Object3D {
       files: [
         {
           name: 'model',
-          path: 'obj/character/character 07_Idle_Run_Fall_T-Pose.glb'
+          path: 'obj/character/character 06_Idle_Run_Fall_T-Pose_Fly.glb'
         }
       ]
     })
@@ -100,6 +100,9 @@ export default class Player extends THREE.Object3D {
       ),
       tPose: this.animationMixer.clipAction(
         THREE.AnimationClip.findByName(this.modelAnimations, 'T-Pose')
+      ),
+      fly: this.animationMixer.clipAction(
+        THREE.AnimationClip.findByName(this.modelAnimations, 'fly')
       )
     }
   }

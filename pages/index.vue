@@ -79,6 +79,8 @@ export default {
       const camera = useCamera()
       const GUI = useGUI()
 
+      GUI.camera.add(this, 'startTraveling')
+
       await this.load()
 
       this.cameraPosition = 'follow player'
@@ -89,6 +91,7 @@ export default {
           .sub(camera._shake)
           .add(new THREE.Vector3(0, 0.75, 0))
       )
+
       GUI.camera.addVector('origin position', camera._position)
 
       webglScene.background = new THREE.Color(0xffffff)
@@ -147,7 +150,7 @@ export default {
       console.log('60%')
 
       this.introSpline = await new Spline().load(
-        'obj/splines/intro_spline_03.obj'
+        'obj/splines/intro_spline_04.obj'
       )
       this.map.add(this.introSpline)
 
@@ -183,7 +186,7 @@ export default {
         .volume(0.5)
         .loop(true)
 
-      this.player.appearPlayer()
+      // this.player.appearPlayer()
 
       this.cameraPosition = 'intro travelling'
 
