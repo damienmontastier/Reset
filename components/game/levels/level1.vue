@@ -112,9 +112,9 @@ export default {
     playerIsOnTerminal(newVal, oldVal) {
       if (oldVal === undefined) return
       if (this.playerIsOnTerminal) {
-        this.levelMusic.fade(0.65, 0.25, 1000)
+        this.levelMusic.fade(0.8, 0.25, 1000)
       } else {
-        this.levelMusic.fade(0.25, 0.65, 1000)
+        this.levelMusic.fade(0.25, 0.8, 1000)
       }
 
       this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
@@ -153,7 +153,7 @@ export default {
       const audioManager = useAudio()
       this.levelMusic = audioManager
         .play('level01')
-        .fade(0, 0.65, 1000)
+        .fade(0, 0.8, 1000)
         .loop(true)
 
       gsap.from(this.map.greenWireframeMaterial.uniforms.uAppear, {
@@ -343,7 +343,7 @@ export default {
           // GOAL REACH
 
           const audioManager = useAudio()
-          audioManager.play('level_goal').volume(0.65)
+          audioManager.play('level_goal').volume(1)
 
           this.countdown.paused = true
           this.$store.commit('stages/setScore', {
@@ -351,7 +351,7 @@ export default {
             score: this.countdown.time
           })
 
-          this.levelMusic.fade(0.65, 0, 1000)
+          this.levelMusic.fade(0.8, 0, 1000)
 
           this.cameraAnimation(LEVEL01_CONFIG.cameras.goal)
 
