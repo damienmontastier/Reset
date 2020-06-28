@@ -12,7 +12,7 @@ export default {
       distance: 7
     },
     appear: {
-      normalized_angle: new THREE.Vector3(1.05, 0.55, 0.7),
+      normalized_angle: new THREE.Vector3(0.1, 0.55, 0.7),
       distance: 4
     },
     close_up: {
