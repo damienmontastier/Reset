@@ -15,7 +15,7 @@ export default {
   },
   zone_C: {
     speedScale: 0.1,
-    speedMinimum: 1.70,
+    speedMinimum: 1.7,
     speedRandomness: 0.5,
     appearIntervalMinimum: 0.17,
     appearIntervalRandomness: 1.56

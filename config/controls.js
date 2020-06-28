@@ -3,5 +3,6 @@ export default {
   MOVE_LEFT: ['ArrowLeft', 'KeyA'],
   MOVE_RIGHT: ['ArrowRight', 'KeyD'],
   MOVE_BACKWARD: ['ArrowDown', 'KeyS'],
-  INTERACT: ['KeyE']
+  INTERACT: ['KeyE'],
+  TOGGLE_GUI: ['SHIFT+KeyH']
 }

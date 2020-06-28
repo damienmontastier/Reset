@@ -1,19 +1,31 @@
 <template>
   <div id="appScene">
-    <Info />
+    <Info v-if="infoVisible" />
   </div>
 </template>
 
 <script>
 import useWebGL from '@/hooks/use-webgl'
+import GLOBAL_CONFIG from '@/config/global'
 
 export default {
+  data() {
+    return {
+      infoVisible: false
+    }
+  },
   components: {
     Info: () => import('@/components/webgl/info')
   },
   mounted() {
     const { canvas } = useWebGL()
     this.$el.appendChild(canvas)
+
+    this.infoVisible = GLOBAL_CONFIG.GUI
+
+    this.$events.on('TOGGLE_GUI', (value) => {
+      this.infoVisible = value
+    })
   },
   beforeDestroy() {
     useWebGL().destroy()

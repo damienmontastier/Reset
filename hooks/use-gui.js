@@ -1,3 +1,6 @@
+import events from '@/plugins/events'
+import GLOBAL_CONFIG from '@/config/global'
+
 let GUI
 
 const useGUI = () => {
@@ -20,6 +23,20 @@ const useGUI = () => {
 
     // postprocessing
     GUI.postprocessing = GUI.rendering.addFolder('Post-processing')
+
+    if (GLOBAL_CONFIG.GUI) {
+      GUI.show()
+    } else {
+      GUI.hide()
+    }
+
+    events.on('TOGGLE_GUI', (value) => {
+      if (value) {
+        GUI.show()
+      } else {
+        GUI.hide()
+      }
+    })
   }
 
   return GUI
