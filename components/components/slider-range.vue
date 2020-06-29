@@ -190,8 +190,8 @@ export default {
     span {
       color: var(--color-black);
       font-family: var(--font-cindie-c);
-      font-size: 10px;
-      line-height: 10px;
+      font-size: 11px;
+      line-height: 11px;
       position: absolute;
     }
   }

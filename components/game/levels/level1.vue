@@ -543,13 +543,15 @@ export default {
     },
 
     async onPlayerIntersectsWithParcelPost(type) {
-      const posts = this.posts.filter((post) => {
-        return post.social_network.toLowerCase() === type
-      })
+      if (type) {
+        const posts = this.posts.filter((post) => {
+          return post.social_network.toLowerCase() === type
+        })
 
-      this.$refs.notifications.addNotification(
-        posts[Math.floor(Math.random() * posts.length)]
-      )
+        this.$refs.notifications.addNotification(
+          posts[Math.floor(Math.random() * posts.length)]
+        )
+      }
 
       const clock = useClock()
       clock.add(10)

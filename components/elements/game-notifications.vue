@@ -11,9 +11,11 @@
 <script>
 import useClock from '@/hooks/use-clock'
 
+import Notification from '@/components/components/notification'
+
 export default {
   components: {
-    Notification: () => import('@/components/components/notification')
+    Notification
   },
 
   data() {
@@ -66,7 +68,7 @@ export default {
   position: absolute;
   right: 10px;
   top: 70px;
-  width: 15vw;
+  width: 240px;
 
   &__inner {
     display: block;
