@@ -64,13 +64,29 @@ export default {
     }
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
-    // }, 5000)
+    setTimeout(() => {
+      this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
+    }, 5000)
     this.init()
   },
   beforeDestroy() {
     const { scene } = useGame()
+
+    const { scene: webglScene } = useWebGL()
+
+    webglScene.background = new THREE.Color(0x000000)
+
+    this.player.traverse((child) => {
+      if (child.geometry) {
+        child.geometry.dispose()
+      } else if (child.material) {
+        child.material.dispose()
+      } else if (child.skeleton && child.skeleton.boneTexture) {
+        child.skeleton.boneTexture.dispose()
+      }
+    })
+
+    this.player.destroy()
 
     scene.remove(this.introGroup)
 
@@ -79,6 +95,8 @@ export default {
     const audioManager = useAudio()
     audioManager.stop('virtualisation_perso')
     audioManager.stop('intro')
+
+    this.$store.commit('loading/setInitialState')
   },
   methods: {
     async init() {

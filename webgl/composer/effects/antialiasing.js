@@ -64,7 +64,7 @@ export default class AntialiasingEffect {
 
   initGUI() {
     const gui = useGUI()
-    const antialising = gui.postprocessing.addFolder('Antialiasing')
+    const antialising = gui.postprocessing._addFolder('Antialiasing')
 
     const effectPass = this.effectPass
 

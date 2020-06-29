@@ -17,13 +17,16 @@ const controller = new Vue({
   methods: {
     onKeyUp(e) {
       const commands = []
+      let key = ''
+      key += e.shiftKey ? 'SHIFT+' : ''
+      key += e.code
       Object.entries(controls).forEach(([command, keys]) => {
-        if (keys.includes(e.code)) {
+        if (keys.includes(e.code) || keys.includes(key)) {
           commands.push(command)
         }
       })
 
-      this.events.emit('keyup', commands)
+      if (commands[0]) this.events.emit('keyup', commands)
     }
   }
 })

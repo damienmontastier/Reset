@@ -17,6 +17,12 @@ export const mutations = {
   },
   setCommands(state, value) {
     state.commands = value
+  },
+  setInitialState(state) {
+    state.commands = []
+    state.toLoad = 0
+    state.loaded = 0
+    state.visible = false
   }
 }
 

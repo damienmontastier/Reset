@@ -60,7 +60,7 @@ export default class DotsPlane extends THREE.Object3D {
 
   initGUI() {
     const GUI = useGUI()
-    const dotsGUI = GUI.addFolder('dots pattern')
+    const dotsGUI = GUI._addFolder('dots pattern')
     dotsGUI
       .add(this.material.uniforms.uDotsFrenquency, 'value')
       .min(0)

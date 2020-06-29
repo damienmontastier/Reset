@@ -47,42 +47,6 @@ export default class Level01 extends THREE.Object3D {
     this.blackWireframeMaterial = new BasicMaterial({ color: 0x000000 })
 
     const GUI = useGUI()
-    GUI.addMaterial('solid material', this.standardMaterial)
-    GUI.add(this.greenWireframeMaterial.uniforms.uAppear, 'value')
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name('green appear')
-
-    GUI.add(this.greenMaterial, 'alphaTest')
-      .min(0)
-      .max(1)
-      .step(0.01)
-      .name('green alphatest')
-
-    GUI.add(this.greenMaterial, 'depthFunc')
-      .min(0)
-      .max(10)
-      .step(1)
-      .name('green depthFunc')
-
-    GUI.add(this.greenMaterial, 'blendSrc')
-      .min(0)
-      .max(300)
-      .step(1)
-      .name('green blendSrc')
-
-    GUI.add(this.greenMaterial, 'blendSrc')
-      .min(0)
-      .max(300)
-      .step(1)
-      .name('green blendDst')
-
-    GUI.add(this.greenMaterial, 'depthTest').name('green depthTest')
-
-    GUI.add(this.greenMaterial, 'depthWrite').name('green depthWrite')
-
-    GUI.add(this.greenMaterial, 'transparent').name('green transparent')
 
     GUI.add(this.blackWireframeMaterial.uniforms.uAppear, 'value')
       .min(0)
@@ -90,7 +54,6 @@ export default class Level01 extends THREE.Object3D {
       .step(0.01)
       .name('black appear')
 
-    GUI.add(this, 'appear').name('trigger appear')
     // materials
 
     const assetsManager = useAssetsManager()
@@ -330,7 +293,7 @@ export default class Level01 extends THREE.Object3D {
 
     const GUI = useGUI()
 
-    GUI.addLight('light', this.directionalLight)
+    GUI.addLight('level1 light', this.directionalLight)
   }
 
   initTreadmillsHitboxes() {

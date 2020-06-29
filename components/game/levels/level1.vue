@@ -10,18 +10,6 @@
       v-if="$store.state.ui.missionReportVisible"
       class="gameLevel01__missionReport"
     />
-    <button
-      @click="playerIsOnTerminal = !playerIsOnTerminal"
-      class="gameLevel01__debug"
-    >
-      toggle Terminam
-    </button>
-    <button
-      @click="$store.commit('ui/setMissionReportVisible', true)"
-      class="gameLevel01__debug"
-    >
-      toggle report
-    </button>
   </div>
 </template>
 
@@ -41,7 +29,7 @@ import Player from '@/game/components/player'
 import MapLevel01 from '@/game/components/level_01'
 import GridTerrain from '@/game/features/grid-terrain'
 
-import Spline from '@/webgl/components/spline'
+// import Spline from '@/webgl/components/spline'
 
 import Countdown from '@/assets/js/countdown'
 
@@ -109,15 +97,13 @@ export default {
         console.log('TREADMILL LEAVE')
       }
     },
-    playerIsOnTerminal() {
-      // if (this.playerIsOnTerminal === true) {
-      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.close_up)
-      //   // this.setTerminalOpened(true)
-      // } else if (this.playerIsOnTerminal === false && oldVal !== undefined) {
-      //   console.log('here')
-      //   this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
-      //   // this.setTerminalOpened(false)
-      // }
+    playerIsOnTerminal(newVal, oldVal) {
+      if (oldVal === undefined) return
+      if (this.playerIsOnTerminal) {
+        this.levelMusic.fade(0.8, 0.25, 1000)
+      } else {
+        this.levelMusic.fade(0.25, 0.8, 1000)
+      }
 
       this.$store.commit('ui/setTerminalVisible', this.playerIsOnTerminal)
     },
@@ -149,20 +135,13 @@ export default {
     RAF.remove('level1', this.loop.bind(this))
   },
   methods: {
-    // ...mapMutations({
-    //   setTerminalOpened: 'setTerminalOpened'
-    // }),
     async onLoadingCompleted() {
       console.log('onLoadingCompleted')
 
       const audioManager = useAudio()
-      audioManager
+      this.levelMusic = audioManager
         .play('level01')
-        .volume(0.65)
-        .loop(true)
-      audioManager
-        .play('factory_ambiance')
-        .volume(1)
+        .fade(0, 0.8, 1000)
         .loop(true)
 
       gsap.from(this.map.greenWireframeMaterial.uniforms.uAppear, {
@@ -173,19 +152,7 @@ export default {
       await this.player.appearPlayer().timeScale(2)
       this.countdown.paused = false
 
-      // const tl = new gsap.timeline()
-
-      // tl.to(
-      //   this.player.animations.tPose,
-      //   {
-      //     weight: 0,
-      //     duration: 1,
-      //     ease: 'expo.out'
-      //   },
-      //   0
-      // )
-
-      // this.player.animations.idle.play()
+      this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
     },
     async load() {
       this.$store.commit('loading/setCommands', [
@@ -219,8 +186,8 @@ export default {
       this.$store.commit('loading/incrementLoaded')
       console.log('60%')
 
-      this.introRail = await new Spline().load('obj/splines/level01_01.obj')
-      this.map.add(this.introRail)
+      // this.introRail = await new Spline().load('obj/splines/level01_01.obj')
+      // this.map.add(this.introRail)
 
       this.$store.commit('loading/incrementLoaded')
       console.log('80%')
@@ -228,7 +195,6 @@ export default {
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
-        { path: '/sounds/RESET_AMBIANCE_FACTORY.mp3', id: 'factory_ambiance' },
         { path: '/sounds/RESET_USB.mp3', id: 'level_goal' }
       ])
 
@@ -241,7 +207,10 @@ export default {
       score.type = 'countdown'
 
       const camera = useCamera()
-      // camera._distance = 25
+      camera._normalizedAngle.copy(
+        LEVEL01_CONFIG.cameras.appear.normalized_angle
+      )
+      camera._distance = LEVEL01_CONFIG.cameras.appear.distance
 
       console.log('here')
 
@@ -311,6 +280,8 @@ export default {
         this.player.position.copy(this.spawnPoint)
       }
 
+      this.player.model.rotation.y = THREE.MathUtils.degToRad(180)
+
       // TODO - Restart chronometre du niveau
     },
 
@@ -366,13 +337,17 @@ export default {
           // GOAL REACH
 
           const audioManager = useAudio()
-          audioManager.play('level_goal').volume(0.65)
+          audioManager.play('level_goal').volume(1)
 
           this.countdown.paused = true
           this.$store.commit('stages/setScore', {
             stage: 'level1',
             score: this.countdown.time
           })
+
+          this.levelMusic.fade(0.8, 0, 1000)
+
+          this.cameraAnimation(LEVEL01_CONFIG.cameras.goal)
 
           const { UIOverlay } = useGame()
 
@@ -687,8 +662,8 @@ export default {
           this.cameraAnimation(config)
         })
 
-      const treadmillGUI = GUI.addFolder('treadmills config')
-      const zoneAGUI = treadmillGUI.addFolder('a')
+      const treadmillGUI = GUI._addFolder('treadmills config')
+      const zoneAGUI = treadmillGUI._addFolder('a')
       zoneAGUI
         .add(treadmillConfig.zone_A, 'speedScale')
         .min(0)
@@ -715,7 +690,7 @@ export default {
         .max(10)
         .step(0.01)
 
-      const zoneBGUI = treadmillGUI.addFolder('b')
+      const zoneBGUI = treadmillGUI._addFolder('b')
       zoneBGUI
         .add(treadmillConfig.zone_B, 'speedScale')
         .min(0)
@@ -742,7 +717,7 @@ export default {
         .max(10)
         .step(0.01)
 
-      const zoneCGUI = treadmillGUI.addFolder('c')
+      const zoneCGUI = treadmillGUI._addFolder('c')
       zoneCGUI
         .add(treadmillConfig.zone_C, 'speedScale')
         .min(0)

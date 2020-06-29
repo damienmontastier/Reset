@@ -177,7 +177,11 @@ export default class Player extends THREE.Object3D {
   }
 
   destroy() {
-    keyboadEvents.off('keydown', this.onKeydownHandler)
+    const GUI = useGUI()
+
+    const modelFolder = GUI.__folders.model
+
+    GUI.removeFolder(modelFolder)
 
     const RAF = useRAF()
     RAF.remove('player')
@@ -185,7 +189,7 @@ export default class Player extends THREE.Object3D {
 
   fall() {
     const audioManager = useAudio()
-    audioManager.play('fall_01')
+    audioManager.play('fall_01').volume(0.85)
 
     this.isFalling = true
     if (this.positionTween) {
@@ -328,7 +332,7 @@ export default class Player extends THREE.Object3D {
     const audioManager = useAudio()
     const dashs = ['dash_01', 'dash_02', 'dash_03', 'dash_04']
     const dashSound = dashs[Math.floor(Math.random() * dashs.length)]
-    audioManager.play(dashSound)
+    audioManager.play(dashSound).volume(0.35)
 
     const d = this.position
       .clone()

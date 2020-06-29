@@ -3,6 +3,9 @@ import viewport from '@/plugins/viewport'
 import useRAF from '@/hooks/use-raf'
 import useCamera from '@/hooks/use-camera'
 
+import events from '@/plugins/events'
+import GLOBAL_CONFIG from '@/config/global'
+
 let webgl
 
 class WebGL {
@@ -62,6 +65,13 @@ class WebGL {
 
     // stats
     this.stats = new Stats()
+
+    this.stats.dom.style.visibility = GLOBAL_CONFIG.GUI ? 'visible' : 'hidden'
+
+    events.on('TOGGLE_GUI', (value) => {
+      this.stats.dom.style.visibility = GLOBAL_CONFIG.GUI ? 'visible' : 'hidden'
+    })
+
     document.body.appendChild(this.stats.dom)
     RAF.add('stats-begin', this.stats.begin, -1000)
     RAF.add('stats-end', this.stats.end, 1000)

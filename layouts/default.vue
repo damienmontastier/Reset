@@ -34,6 +34,9 @@ import AppScene from '@/components/webgl/scene'
 import AppGame from '@/components/game/game'
 import AppHeader from '@/components/elements/header'
 import GameLoader from '@/components/game/game-loader'
+import SolutionsButton from '@/components/game/solutions/solutions-button'
+
+import GLOBAL_CONFIG from '@/config/global'
 
 export default {
   components: {
@@ -42,16 +45,7 @@ export default {
     AppHeader,
     GameLoader,
     Solutions,
-    SolutionsButton: () =>
-      import('@/components/game/solutions/solutions-button')
-  },
-  data() {
-    return {
-      clicked: false,
-      keyDowned: false,
-      tuto: undefined,
-      endgame: false
-    }
+    SolutionsButton
   },
   computed: {
     shouldGridBeDisplayed() {
@@ -70,51 +64,18 @@ export default {
     }
   },
 
-  fetch() {
-    // this.$store.commit('stages/setScore', {
-    //   stage: 'level1',
-    //   score: 150
-    // })
-    // this.$store.commit('stages/setScore', {
-    //   stage: 'level2',
-    //   score: 300
-    // })
-  },
-
   beforeDestroy() {
     const GUI = useGUI()
     GUI.destroy()
   },
 
   mounted() {
-    // const GUI = useGUI()
-    // const params = {
-    //   level1: 300,
-    //   level2: 300
-    // }
-    // const stagesGUI = GUI.addFolder('Stages')
-    // stagesGUI
-    //   .add(params, 'level1')
-    //   .min(0)
-    //   .max(300)
-    //   .step(1)
-    //   .onChange(() => {
-    //     this.$store.commit('stages/setScore', {
-    //       stage: 'level1',
-    //       score: params.level1
-    //     })
-    //   })
-    // stagesGUI
-    //   .add(params, 'level2')
-    //   .min(0)
-    //   .max(300)
-    //   .step(1)
-    //   .onChange(() => {
-    //     this.$store.commit('stages/setScore', {
-    //       stage: 'level2',
-    //       score: params.level2
-    //     })
-    //   })
+    this.$controller.events.on('keyup', (e) => {
+      if (e.includes('TOGGLE_GUI')) {
+        GLOBAL_CONFIG.GUI = !GLOBAL_CONFIG.GUI
+        this.$events.emit('TOGGLE_GUI', GLOBAL_CONFIG.GUI)
+      }
+    })
   }
 }
 </script>
@@ -152,8 +113,8 @@ export default {
 }
 
 #appView {
-  // pointer-events: none;
   height: 100vh;
+  pointer-events: none;
   position: relative;
   z-index: 10;
 }
