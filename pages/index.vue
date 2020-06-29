@@ -163,7 +163,7 @@ export default {
         'Checking Mission Status',
         'Status : Awaiting Signature'
       ])
-      // this.$store.commit('loading/setVisible', true)
+      this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
       this.$store.commit('loading/incrementLoaded')
