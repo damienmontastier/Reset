@@ -23,6 +23,10 @@ export default {
     afterStart: {
       normalized_angle: new THREE.Vector3(0.13, 0.7, -0.6),
       distance: 7
+    },
+    test: {
+      normalized_angle: new THREE.Vector3(0.8, 0.7, -1.5),
+      distance: 7
     }
   }
 }

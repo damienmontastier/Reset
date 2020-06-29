@@ -122,8 +122,6 @@ export default {
 
       this.player.position.copy(this.spawnPoint)
 
-      // this.cameraPosition = 'follow player'
-
       camera._position.set(5, 9, 10)
       camera._normalizedAngle.copy(
         INTRODUCTION_CONFIG.cameras.start.normalized_angle
@@ -250,6 +248,26 @@ export default {
 
       this.cameraPosition = 'intro travelling'
 
+      // const tl = gsap.timeline()
+
+      // tl.to(camera._normalizedAngle, {
+      //   x: 0.8,
+      //   y: 0.7,
+      //   z: -1.5,
+      //   duration: 1
+      // })
+
+      // tl.to(
+      //   camera._position,
+      //   {
+      //     x: this.introSpline.curvedPath.points[1].x,
+      //     y: this.introSpline.curvedPath.points[1].y,
+      //     z: this.introSpline.curvedPath.points[1].z,
+      //     duration: 1
+      //   },
+      //   0
+      // )
+
       this.progress = 0
       gsap.to(this, {
         duration: 8,
@@ -265,10 +283,11 @@ export default {
           camera._position.copy(position)
         },
         onComplete: () => {
-          this.cameraPosition = 'follow player'
           this.cameraAnimation(INTRODUCTION_CONFIG.cameras.default)
+
           camera.disableMouseMove = false
           this.onStartMovementPlayer()
+          this.cameraPosition = 'follow player'
         }
       })
 
