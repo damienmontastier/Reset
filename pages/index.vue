@@ -110,16 +110,7 @@ export default {
 
       await this.load()
 
-      this.cameraPosition = 'follow player'
-      camera.camera.lookAt(
-        camera._position
-          .clone()
-          .sub(camera._angle)
-          .sub(camera._shake)
-          .add(new THREE.Vector3(0, 0.75, 0))
-      )
-
-      GUI.camera.addVector('origin position', camera._position)
+      // this.cameraPosition = 'follow player'
 
       webglScene.background = new THREE.Color(0xffffff)
 
@@ -136,9 +127,15 @@ export default {
 
       this.player.position.copy(this.spawnPoint)
 
-      // setTimeout(() => {
-      //   this.player.position.copy(this.spawnPoint)
-      // }, 5000)
+      camera.camera.lookAt(
+        camera._position
+          .clone()
+          .sub(camera._angle)
+          .sub(camera._shake)
+          .add(new THREE.Vector3(0, 0.75, 0))
+      )
+
+      GUI.camera.addVector('origin position', camera._position)
 
       this.introGroup.add(this.player)
       this.player.getObjectByName(
@@ -166,7 +163,7 @@ export default {
         'Checking Mission Status',
         'Status : Awaiting Signature'
       ])
-      this.$store.commit('loading/setVisible', true)
+      // this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
       this.$store.commit('loading/incrementLoaded')
