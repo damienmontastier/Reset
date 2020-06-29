@@ -88,16 +88,29 @@ export default {
     return {
       displayError: false,
       items: [
-        { name: 'Poneys', active: true, selectable: true },
-        { name: 'Chats', active: true, selectable: true },
-        { name: 'Dogs', active: true, selectable: true },
-        { name: 'BFM TV', active: true, selectable: true },
-        { name: 'Manu', active: true, selectable: true },
-        { name: 'Reine Fatima', active: true, selectable: true },
-        { name: 'Jul', active: true, selectable: true },
-        { name: 'Cordula', active: true, selectable: true },
-        { name: 'Tout selectionner', active: true, selectable: false },
-        { name: 'Tout déselectionner', active: true, selectable: false }
+        { name: 'CNN', active: true, selectable: true },
+        { name: 'Baseball', active: true, selectable: true },
+        { name: 'MoMA', active: true, selectable: true },
+        { name: 'Typography', active: true, selectable: true },
+        { name: 'NBA', active: true, selectable: true },
+        { name: 'Illustration', active: true, selectable: true },
+        { name: 'Cute baby dogs', active: true, selectable: true },
+        { name: 'WWF', active: true, selectable: true },
+        { name: 'Fashion', active: true, selectable: true },
+        { name: 'Soccer', active: true, selectable: true },
+        { name: 'Motion Design', active: true, selectable: true },
+        { name: 'ABC', active: true, selectable: true },
+        { name: 'National Geographic', active: true, selectable: true },
+        { name: 'Netflix', active: true, selectable: true },
+        { name: 'Buzzfeed', active: true, selectable: true },
+        { name: 'Generative Art', active: true, selectable: true },
+        { name: 'New York Times', active: true, selectable: true },
+        { name: 'Football', active: true, selectable: true },
+        { name: 'Cute baby cats', active: true, selectable: true },
+        { name: 'Tasty', active: true, selectable: true },
+        { name: 'Electronics', active: true, selectable: true },
+        { name: 'Select all', active: true, selectable: false },
+        { name: 'Unselect all', active: true, selectable: false }
       ],
       mounted: false
     }
@@ -127,10 +140,10 @@ export default {
     },
 
     checkboxBehavior(e) {
-      if (e.target.name === 'tout-deselectionner') {
+      if (e.target.name === 'unselect-all') {
         e.target.checked = false
         this.items.forEach((item) => (item.active = false))
-      } else if (e.target.name === 'tout-selectionner') {
+      } else if (e.target.name === 'select-all') {
         e.target.checked = true
         this.items.forEach((item) => (item.active = true))
       }

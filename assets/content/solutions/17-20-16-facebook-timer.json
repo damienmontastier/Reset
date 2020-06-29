@@ -1,7 +1,7 @@
 {
   "id": "01",
   "title": "Facebook Timer",
-  "required_score": 180,
+  "required_score": 360,
   "stage_id": "level1",
   "content": "This option allows you to see how much time you spent on Facebook application. You can set an custom alarm, which warns you when you exceed the set time.\n\n##### How to set a timer on Facebook :\n\n* Launch Facebook app\n* Menu\n* Settings & privacy\n* Your time on Facebook\n* Set daily reminder\n* Update"
 }

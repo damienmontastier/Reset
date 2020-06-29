@@ -1,7 +1,7 @@
 {
   "id": "03",
   "title": "Block notifications",
-  "required_score": 140,
+  "required_score": 280,
   "stage_id": "level1",
   "content": "Do you really need to be notified that you've been emailed a coupon offer? Constant attention grabbers like these are designed to nudge us into checking when we don't mean to. Turning them off is the single most powerful thing you can do to put yourself in control again.\n\n**How to block notifications on Android**:\n\n* To turn off notifications for a specific app:\n\n  * *Settings* →\n  * *Notifications* →\n  * tap an app →\n  * Block all settings\n\n**How to block notifications on iPhone**:\n\n* To turn off notifications for a specific app:\n\n  * *Settings* →\n  * *Notifications* →\n  * tap an app →\n  * turn off *Allow Notifications*\n\nDiscover more tips on : <https://datadetoxkit.org/en/wellbeing/smarthabits>"
 }

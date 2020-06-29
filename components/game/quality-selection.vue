@@ -1,14 +1,28 @@
 <template>
   <section class="qualitySelection">
     <div class="qualitySelection__inner">
-      <h2 class="qualitySelection__title u-uppercase">Select the quality</h2>
+      <h2
+        class="qualitySelection__title u-uppercase"
+        :class="{
+          transition__fadeIn: true,
+          'transition--on': mounted
+        }"
+      >
+        Select the quality
+      </h2>
       <ul class="qualitySelection__list">
         <li class="qualitySelection__item u-uppercase u-link-hover">
           <button
             v-sounds="{
-              mouseenter: '/sounds/RESET_HOVER.mp3'
+              mouseenter: '/sounds/RESET_HOVER.mp3',
+              click: '/sounds/RESET_CLIC.mp3'
             }"
             @click="setQuality('low')"
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.1s` }"
           >
             low
           </button>
@@ -16,9 +30,15 @@
         <li class="qualitySelection__item u-uppercase u-link-hover">
           <button
             v-sounds="{
-              mouseenter: '/sounds/RESET_HOVER.mp3'
+              mouseenter: '/sounds/RESET_HOVER.mp3',
+              click: '/sounds/RESET_CLIC.mp3'
             }"
             @click="setQuality('medium')"
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.2s` }"
           >
             medium
           </button>
@@ -26,9 +46,15 @@
         <li class="qualitySelection__item u-uppercase u-link-hover">
           <button
             v-sounds="{
-              mouseenter: '/sounds/RESET_HOVER.mp3'
+              mouseenter: '/sounds/RESET_HOVER.mp3',
+              click: '/sounds/RESET_CLIC.mp3'
             }"
             @click="setQuality('high')"
+            :class="{
+              transition__fadeIn: true,
+              'transition--on': mounted
+            }"
+            :style="{ 'transition-delay': `0.3s` }"
           >
             high
           </button>
@@ -40,6 +66,16 @@
 
 <script>
 export default {
+  data() {
+    return {
+      mounted: false
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.mounted = true
+    }, 0)
+  },
   methods: {
     setQuality(quality) {
       console.log(quality)

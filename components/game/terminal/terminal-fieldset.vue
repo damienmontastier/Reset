@@ -63,7 +63,7 @@ export default {
 
     label {
       display: block;
-      font-size: 10px;
+      font-size: 11px;
 
       &::before {
         background: var(--color-grey-lighten);
@@ -81,7 +81,7 @@ export default {
   &__error {
     border: 1px solid;
     color: var(--color-green);
-    font-size: 8px;
+    font-size: 11px;
     padding: 8px 24px;
   }
 
