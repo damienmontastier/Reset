@@ -162,7 +162,7 @@ export default class Composer {
 
   initBloomGUI() {
     const GUI = useGUI()
-    const bloomGUI = GUI.postprocessing.addFolder('Bloom')
+    const bloomGUI = GUI.postprocessing._addFolder('Bloom')
 
     const bloomParams = {
       resolution: this.bloomEffect.resolution.height,
@@ -204,7 +204,7 @@ export default class Composer {
         this.bloomEffect.intensity = Number(bloomParams.intensity)
       })
 
-    const luminanceGUI = bloomGUI.addFolder('Luminance')
+    const luminanceGUI = bloomGUI._addFolder('Luminance')
 
     luminanceGUI.add(bloomParams.luminance, 'filter').onChange(() => {
       this.bloomEffect.luminancePass.enabled = bloomParams.luminance.filter
@@ -235,7 +235,7 @@ export default class Composer {
 
   initNoiseGUI() {
     const GUI = useGUI()
-    const noiseGUI = GUI.postprocessing.addFolder('Noise')
+    const noiseGUI = GUI.postprocessing._addFolder('Noise')
 
     noiseGUI
       .add(this.noiseEffect.uniforms.get('intensity'), 'value')

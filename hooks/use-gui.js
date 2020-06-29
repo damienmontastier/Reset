@@ -9,34 +9,42 @@ const useGUI = () => {
     const init = require('three-dat.gui')
     init(dat)
 
+    dat.GUI.prototype._addFolder = function(name) {
+      if (this.__folders[name]) {
+        return this.__folders[name]
+      } else {
+        return this.addFolder(name)
+      }
+    }
+
     GUI = new dat.GUI()
     // GUI.closed = true
 
     // camera
-    GUI.camera = GUI.addFolder('Camera')
+    GUI.camera = GUI._addFolder('Camera')
 
     // rendering
-    GUI.rendering = GUI.addFolder('Rendering')
+    GUI.rendering = GUI._addFolder('Rendering')
 
     // audio
-    GUI.audio = GUI.addFolder('Audio')
+    GUI.audio = GUI._addFolder('Audio')
 
     // postprocessing
-    GUI.postprocessing = GUI.rendering.addFolder('Post-processing')
+    GUI.postprocessing = GUI.rendering._addFolder('Post-processing')
 
-    if (GLOBAL_CONFIG.GUI) {
-      GUI.show()
-    } else {
-      GUI.hide()
-    }
+    console.log(GUI)
 
-    events.on('TOGGLE_GUI', (value) => {
+    GUI.toggle = (value) => {
       if (value) {
         GUI.show()
       } else {
         GUI.hide()
       }
-    })
+    }
+
+    GUI.toggle(GLOBAL_CONFIG.GUI)
+
+    events.on('TOGGLE_GUI', GUI.toggle)
   }
 
   return GUI

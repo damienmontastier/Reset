@@ -656,8 +656,8 @@ export default {
           this.cameraAnimation(config)
         })
 
-      const treadmillGUI = GUI.addFolder('treadmills config')
-      const zoneAGUI = treadmillGUI.addFolder('a')
+      const treadmillGUI = GUI._addFolder('treadmills config')
+      const zoneAGUI = treadmillGUI._addFolder('a')
       zoneAGUI
         .add(treadmillConfig.zone_A, 'speedScale')
         .min(0)
@@ -684,7 +684,7 @@ export default {
         .max(10)
         .step(0.01)
 
-      const zoneBGUI = treadmillGUI.addFolder('b')
+      const zoneBGUI = treadmillGUI._addFolder('b')
       zoneBGUI
         .add(treadmillConfig.zone_B, 'speedScale')
         .min(0)
@@ -711,7 +711,7 @@ export default {
         .max(10)
         .step(0.01)
 
-      const zoneCGUI = treadmillGUI.addFolder('c')
+      const zoneCGUI = treadmillGUI._addFolder('c')
       zoneCGUI
         .add(treadmillConfig.zone_C, 'speedScale')
         .min(0)
