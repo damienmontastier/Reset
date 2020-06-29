@@ -139,20 +139,23 @@ export default {
       console.log('onLoadingCompleted')
 
       const audioManager = useAudio()
+
+      audioManager.play('level01_appear')
+
+      gsap.from(this.map.greenWireframeMaterial.uniforms.uAppear, {
+        duration: 8,
+        ease: 'none',
+        value: 0
+      })
+      await this.player.appearPlayer().timeScale(1)
+      this.countdown.paused = false
+
+      this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
+
       this.levelMusic = audioManager
         .play('level01')
         .fade(0, 0.8, 1000)
         .loop(true)
-
-      gsap.from(this.map.greenWireframeMaterial.uniforms.uAppear, {
-        duration: 4,
-        ease: 'none',
-        value: 0
-      })
-      await this.player.appearPlayer().timeScale(2)
-      this.countdown.paused = false
-
-      this.cameraAnimation(LEVEL01_CONFIG.cameras.default)
     },
     async load() {
       this.$store.commit('loading/setCommands', [
@@ -191,7 +194,8 @@ export default {
       const audioManager = useAudio()
       await audioManager.add([
         { path: '/sounds/RESET_LEVEL01.mp3', id: 'level01' },
-        { path: '/sounds/RESET_USB.mp3', id: 'level_goal' }
+        { path: '/sounds/RESET_USB.mp3', id: 'level_goal' },
+        { path: '/sounds/RESET_APPARITION_LEVEL.mp3', id: 'level01_appear' }
       ])
 
       this.$store.commit('loading/incrementLoaded')
@@ -516,7 +520,6 @@ export default {
       if (parcelPostsIntersections.length > 0) {
         const socialNetwork =
           parcelPostsIntersections[0].target.mesh.parent._type
-        console.log()
         this.onPlayerIntersectsWithParcelPost(socialNetwork)
       }
 

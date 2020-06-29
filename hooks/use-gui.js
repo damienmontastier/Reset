@@ -32,8 +32,6 @@ const useGUI = () => {
     // postprocessing
     GUI.postprocessing = GUI.rendering._addFolder('Post-processing')
 
-    console.log(GUI)
-
     GUI.toggle = (value) => {
       if (value) {
         GUI.show()
