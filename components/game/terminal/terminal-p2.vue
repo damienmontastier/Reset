@@ -140,10 +140,10 @@ export default {
     },
 
     checkboxBehavior(e) {
-      if (e.target.name === 'tout-deselectionner') {
+      if (e.target.name === 'unselect-all') {
         e.target.checked = false
         this.items.forEach((item) => (item.active = false))
-      } else if (e.target.name === 'tout-selectionner') {
+      } else if (e.target.name === 'select-all') {
         e.target.checked = true
         this.items.forEach((item) => (item.active = true))
       }
