@@ -5,7 +5,9 @@
 <script>
 export default {
   mounted() {
-    this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
+    setTimeout(() => {
+      this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
+    }, 5000)
   }
 }
 </script>
