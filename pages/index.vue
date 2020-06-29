@@ -97,6 +97,9 @@ export default {
     audioManager.stop('intro')
 
     this.$store.commit('loading/setInitialState')
+
+    const RAF = useRAF()
+    RAF.remove('introduction', this.loop.bind(this))
   },
   methods: {
     async init() {
@@ -198,8 +201,6 @@ export default {
     },
 
     async startTraveling() {
-      this.player.position.copy(this.spawnPoint)
-
       this.showMissionStatement = false
 
       const camera = useCamera()
@@ -216,6 +217,8 @@ export default {
         .loop(true)
 
       this.cameraPosition = 'intro travelling'
+
+      console.log(this.introSpline)
 
       this.progress = 0
       gsap.to(this, {
