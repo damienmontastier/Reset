@@ -1,5 +1,5 @@
 <template>
-  <div class="homepage">
+  <div v-if="!$store.state.solutions.opened" class="homepage">
     <mission-statement
       v-if="showMissionStatement"
       @startMission="startTraveling"
@@ -314,10 +314,6 @@ export default {
       }
 
       this.dotsPlane.update(clock)
-    },
-
-    onStartGame() {
-      this.introCameraTraveling()
     },
 
     onKeydown(e) {
