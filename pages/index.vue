@@ -64,9 +64,6 @@ export default {
     }
   },
   mounted() {
-    // setTimeout(() => {
-    //   this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
-    // }, 5000)
     this.init()
   },
   beforeDestroy() {
@@ -110,8 +107,6 @@ export default {
 
       await this.load()
 
-      // this.cameraPosition = 'follow player'
-
       webglScene.background = new THREE.Color(0xffffff)
 
       this.introGroup = new THREE.Group()
@@ -126,6 +121,13 @@ export default {
       this.interactPoint = this.map.interactZonePoint.clone()
 
       this.player.position.copy(this.spawnPoint)
+
+      // this.cameraPosition = 'follow player'
+
+      camera._position.set(5, 9, 10)
+      camera._normalizedAngle.copy(
+        INTRODUCTION_CONFIG.cameras.start.normalized_angle
+      )
 
       camera.camera.lookAt(
         camera._position
@@ -197,13 +199,40 @@ export default {
       this.$store.commit('loading/incrementLoaded')
     },
 
-    async startTraveling() {
-      this.showMissionStatement = false
-
+    cameraAnimation(config) {
       const camera = useCamera()
-      camera.disableMouseMove = true
 
+      const { x, y, z } = config.normalized_angle
+      const distance = config.distance
+
+      const tl = new gsap.timeline()
+      tl.to(
+        camera._normalizedAngle,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          x,
+          y,
+          z
+        },
+        0
+      )
+
+      tl.to(
+        camera,
+        {
+          duration: 1,
+          ease: 'power4.out',
+          _distance: distance
+        },
+        0
+      )
+    },
+
+    async startTraveling() {
       const audioManager = useAudio()
+      const camera = useCamera()
+
       audioManager
         .play('virtualisation_perso')
         .volume(1)
@@ -213,9 +242,13 @@ export default {
         .volume(0.5)
         .loop(true)
 
-      this.cameraPosition = 'intro travelling'
+      this.showMissionStatement = false
 
-      console.log(this.introSpline)
+      camera.disableMouseMove = true
+
+      this.introSpline.curvedPath.points.unshift(camera._position)
+
+      this.cameraPosition = 'intro travelling'
 
       this.progress = 0
       gsap.to(this, {
@@ -224,6 +257,7 @@ export default {
         progress: 1,
         onUpdate: () => {
           const position = this.introSpline.curvedPath.getPoint(this.progress)
+
           camera.camera.lookAt(
             this.player.position.clone().add(new THREE.Vector3(0, 0.75, 0))
           )
@@ -232,8 +266,8 @@ export default {
         },
         onComplete: () => {
           this.cameraPosition = 'follow player'
+          this.cameraAnimation(INTRODUCTION_CONFIG.cameras.default)
           camera.disableMouseMove = false
-
           this.onStartMovementPlayer()
         }
       })
@@ -290,8 +324,9 @@ export default {
     },
 
     loop(clock) {
+      const camera = useCamera()
+
       if (this.cameraPosition === 'follow player') {
-        const camera = useCamera()
         const nextPosition = this.player.worldPosition
           .clone()
           .add(camera._angle)
@@ -303,15 +338,15 @@ export default {
           duration: 1,
           ease: 'power2.out'
         })
-
-        camera.camera.lookAt(
-          camera._position
-            .clone()
-            .sub(camera._angle)
-            .sub(camera._shake)
-            .add(new THREE.Vector3(0, 0.75, 0))
-        )
       }
+
+      camera.camera.lookAt(
+        camera._position
+          .clone()
+          .sub(camera._angle)
+          .sub(camera._shake)
+          .add(new THREE.Vector3(0, 0.75, 0))
+      )
 
       this.dotsPlane.update(clock)
     },

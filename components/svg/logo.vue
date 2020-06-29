@@ -7,3 +7,10 @@
     />
   </svg>
 </template>
+
+<style lang="scss" scoped>
+svg {
+  height: auto;
+  width: 100%;
+}
+</style>

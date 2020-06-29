@@ -8,7 +8,8 @@
     class="mission-statement-P1"
   >
     <div class="mission-statement-P1__logo">
-      <logo></logo>
+      <!-- <logo ref="logo"></logo> -->
+      <div ref="logo"></div>
     </div>
     <div class="mission-statement-P1__intro border">
       <p>Will you help us fight the world's addiction to Smartphones ?</p>
@@ -19,9 +20,11 @@
 </template>
 
 <script>
+import lottie from 'lottie-web'
+import resetLogo from '@/assets/lottie/reset-logo.json'
+
 export default {
   components: {
-    Logo: () => import('@/components/svg/logo-big'),
     Btn: () => import('@/components/components/btn-introduction')
   },
   data() {
@@ -30,6 +33,13 @@ export default {
     }
   },
   mounted() {
+    this.logoAnimation = lottie.loadAnimation({
+      container: this.$refs.logo,
+      renderer: 'svg',
+      loop: false,
+      autoplay: true,
+      animationData: resetLogo
+    })
     setTimeout(() => {
       this.mounted = true
     }, 0)
@@ -44,11 +54,6 @@ export default {
 
   &__logo {
     position: relative;
-
-    svg {
-      height: auto;
-      width: 100%;
-    }
   }
 
   &__intro {
