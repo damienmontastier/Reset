@@ -1,7 +1,7 @@
 <template>
   <div v-if="!$store.state.solutions.opened" class="homepage">
     <mission-statement
-      v-if="showMissionStatement"
+      v-if="showMissionStatement && appearDOM"
       @startMission="startTraveling"
     ></mission-statement>
     <keyboard-instructions
@@ -49,7 +49,8 @@ export default {
       playerInteractWithSmartphone: false,
       movementEnabled: false,
       showControls: false,
-      showMissionStatement: true
+      showMissionStatement: true,
+      appearDOM: false
     }
   },
   watch: {
@@ -65,6 +66,8 @@ export default {
   },
   mounted() {
     this.init()
+
+    this.$events.on('loading completed', this.onLoadingCompleted)
   },
   beforeDestroy() {
     const { scene } = useGame()
@@ -153,6 +156,10 @@ export default {
 
       const RAF = useRAF()
       RAF.add('introduction', this.loop.bind(this))
+    },
+
+    onLoadingCompleted() {
+      this.appearDOM = true
     },
 
     async load() {
