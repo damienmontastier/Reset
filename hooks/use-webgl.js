@@ -66,6 +66,8 @@ class WebGL {
     // stats
     this.stats = new Stats()
 
+    this.stats.dom.style.visibility = GLOBAL_CONFIG.GUI ? 'visible' : 'hidden'
+
     events.on('TOGGLE_GUI', (value) => {
       this.stats.dom.style.visibility = GLOBAL_CONFIG.GUI ? 'visible' : 'hidden'
     })

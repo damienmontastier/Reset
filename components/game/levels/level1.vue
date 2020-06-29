@@ -10,18 +10,6 @@
       v-if="$store.state.ui.missionReportVisible"
       class="gameLevel01__missionReport"
     />
-    <button
-      @click="playerIsOnTerminal = !playerIsOnTerminal"
-      class="gameLevel01__debug"
-    >
-      toggle Terminam
-    </button>
-    <button
-      @click="$store.commit('ui/setMissionReportVisible', true)"
-      class="gameLevel01__debug"
-    >
-      toggle report
-    </button>
   </div>
 </template>
 

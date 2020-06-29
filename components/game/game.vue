@@ -1,16 +1,6 @@
 <template>
   <div class="appGame">
-    <div class="appGame__router">
-      <router-link to="/">Introduction</router-link>
-      <span @click="goTerminal">Terminal</span>
-      <router-link :to="'level1'">level1</router-link>
-      <button @click="$events.emit('TERMINAL COMPLETED')">
-        complete terminal
-      </button>
-      <button @click="cameraShake">
-        camera shake
-      </button>
-    </div>
+    <div class="appGame__router"></div>
 
     <game-controls class="appGame__controls" />
   </div>
