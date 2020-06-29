@@ -47,7 +47,6 @@ export default {
   pointer-events: all;
   position: relative;
   width: 480px;
-  z-index: 999;
 
   .border {
     border: 1px solid #161616;

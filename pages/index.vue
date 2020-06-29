@@ -64,9 +64,9 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
-    }, 5000)
+    // setTimeout(() => {
+    //   this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
+    // }, 5000)
     this.init()
   },
   beforeDestroy() {
@@ -256,9 +256,9 @@ export default {
         }
       })
 
-      this.player.animationMixer.addEventListener('finished', (e) => {
-        console.log('finish', e)
-        this.playerInteractWithSmartphone = true
+      gsap.set(this, {
+        playerInteractWithSmartphone: true,
+        delay: 2.1
       })
     },
 
