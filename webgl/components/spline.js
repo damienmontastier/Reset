@@ -1,5 +1,5 @@
 import useAssetsManager from '@/hooks/use-assets-manager'
-import useGame from '@/hooks/use-game'
+// import useGame from '@/hooks/use-game'
 
 export default class Spline extends THREE.Object3D {
   async load(path) {
@@ -33,17 +33,17 @@ export default class Spline extends THREE.Object3D {
 
     this.curvedPath.curveType = 'catmullrom'
 
-    const points = this.curvedPath.getPoints(50)
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
+    // const points = this.curvedPath.getPoints(50)
+    // const geometry = new THREE.BufferGeometry().setFromPoints(points)
 
-    const material = new THREE.LineBasicMaterial({ color: 0xff0000 })
+    // const material = new THREE.LineBasicMaterial({ color: 0xff0000 })
 
-    // Create the final object to add to the scene
-    const { scene } = useGame()
+    // // Create the final object to add to the scene
+    // const { scene } = useGame()
 
-    const curveObject = new THREE.Line(geometry, material)
+    // const curveObject = new THREE.Line(geometry, material)
 
-    scene.add(curveObject)
+    // scene.add(curveObject)
 
     // const geometry = new THREE.SphereBufferGeometry(1, 1, 1)
     // const material = new THREE.MeshBasicMaterial({ color: 0xffff00 })

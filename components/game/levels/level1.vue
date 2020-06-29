@@ -195,6 +195,7 @@ export default {
         'FETCHING DATA',
         'Status : Ready'
       ])
+
       this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
@@ -202,8 +203,11 @@ export default {
 
       this.$store.commit('loading/incrementLoaded')
 
+      console.log('here0')
       this.map = new MapLevel01()
+      console.log('here1', this.map)
       await this.map.load()
+      console.log('here2')
 
       this.$store.commit('loading/incrementLoaded')
 
@@ -238,6 +242,8 @@ export default {
 
       const camera = useCamera()
       // camera._distance = 25
+
+      console.log('here')
 
       await this.load()
       // this.player.animations.idle.stop()

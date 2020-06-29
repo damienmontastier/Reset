@@ -16,7 +16,6 @@ export const mutations = {
     state.visible = value
   },
   setCommands(state, value) {
-    console.log(value)
     state.commands = value
   }
 }

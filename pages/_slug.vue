@@ -17,8 +17,13 @@ export default {
     level1: () => import('@/components/game/levels/level1.vue'),
     level2: () => import('@/components/game/levels/level2.vue')
   },
+
   asyncData({ store, params }) {
     return { stage: store.getters['stages/getStageBySlug'](params.slug) }
+  },
+
+  mounted() {
+    console.log(this.$route)
   }
 }
 </script>

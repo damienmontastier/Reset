@@ -44,6 +44,7 @@ export default {
   height: 100vh;
   justify-content: center;
   margin-left: 80px;
+  pointer-events: all;
   position: relative;
   width: 480px;
   z-index: 999;

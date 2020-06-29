@@ -8,8 +8,9 @@
       @closeKeyboardInstructions="showControls = false"
       v-if="showControls"
     ></keyboard-instructions>
-    <!-- <video-transition v-if="playerInteractWithSmartphone"></video-transition> -->
-    <video-transition v-if="false"></video-transition>
+    <transition name="video-circle">
+      <video-transition v-if="playerInteractWithSmartphone"></video-transition>
+    </transition>
   </div>
 </template>
 
@@ -57,16 +58,22 @@ export default {
     },
     playerIsInteract(val, oldVal) {
       if (val) {
-        this.playerInteractWithSmartphone = val
         this.movementEnabled = false
         this.onPlayerInteractWithSmartphone()
       }
     }
   },
   mounted() {
+    // setTimeout(() => {
+    //   this.$router.push({ name: 'slug', params: { slug: 'infinite-scroll' } })
+    // }, 5000)
     this.init()
   },
   beforeDestroy() {
+    const { scene } = useGame()
+
+    scene.remove(this.introGroup)
+
     this.$controller.events.off('keyup', this.onKeydown)
 
     const audioManager = useAudio()
@@ -121,7 +128,7 @@ export default {
       this.$controller.events.on('keyup', this.onKeydown)
 
       this.dotsPlane = new DotsPlane(INTRODUCTION_CONFIG.dots)
-      scene.add(this.dotsPlane)
+      this.introGroup.add(this.dotsPlane)
       this.dotsPlane.scale.setScalar(50)
       this.dotsPlane.rotation.x = -Math.PI / 2
       this.dotsPlane.position.y = -2
@@ -138,7 +145,7 @@ export default {
         'Checking Mission Status',
         'Status : Awaiting Signature'
       ])
-      // this.$store.commit('loading/setVisible', true)
+      this.$store.commit('loading/setVisible', true)
       this.$store.commit('loading/setToLoad', 5)
 
       this.$store.commit('loading/incrementLoaded')
@@ -229,6 +236,11 @@ export default {
           this.player.animations.fly.timeScale = 0.8
           this.player.animations.fly.play()
         }
+      })
+
+      this.player.animationMixer.addEventListener('finished', (e) => {
+        console.log('finish', e)
+        this.playerInteractWithSmartphone = true
       })
     },
 

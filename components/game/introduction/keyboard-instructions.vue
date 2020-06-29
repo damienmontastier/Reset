@@ -42,6 +42,7 @@ export default {
 .keyboard-instructions {
   bottom: 50px;
   left: 50%;
+  pointer-events: all;
   position: absolute;
   transform: translateX(-50%);
 
