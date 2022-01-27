@@ -37,7 +37,7 @@
     "raw-loader": "^4.0.1",
     "simplex-noise": "^2.4.0",
     "stats.js": "^0.17.0",
-    "three": "^0.117.1",
+    "three": "^0.137.0",
     "three-dat.gui": "^2.0.6",
     "virtual-scroll": "^1.5.2"
   },
